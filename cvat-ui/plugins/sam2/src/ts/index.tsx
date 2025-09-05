@@ -205,6 +205,7 @@ const sam2Plugin: SAM2Plugin = {
                         mask: number[][];
                         bounds: [number, number, number, number];
                     }> {
+                    console.log('SAM2 Plugin received result:', result);
                     return new Promise((resolve, reject) => {
                         if (model.id !== plugin.data.modelID) {
                             resolve(result);
