@@ -1,0 +1,12 @@
+<clickhouse>
+    <!-- background_pool_size 是服务器级别设置 -->
+    <background_pool_size>1</background_pool_size>
+
+    <!-- 以下是 MergeTree 引擎相关的设置 -->
+    <merge_tree>
+        <parts_to_throw_insert>100</parts_to_throw_insert>
+        <inactive_parts_to_throw_insert>100</inactive_parts_to_throw_insert>
+        <parts_to_delay_insert>200</parts_to_delay_insert>
+        <inactive_parts_to_delay_insert>200</inactive_parts_to_delay_insert>
+    </merge_tree>
+</clickhouse>
