@@ -1,0 +1,15 @@
+<clickhouse>
+    <!-- background_pool_size 是服务器级别设置 -->
+    <background_pool_size>1</background_pool_size>
+
+    <!-- 以下是 MergeTree 引擎相关的设置 -->
+    <merge_tree>
+	<number_of_free_entries_in_pool_to_execute_mutation>2</number_of_free_entries_in_pool_to_execute_mutation>
+	<number_of_free_entries_in_pool_to_lower_max_size_of_merge>2</number_of_free_entries_in_pool_to_lower_max_size_of_merge>
+	<number_of_free_entries_in_pool_to_execute_optimize_entire_partition>2</number_of_free_entries_in_pool_to_execute_optimize_entire_partition>
+        <parts_to_throw_insert>100</parts_to_throw_insert>
+        <inactive_parts_to_throw_insert>100</inactive_parts_to_throw_insert>
+        <parts_to_delay_insert>200</parts_to_delay_insert>
+        <inactive_parts_to_delay_insert>200</inactive_parts_to_delay_insert>
+    </merge_tree>
+</clickhouse>
