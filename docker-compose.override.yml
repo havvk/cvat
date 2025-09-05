@@ -1,0 +1,36 @@
+services:
+  cvat_ui:
+    volumes:
+      - ./cvat-ui-default.conf:/etc/nginx/conf.d/default.conf:ro
+
+  cvat_server:
+    volumes:
+      - cvat_share:/home/django/share:ro
+
+  cvat_worker_import:
+    volumes:
+      - cvat_share:/home/django/share:ro
+
+  cvat_worker_export:
+    volumes:
+      - cvat_share:/home/django/share:ro
+
+  cvat_worker_annotation:
+    volumes:
+      - cvat_share:/home/django/share:ro
+
+  cvat_worker_chunks:
+    volumes:
+      - cvat_share:/home/django/share:ro
+
+  cvat_clickhouse:
+    volumes:
+      # 将自定义的调优配置挂载到 ClickHouse 的配置目录中
+      - ./clickhouse_tuning.xml:/etc/clickhouse-server/config.d/tuning.xml:ro
+
+volumes:
+  cvat_share:
+    driver_opts:
+      type: none
+      device: /app/dataset # 请确保这个目录在开发主机上存在
+      o: bind
