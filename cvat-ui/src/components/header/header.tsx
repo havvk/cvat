@@ -503,7 +503,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 ) : null}
             </div>
             <div className='cvat-right-header'>
-                <Dropdown overlay={languageMenu} trigger={['click']}>
+                <Dropdown menu={languageMenu} trigger={['click']}>
                     <Button type='link' className='cvat-header-button'>
                         <GlobalOutlined />
                     </Button>
