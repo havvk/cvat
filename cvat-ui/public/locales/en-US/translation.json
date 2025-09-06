@@ -1,3 +1,24 @@
 {
-    "Tasks": "Tasks"
+    "Projects": "Projects",
+    "Tasks": "Tasks",
+    "Jobs": "Jobs",
+    "Cloud Storages": "Cloud Storages",
+    "Requests": "Requests",
+    "Models": "Models",
+    "Analytics": "Analytics",
+    "Admin page": "Admin page",
+    "Organization": "Organization",
+    "Settings": "Settings",
+    "Invitations": "Invitations",
+    "Create": "Create",
+    "Switch organization": "Switch organization",
+    "Personal workspace": "Personal workspace",
+    "About": "About",
+    "Change password": "Change password",
+    "Logout": "Logout",
+    "What's new?": "What's new?",
+    "MIT License": "MIT License",
+    "Find us on Discord": "Find us on Discord",
+    "Server version": "Server version",
+    "UI version": "UI version"
 }

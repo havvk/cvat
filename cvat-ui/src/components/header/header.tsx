@@ -23,12 +23,14 @@ import {
     TeamOutlined,
     PlusOutlined,
     MailOutlined,
+    GlobalOutlined,
 } from '@ant-design/icons';
 import Layout from 'antd/lib/layout';
 import Button from 'antd/lib/button';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import config from 'config';
 
@@ -196,6 +198,7 @@ function HeaderComponent(props: Props): JSX.Element {
         openSelectOrganizationModal,
     } = props;
 
+    const { t, i18n } = useTranslation();
     const {
         CHANGELOG_URL, LICENSE_URL, GITHUB_URL, GUIDE_URL, DISCORD_URL,
     } = config;
@@ -228,27 +231,9 @@ function HeaderComponent(props: Props): JSX.Element {
 
     const aboutPlugins = usePlugins((state: CombinedState) => state.plugins.components.about.links.items, props);
     const aboutLinks: [JSX.Element, number][] = [];
-    aboutLinks.push([(
-        <Col key='changelog'>
-            <a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>
-                What&apos;s new?
-            </a>
-        </Col>
-    ), 0]);
-    aboutLinks.push([(
-        <Col key='license'>
-            <a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>
-                MIT License
-            </a>
-        </Col>
-    ), 10]);
-    aboutLinks.push([(
-        <Col key='discord'>
-            <a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>
-                Find us on Discord
-            </a>
-        </Col>
-    ), 20]);
+    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t('What's new?')}</a></Col>), 0]);
+    aboutLinks.push([(<Col key='license'><a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>{t('MIT License')}</a></Col>), 10]);
+    aboutLinks.push([(<Col key='discord'><a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>{t('Find us on Discord')}</a></Col>), 20]);
 
     aboutLinks.push(...aboutPlugins.map(({ component: Component, weight }, index: number) => (
         [<Component key={index} targetProps={props} />, weight] as [JSX.Element, number]
@@ -260,14 +245,8 @@ function HeaderComponent(props: Props): JSX.Element {
             content: (
                 <div>
                     <p>{`${about.server.description}`}</p>
-                    <p>
-                        <Text strong>Server version:</Text>
-                        <Text type='secondary'>{` ${about.server.version}`}</Text>
-                    </p>
-                    <p>
-                        <Text strong>UI version:</Text>
-                        <Text type='secondary'>{` ${about.packageVersion.ui}`}</Text>
-                    </p>
+                    <p><Text strong>{t('Server version')}:</Text><Text type='secondary'>{` ${about.server.version}`}</Text></p>
+                    <p><Text strong>{t('UI version')}:</Text><Text type='secondary'>{` ${about.packageVersion.ui}`}</Text></p>
                     <Row justify='space-around'>
                         { aboutLinks.sort((item1, item2) => item1[1] - item2[1])
                             .map((item) => item[0]) }
@@ -281,7 +260,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 },
             },
         });
-    }, [about]);
+    }, [about, t]);
 
     const closeSettings = useCallback(() => {
         switchSettingsModalVisible(false);
@@ -320,7 +299,7 @@ function HeaderComponent(props: Props): JSX.Element {
             onClick: (): void => {
                 window.open('/admin', '_blank');
             },
-            label: 'Admin page',
+            label: t('Admin page'),
         }, 0]);
     }
 
@@ -329,31 +308,31 @@ function HeaderComponent(props: Props): JSX.Element {
     menuItems.push([{
         key: 'organization',
         icon: organizationFetching || organizationsListFetching ? <LoadingOutlined /> : <TeamOutlined />,
-        label: 'Organization',
+        label: t('Organization'),
         disabled: organizationFetching || organizationsListFetching,
         children: [
             ...(currentOrganization ? [{
                 key: 'open_organization',
                 icon: <SettingOutlined />,
-                label: 'Settings',
+                label: t('Settings'),
                 className: 'cvat-header-menu-open-organization',
                 onClick: () => history.push('/organization'),
             }] : []), {
                 key: 'invitations',
                 icon: <MailOutlined />,
-                label: 'Invitations',
+                label: t('Invitations'),
                 className: 'cvat-header-menu-organization-invitations-item',
                 onClick: () => history.push('/invitations'),
             }, {
                 key: 'create_organization',
                 icon: <PlusOutlined />,
-                label: 'Create',
+                label: t('Create'),
                 className: 'cvat-header-menu-create-organization',
                 onClick: () => history.push('/organizations/create'),
             },
             ...(!!organizationsList && viewType === 'list' ? [{
                 key: 'switch_organization',
-                label: 'Switch organization',
+                label: t('Switch organization'),
                 onClick: () => {
                     openSelectOrganizationModal(setNewOrganization);
                 },
@@ -362,7 +341,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 type: 'divider' as const,
             }, {
                 key: '$personal',
-                label: 'Personal workspace',
+                label: t('Personal workspace'),
                 className: !currentOrganization ? 'cvat-header-menu-active-organization-item' : 'cvat-header-menu-organization-item',
                 onClick: resetOrganization,
             }, ...organizationsList.map((organization: Organization) => ({
@@ -379,14 +358,14 @@ function HeaderComponent(props: Props): JSX.Element {
         icon: <SettingOutlined />,
         onClick: () => switchSettingsModalVisible(true),
         title: `Press ${switchSettingsShortcut} to switch`,
-        label: 'Settings',
+        label: t('Settings'),
     }, 20]);
 
     menuItems.push([{
         key: 'about',
         icon: <InfoCircleOutlined />,
         onClick: () => showAboutModal(),
-        label: 'About',
+        label: t('About'),
     }, 30]);
 
     if (renderChangePasswordItem) {
@@ -395,7 +374,7 @@ function HeaderComponent(props: Props): JSX.Element {
             icon: changePasswordFetching ? <LoadingOutlined /> : <EditOutlined />,
             className: 'cvat-header-menu-change-password',
             onClick: () => switchChangePasswordModalVisible(true),
-            label: 'Change password',
+            label: t('Change password'),
             disabled: changePasswordFetching,
         }, 40]);
     }
@@ -404,13 +383,23 @@ function HeaderComponent(props: Props): JSX.Element {
         key: 'logout',
         icon: logoutFetching ? <LoadingOutlined /> : <LogoutOutlined />,
         onClick: () => history.push('/auth/logout'),
-        label: 'Logout',
+        label: t('Logout'),
         disabled: logoutFetching,
     }, 50]);
 
     menuItems.push(...plugins
         .map(({ component, weight }): typeof menuItems[0] => [component({ targetProps: props }), weight]),
     );
+
+    const languageMenu: MenuProps = {
+        items: [
+            { key: 'en-US', label: 'English' },
+            { key: 'zh', label: '简体中文' },
+        ],
+        onClick: (item) => {
+            i18n.changeLanguage(item.key);
+        },
+    };
 
     const getButtonClassName = (value: string, highlightable = true): string => {
         // eslint-disable-next-line security/detect-non-literal-regexp
@@ -435,7 +424,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/projects');
                     }}
                 >
-                    Projects
+                    {t('Projects')}
                 </Button>
                 <Button
                     className={getButtonClassName('tasks')}
@@ -447,7 +436,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/tasks');
                     }}
                 >
-                    Tasks
+                    {t('Tasks')}
                 </Button>
                 <Button
                     className={getButtonClassName('jobs')}
@@ -459,7 +448,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/jobs');
                     }}
                 >
-                    Jobs
+                    {t('Jobs')}
                 </Button>
                 <Button
                     className={getButtonClassName('cloudstorages')}
@@ -471,7 +460,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/cloudstorages');
                     }}
                 >
-                    Cloud Storages
+                    {t('Cloud Storages')}
                 </Button>
                 <Button
                     className={getButtonClassName('requests')}
@@ -483,7 +472,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/requests');
                     }}
                 >
-                    Requests
+                    {t('Requests')}
                 </Button>
                 {isModelsPluginActive ? (
                     <Button
@@ -496,7 +485,7 @@ function HeaderComponent(props: Props): JSX.Element {
                             history.push('/models');
                         }}
                     >
-                        Models
+                        {t('Models')}
                     </Button>
                 ) : null}
                 {isAnalyticsPluginActive && user.hasAnalyticsAccess ? (
@@ -509,11 +498,16 @@ function HeaderComponent(props: Props): JSX.Element {
                             window.open('/analytics', '_blank');
                         }}
                     >
-                        Analytics
+                        {t('Analytics')}
                     </Button>
                 ) : null}
             </div>
             <div className='cvat-right-header'>
+                <Dropdown overlay={languageMenu} trigger={['click']}>
+                    <Button type='link' className='cvat-header-button'>
+                        <GlobalOutlined />
+                    </Button>
+                </Dropdown>
                 <CVATTooltip overlay='Click to open repository'>
                     <Button
                         icon={<GithubOutlined />}
