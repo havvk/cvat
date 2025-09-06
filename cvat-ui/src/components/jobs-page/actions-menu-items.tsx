@@ -5,6 +5,7 @@
 import React from 'react';
 import { MenuProps } from 'antd/lib/menu';
 import { LoadingOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { usePlugins } from 'utils/hooks';
 import { CVATMenuEditLabel } from 'components/common/cvat-menu-edit-label';
 import { LabelWithCountHOF } from 'components/common/label-with-count';
@@ -42,6 +43,7 @@ export default function JobActionsItems(
         onDeleteJob,
         selectedIds = [],
     } = menuItemsData;
+    const { t } = useTranslation();
 
     const isBulkMode = selectedIds.length > 1;
     const bulkAllowedKeys = ['edit_assignee', 'edit_state', 'edit_stage', 'export_job', 'delete'];
@@ -52,14 +54,14 @@ export default function JobActionsItems(
 
     menuItems.push([{
         key: 'task',
-        label: withCount('Go to the task', 'task', `/tasks/${taskId}`),
+        label: withCount(t('Go to the task'), 'task', `/tasks/${taskId}`),
         disabled: isDisabled('task'),
     }, 0]);
 
     if (projectId) {
         menuItems.push([{
             key: 'project',
-            label: withCount('Go to the project', 'project', `/projects/${projectId}`),
+            label: withCount(t('Go to the project'), 'project', `/projects/${projectId}`),
             disabled: isDisabled('project'),
         }, 10]);
     }
@@ -68,7 +70,7 @@ export default function JobActionsItems(
         menuItems.push([{
             key: 'bug_tracker',
             onClick: onOpenBugTracker,
-            label: withCount('Go to the bug tracker', 'bug_tracker'),
+            label: withCount(t('Go to the bug tracker'), 'bug_tracker'),
             disabled: isDisabled('bug_tracker'),
         }, 20]);
     }
@@ -76,14 +78,14 @@ export default function JobActionsItems(
     menuItems.push([{
         key: 'import_job',
         onClick: onImportAnnotations,
-        label: withCount('Import annotations', 'import_job'),
+        label: withCount(t('Import annotations'), 'import_job'),
         disabled: isDisabled('import_job'),
     }, 30]);
 
     menuItems.push([{
         key: 'export_job',
         onClick: onExportAnnotations,
-        label: withCount('Export annotations', 'export_job'),
+        label: withCount(t('Export annotations'), 'export_job'),
         disabled: isDisabled('export_job'),
     }, 40]);
 
@@ -91,7 +93,7 @@ export default function JobActionsItems(
         menuItems.push([{
             key: 'merge_specific_consensus_jobs',
             onClick: onMergeConsensusJob,
-            label: withCount('Merge consensus job', 'merge_specific_consensus_jobs'),
+            label: withCount(t('Merge consensus job'), 'merge_specific_consensus_jobs'),
             disabled: isMergingConsensusEnabled || isDisabled('merge_specific_consensus_jobs'),
             itemIcon: isMergingConsensusEnabled ? <LoadingOutlined /> : undefined,
         }, 50]);
@@ -100,27 +102,27 @@ export default function JobActionsItems(
     menuItems.push([{
         key: 'edit_assignee',
         onClick: () => startEditField('assignee'),
-        label: <CVATMenuEditLabel>{withCount('Assignee', 'edit_assignee')}</CVATMenuEditLabel>,
+        label: <CVATMenuEditLabel>{withCount(t('Assignee'), 'edit_assignee')}</CVATMenuEditLabel>,
         disabled: isDisabled('edit_assignee'),
     }, 60]);
 
     menuItems.push([{
         key: 'edit_state',
         onClick: () => startEditField('state'),
-        label: <CVATMenuEditLabel>{withCount('State', 'edit_state')}</CVATMenuEditLabel>,
+        label: <CVATMenuEditLabel>{withCount(t('State'), 'edit_state')}</CVATMenuEditLabel>,
         disabled: isDisabled('edit_state'),
     }, 70]);
 
     menuItems.push([{
         key: 'edit_stage',
         onClick: () => startEditField('stage'),
-        label: <CVATMenuEditLabel>{withCount('Stage', 'edit_stage')}</CVATMenuEditLabel>,
+        label: <CVATMenuEditLabel>{withCount(t('Stage'), 'edit_stage')}</CVATMenuEditLabel>,
         disabled: isDisabled('edit_stage'),
     }, 80]);
 
     menuItems.push([{
         key: 'view-analytics',
-        label: withCount('View analytics', 'view-analytics', `/tasks/${taskId}/jobs/${jobId}/analytics`),
+        label: withCount(t('View analytics'), 'view-analytics', `/tasks/${taskId}/jobs/${jobId}/analytics`),
         disabled: isDisabled('view-analytics'),
     }, 90]);
 
@@ -129,7 +131,7 @@ export default function JobActionsItems(
         menuItems.push([{
             key: 'delete',
             onClick: onDeleteJob,
-            label: withCount('Delete', 'delete'),
+            label: withCount(t('Delete'), 'delete'),
             disabled: isDisabled('delete'),
         }, 100]);
     }

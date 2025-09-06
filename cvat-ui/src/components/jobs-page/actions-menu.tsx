@@ -6,6 +6,7 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 
 import {
     Job, JobStage, JobState, JobType, User,
@@ -40,6 +41,7 @@ function JobActionsComponent(
         dropdownTrigger,
     } = props;
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const pluginActions = usePlugins((state: CombinedState) => state.plugins.components.jobActions.items, props);
     const mergingConsensus = useSelector((state: CombinedState) => state.consensus.actions.merging);
@@ -74,8 +76,8 @@ function JobActionsComponent(
     const onMergeConsensusJob = useCallback(() => {
         if (consensusJobsPresent && jobInstance.parentJobId === null) {
             Modal.confirm({
-                title: 'The consensus job will be merged',
-                content: 'Existing annotations in the parent job will be updated. Continue?',
+                title: t('The consensus job will be merged'),
+                content: t('Existing annotations in the parent job will be updated. Continue?'),
                 className: 'cvat-modal-confirm-consensus-merge-job',
                 onOk: () => {
                     dispatch(mergeConsensusJobsAsync(jobInstance));
@@ -84,7 +86,7 @@ function JobActionsComponent(
                     type: 'primary',
                     danger: true,
                 },
-                okText: 'Merge',
+                okText: t('Merge'),
             });
         }
     }, [consensusJobsPresent, jobInstance]);
@@ -94,11 +96,11 @@ function JobActionsComponent(
         const isBulk = jobsToDelete.length > 1;
         Modal.confirm({
             title: isBulk ?
-                `Delete ${jobsToDelete.length} selected jobs` :
-                `The job ${jobInstance.id} will be deleted`,
+                t('Delete {{count}} selected jobs', { count: jobsToDelete.length }) :
+                t('The job {{jobId}} will be deleted', { jobId: jobInstance.id }),
             content: isBulk ?
-                'All related data (annotations) for all selected jobs will be lost. Continue?' :
-                'All related data (annotations) will be lost. Continue?',
+                t('All related data (annotations) for all selected jobs will be lost. Continue?') :
+                t('All related data (annotations) will be lost. Continue?'),
             className: 'cvat-modal-confirm-delete-job',
             onOk: () => {
                 setTimeout(() => {
@@ -109,7 +111,7 @@ function JobActionsComponent(
                                 await dispatch(deleteJobAsync(job));
                             }
                         },
-                        (job, idx, total) => `Deleting job #${job.id} (${idx + 1}/${total})`,
+                        (job, idx, total) => t('Deleting job #{{jobId}} ({{current}}/{{total}})', { jobId: job.id, current: idx + 1, total }),
                     ));
                 }, 0);
             },
@@ -117,7 +119,7 @@ function JobActionsComponent(
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulk ? 'Delete selected' : 'Delete',
+            okText: isBulk ? t('Delete selected') : t('Delete'),
         });
     }, [jobInstance, allJobs, selectedIds, dispatch]);
 
@@ -150,7 +152,7 @@ function JobActionsComponent(
             async (job) => {
                 await dispatch(updateJobAsync(job, fields));
             },
-            (job, idx, total) => `Updating job #${job.id} (${idx + 1}/${total})`,
+            (job, idx, total) => t('Updating job #{{jobId}} ({{current}}/{{total}})', { jobId: job.id, current: idx + 1, total }),
         ));
     }, [jobInstance, allJobs, selectedIds, dispatch, stopEditField]);
 
