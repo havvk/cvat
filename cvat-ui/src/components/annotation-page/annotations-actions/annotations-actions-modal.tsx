@@ -5,6 +5,7 @@
 import './styles.scss';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { createStore } from 'redux';
 import {
     Provider, shallowEqual, useDispatch, useSelector,
@@ -356,10 +357,10 @@ function AnnotationsActionsModalContent(props: Props): JSX.Element {
                     <Alert
                         message={(
                             targetObjectState ? (
-                                <Text> Selected action will be applied to the current object </Text>
+                                <Text> {t('Selected action will be applied to the current object')} </Text>
                             ) : (
-                                <div>
-                                    <Text>Actions allow executing certain algorithms on </Text>
+                                                                <Trans i18nKey="actionsOnFilteredAnnotations">
+                                    Actions allow executing certain algorithms on
                                     <Text strong>
                                         <a
                                             target='_blank'
@@ -369,8 +370,8 @@ function AnnotationsActionsModalContent(props: Props): JSX.Element {
                                             filtered
                                         </a>
                                     </Text>
-                                    <Text> annotations. </Text>
-                                </div>
+                                    annotations.
+                                </Trans>
                             )
                         )}
                         type='info'
@@ -515,7 +516,7 @@ function AnnotationsActionsModalContent(props: Props): JSX.Element {
                     <Col span={24} className='cvat-action-runner-action-parameters'>
                         <Row>
                             <Col span={24}>
-                                <Text strong>Setup action parameters </Text>
+                                <Text strong>{t('Setup action parameters')} </Text>
                                 <hr />
                             </Col>
                             {Object.entries(activeAction.parameters)
@@ -655,5 +656,8 @@ export function openAnnotationsActionModal({
                 }}
             />
         </Provider>,
+    );
+}
+       </Provider>,
     );
 }

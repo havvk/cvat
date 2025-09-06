@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     connect, shallowEqual, useDispatch, useSelector,
 } from 'react-redux';
@@ -146,7 +147,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
     useEffect(() => {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
-        setHelpMessage(`Export to ${loc} storage ${cloudId}`);
+        setHelpMessage(t('Export to {{loc}} storage {{cloudId}}', { loc, cloudId }));
     }, [defaultStorageLocation, defaultStorageCloudId]);
 
     const closeModal = (): void => {

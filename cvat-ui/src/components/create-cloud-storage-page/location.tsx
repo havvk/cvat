@@ -10,6 +10,7 @@ import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 import Tooltip from 'antd/lib/tooltip';
 
 const { Option } = Select;
@@ -32,6 +33,7 @@ export default function Location(props: Props): JSX.Element {
     const {
         selectedRegion, onSelectRegion, internalCommonProps, name, values, href, label,
     } = props;
+    const { t } = useTranslation();
     const [locations, setLocations] = useState<Locations>(() => Object.fromEntries(values));
     const [newRegionKey, setNewRegionKey] = useState<string>('');
     const [newRegionName, setNewRegionName] = useState<string>('');
@@ -62,7 +64,7 @@ export default function Location(props: Props): JSX.Element {
             label={(
                 <>
                     {label}
-                    <Tooltip title='More information'>
+                    <Tooltip title={t('More information')}>
                         <Button
                             className='cvat-cloud-storage-help-button'
                             type='link'

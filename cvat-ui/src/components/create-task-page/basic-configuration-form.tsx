@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { RefObject } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import Input from 'antd/lib/input';
 import Text from 'antd/lib/typography/Text';
 import Tooltip from 'antd/lib/tooltip';

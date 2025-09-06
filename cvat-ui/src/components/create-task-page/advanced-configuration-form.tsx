@@ -351,7 +351,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
                     <Switch defaultChecked />
                 </Form.Item>
                 <Text className='cvat-text-color'>Use cache</Text>
-                <Tooltip title='Using cache to store data.'>
+                                <Tooltip title={this.props.t('Using cache to store data.')}>
                     <QuestionCircleOutlined style={{ opacity: 0.5 }} />
                 </Tooltip>
             </Space>
@@ -515,3 +515,4 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
 }
 
 export default AdvancedConfigurationForm;
+efault AdvancedConfigurationForm;

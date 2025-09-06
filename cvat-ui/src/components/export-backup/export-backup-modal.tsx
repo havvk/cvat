@@ -118,7 +118,7 @@ function ExportBackupModal(): JSX.Element {
     useEffect(() => {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
-        setHelpMessage(`Export backup to ${loc} storage ${cloudId}`);
+        setHelpMessage(t('Export backup to {{loc}} storage {{cloudId}}', { loc, cloudId }));
     }, [defaultStorageLocation, defaultStorageCloudId]);
 
     const closeModal = (): void => {
@@ -262,7 +262,7 @@ function ExportBackupModal(): JSX.Element {
                                     />
                                 )}
                             >
-                                When forming the backup name, a template is used.
+                                {t('When forming the backup name, a template is used.')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>
@@ -308,3 +308,5 @@ function ExportBackupModal(): JSX.Element {
 }
 
 export default React.memo(ExportBackupModal);
+act.memo(ExportBackupModal);
+ckupModal);

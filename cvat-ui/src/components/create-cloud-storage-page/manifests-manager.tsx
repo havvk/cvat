@@ -12,6 +12,7 @@ import { FormListFieldData, FormListOperation } from 'antd/lib/form/FormList';
 import Input from 'antd/lib/input';
 import Row from 'antd/lib/row';
 import Alert from 'antd/lib/alert';
+import { useTranslation } from 'react-i18next';
 import Tooltip from 'antd/lib/tooltip';
 import config from 'config';
 
@@ -23,6 +24,7 @@ interface Props {
 
 export default function ManifestsManager(props: Props): JSX.Element {
     const { form, manifestNames, setManifestNames } = props;
+    const { t } = useTranslation();
     const { DATASET_MANIFEST_GUIDE_URL } = config;
 
     const updateManifestFields = (): void => {
@@ -60,7 +62,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
                 label={(
                     <>
                         Manifests
-                        <Tooltip title='Click to open guide'>
+                        <Tooltip title={t('Click to open guide')}>
                             <Button
                                 type='link'
                                 target='_blank'
