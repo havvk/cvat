@@ -358,6 +358,7 @@ interface Props {
 }
 
 function AttributeEditor(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         attribute, currentValue, onChange, clientID,
     } = props;

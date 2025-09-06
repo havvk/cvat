@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useEffect } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Layout, { SiderProps } from 'antd/lib/layout';
@@ -164,6 +165,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & With
         normalizedKeyMap,
         canvasIsReady,
         curZLayer,
+        t,
     } = props;
 
     const filteredStates = states.filter((state) => !state.outside && !state.hidden && state.zOrder <= curZLayer);
@@ -341,7 +343,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & With
                     className='cvat-objects-sidebar-sider'
                     onClick={collapse}
                 >
-                    {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                    {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
                 </span>
                 <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
                 <div className='cvat-sidebar-collapse-button-spacer' />
@@ -392,7 +394,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & With
                     </>
                 ) : (
                     <div className='attribute-annotations-sidebar-not-found-wrapper'>
-                        <Text strong>No attributes found</Text>
+                        <Text strong>{t('No attributes found')}</Text>
                     </div>
                 )}
 
@@ -408,16 +410,14 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & With
                 className='cvat-objects-sidebar-sider'
                 onClick={collapse}
             >
-                {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                {sidebarCollapsed ? <MenuFoldOutlined title={t('Show')} /> : <MenuUnfoldOutlined title={t('Hide')} />}
             </span>
             <div className='cvat-sidebar-collapse-button-spacer' />
             <div className='attribute-annotations-sidebar-not-found-wrapper'>
-                <Text strong>No objects found</Text>
+                <Text strong>{t('No objects found')}</Text>
             </div>
         </Layout.Sider>
     );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AttributeAnnotationSidebar);
-
-pDispatchToProps)(AttributeAnnotationSidebar);
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(AttributeAnnotationSidebar));
