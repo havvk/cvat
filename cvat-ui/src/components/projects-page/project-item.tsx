@@ -13,6 +13,7 @@ import Meta from 'antd/lib/card/Meta';
 import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import { MoreOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import { Project } from 'cvat-core-wrapper';
@@ -41,6 +42,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
         onClick,
     } = props;
 
+    const { t } = useTranslation();
     const history = useHistory();
     const ribbonPlugins = usePlugins((state: CombinedState) => state.plugins.components.projectItem.ribbon, props);
     const height = useCardHeight();
@@ -116,13 +118,13 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                                         {ownerName && (
                                             <>
                                                 <Text type='secondary'>
-                                            Created
-                                                    {ownerName ? ` by ${ownerName}` : ''}
+                                                    {t('Created')}
+                                                    {ownerName ? ` ${t('by {{owner}}', { owner: ownerName })}` : ''}
                                                 </Text>
                                                 <br />
                                             </>
                                         )}
-                                        <Text type='secondary'>{`Last updated ${updated}`}</Text>
+                                        <Text type='secondary'>{t('Last updated {{updated}}', { updated })}</Text>
                                     </div>
                                     <div>
                                         <ProjectActionsComponent

@@ -7,6 +7,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useHistory } from 'react-router';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 
 import { Organization, Project, User } from 'cvat-core-wrapper';
 import { useDropdownEditField, usePlugins } from 'utils/hooks';
@@ -37,6 +38,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
 
     const history = useHistory();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const pluginActions = usePlugins((state: CombinedState) => state.plugins.components.projectActions.items, props);
 
     const {
@@ -103,7 +105,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                     project.assignee = assignee;
                     await dispatch(updateProjectAsync(project));
                 },
-                (project, idx, total) => `Updating assignee for project #${project.id} (${idx + 1}/${total})`,
+                (project, idx, total) => t('Updating assignee for project #{{projectId}} ({{current}}/{{total}})', {
+                    projectId: project.id,
+                    current: idx + 1,
+                    total,
+                }),
             ));
         }
     }, [projectInstance, stopEditField, dispatch, collectObjectsForBulkUpdate, onUpdateProject]);
@@ -126,7 +132,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                     project.organizationId = newOrganization?.id ?? null;
                     await dispatch(updateProjectAsync(project, ResourceUpdateTypes.UPDATE_ORGANIZATION));
                 },
-                (project, idx, total) => `Updating organization for project #${project.id} (${idx + 1}/${total})`,
+                (project, idx, total) => t('Updating organization for project #{{projectId}} ({{current}}/{{total}})', {
+                    projectId: project.id,
+                    current: idx + 1,
+                    total,
+                }),
             )).then((processedCount: number) => {
                 if (processedCount) {
                     // as for some projects org has changed
@@ -162,11 +172,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
         const projectsToDelete = currentProjects.filter((project) => selectedIds.includes(project.id));
         Modal.confirm({
             title: isBulkMode ?
-                `Delete ${projectsToDelete.length} selected projects` :
-                `The project ${projectInstance.id} will be deleted`,
+                t('Delete {{count}} selected projects', { count: projectsToDelete.length }) :
+                t('The project {{projectId}} will be deleted', { projectId: projectInstance.id }),
             content: isBulkMode ?
-                'All related data (images, annotations) for all selected projects will be lost. Continue?' :
-                'All related data (images, annotations) will be lost. Continue?',
+                t('All related data (images, annotations) for all selected projects will be lost. Continue?') :
+                t('All related data (images, annotations) will be lost. Continue?'),
             className: 'cvat-modal-confirm-remove-project',
             onOk: () => {
                 setTimeout(() => {
@@ -175,7 +185,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                         async (project) => {
                             await dispatch(deleteProjectAsync(project));
                         },
-                        (project, idx, total) => `Deleting project #${project.id} (${idx + 1}/${total})`,
+                        (project, idx, total) => t('Deleting project #{{projectId}} ({{current}}/{{total}})', {
+                            projectId: project.id,
+                            current: idx + 1,
+                            total,
+                        }),
                     ));
                 }, 0);
             },
@@ -183,7 +197,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? 'Delete selected' : 'Delete',
+            okText: isBulkMode ? t('Delete selected') : t('Delete'),
         });
     }, [projectInstance, currentProjects, selectedIds, isBulkMode]);
     let menuItems;
