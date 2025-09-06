@@ -231,7 +231,7 @@ function HeaderComponent(props: Props): JSX.Element {
 
     const aboutPlugins = usePlugins((state: CombinedState) => state.plugins.components.about.links.items, props);
     const aboutLinks: [JSX.Element, number][] = [];
-    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t('What's new?')}</a></Col>), 0]);
+    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t("What's new?")}</a></Col>), 0]);
     aboutLinks.push([(<Col key='license'><a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>{t('MIT License')}</a></Col>), 10]);
     aboutLinks.push([(<Col key='discord'><a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>{t('Find us on Discord')}</a></Col>), 20]);
 
