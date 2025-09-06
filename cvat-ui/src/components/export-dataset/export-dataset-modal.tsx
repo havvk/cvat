@@ -51,6 +51,7 @@ const initialValues: FormValues = {
 };
 
 function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
+    const { t } = useTranslation();
     const { dumpers, instance } = props;
 
     const [instanceType, setInstanceType] = useState('');
@@ -148,7 +149,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
         setHelpMessage(t('Export to {{loc}} storage {{cloudId}}', { loc, cloudId }));
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultTargetStorage(true);
@@ -330,7 +331,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                                     />
                                 )}
                             >
-                                When forming the dataset name, a template is used.
+                                {t('When forming the dataset name, a template is used.')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>
