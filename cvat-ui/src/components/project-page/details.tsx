@@ -50,9 +50,17 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
             <Row justify='space-between' className='cvat-project-description'>
                 <Col>
                     <Text type='secondary'>
-                        {t('Project #{{id}} created', { id: project.id })}
-                        {project.owner ? ` ${t('by {{owner}}', { owner: project.owner.username })}` : null}
-                        {` ${t('on {{date}}', { date: moment(project.createdDate).format('MMMM Do YYYY') })}`}
+                        {project.owner ?
+                            t('Project #{{id}} created by {{owner}} on {{date}}', {
+                                id: project.id,
+                                owner: project.owner.username,
+                                date: moment(project.createdDate).format('L'),
+                            }) :
+                            t('Project #{{id}} created on {{date}}', {
+                                id: project.id,
+                                date: moment(project.createdDate).format('L'),
+                            })
+                        }
                     </Text>
                     <MdGuideControl instanceType='project' id={project.id} />
                     <BugTrackerEditor

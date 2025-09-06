@@ -17,6 +17,7 @@ import Button from 'antd/lib/button';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import Menu from 'antd/lib/menu';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { CombinedState } from 'reducers';
 import { User } from 'cvat-core-wrapper';
 
@@ -43,7 +44,7 @@ export default function ResourceFilterHOC(
         QbUtils.loadTree({ id: QbUtils.uuid(), type: 'group' }), config,
     ) as ImmutableTree;
 
-    function keepFilterInLocalStorage(filter: string): void {
+    function keepFilterInLocalStorage(filter: string, t: (key: string) => string): void {
         if (typeof filter !== 'string') {
             return;
         }
@@ -52,7 +53,7 @@ export default function ResourceFilterHOC(
         try {
             savedItems = JSON.parse(localStorage.getItem(localStorageRecentKeyword) || '[]');
             if (!Array.isArray(savedItems) || savedItems.some((item: any) => typeof item !== 'string')) {
-                throw new Error('Wrong filters value stored');
+                throw new Error(t('Wrong filters value stored'));
             }
         } catch (_: any) {
             // nothing to do
@@ -62,12 +63,12 @@ export default function ResourceFilterHOC(
         localStorage.setItem(localStorageRecentKeyword, JSON.stringify(savedItems));
     }
 
-    function receiveRecentFilters(): Record<string, string> {
+    function receiveRecentFilters(t: (key: string) => string): Record<string, string> {
         let recentFilters: string[] = [];
         try {
             recentFilters = JSON.parse(localStorage.getItem(localStorageRecentKeyword) || '[]');
             if (!Array.isArray(recentFilters) || recentFilters.some((item: any) => typeof item !== 'string')) {
-                throw new Error('Wrong filters value stored');
+                throw new Error(t('Wrong filters value stored'));
             }
         } catch (_: any) {
             // nothing to do
@@ -120,6 +121,7 @@ export default function ResourceFilterHOC(
             disabled,
         } = props;
 
+        const { t } = useTranslation();
         const user = useSelector((state: CombinedState) => state.auth.user);
         const [isMounted, setIsMounted] = useState<boolean>(false);
         const [recentFilters, setRecentFilters] = useState<Record<string, string>>({});
@@ -127,7 +129,7 @@ export default function ResourceFilterHOC(
         const [state, setState] = useState<ImmutableTree>(defaultTree);
 
         useEffect(() => {
-            setRecentFilters(receiveRecentFilters());
+            setRecentFilters(receiveRecentFilters(t));
             setIsMounted(true);
 
             try {
@@ -245,7 +247,7 @@ export default function ResourceFilterHOC(
                                 type='default'
                                 onClick={() => onPredefinedVisibleChange(!predefinedVisible)}
                             >
-                                Quick filters
+                                {t('Quick filters')}
                                 { appliedFilter.predefined ?
                                     <FilterFilled /> :
                                     <FilterOutlined />}
@@ -306,7 +308,7 @@ export default function ResourceFilterHOC(
                                             () => onRecentVisibleChange(!recentVisible)
                                         }
                                     >
-                                        Recent
+                                        {t('Recent')}
                                         <DownOutlined />
                                     </Button>
                                 </Popover>
@@ -334,7 +336,7 @@ export default function ResourceFilterHOC(
                                         });
                                     }}
                                 >
-                                    Reset
+                                    {t('Reset')}
                                 </Button>
                                 <Button
                                     className='cvat-apply-filters-button'
@@ -343,8 +345,8 @@ export default function ResourceFilterHOC(
                                     onClick={() => {
                                         const filter = QbUtils.jsonLogicFormat(state, config).logic;
                                         const stringified = JSON.stringify(filter);
-                                        keepFilterInLocalStorage(stringified);
-                                        setRecentFilters(receiveRecentFilters());
+                                        keepFilterInLocalStorage(stringified, t);
+                                        setRecentFilters(receiveRecentFilters(t));
                                         onBuilderVisibleChange(false);
                                         setAppliedFilter({
                                             predefined: null,
@@ -353,7 +355,7 @@ export default function ResourceFilterHOC(
                                         });
                                     }}
                                 >
-                                    Apply
+                                    {t('Apply')}
                                 </Button>
                             </Space>
                         </div>
@@ -365,7 +367,7 @@ export default function ResourceFilterHOC(
                         type='default'
                         onClick={() => onBuilderVisibleChange(!builderVisible)}
                     >
-                        Filter
+                        {t('Filter')}
                         { appliedFilter.built || appliedFilter.recent ?
                             <FilterFilled /> :
                             <FilterOutlined />}
@@ -378,7 +380,7 @@ export default function ResourceFilterHOC(
                     type='link'
                     onClick={() => { setAppliedFilter({ ...defaultAppliedFilter }); }}
                 >
-                    Clear filters
+                    {t('Clear filters')}
                 </Button>
             </div>
         );

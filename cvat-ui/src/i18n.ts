@@ -1,8 +1,9 @@
-
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
 
 i18n
     .use(Backend)
@@ -18,5 +19,9 @@ i18n
             loadPath: '/locales/{{lng}}/{{ns}}.json',
         },
     });
+
+i18n.on('languageChanged', (lng) => {
+    moment.locale(lng);
+});
 
 export default i18n;

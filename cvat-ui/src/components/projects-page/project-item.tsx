@@ -118,8 +118,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
                                         {ownerName && (
                                             <>
                                                 <Text type='secondary'>
-                                                    {t('Created')}
-                                                    {ownerName ? ` ${t('by {{owner}}', { owner: ownerName })}` : ''}
+                                                    {ownerName ? t('Created by {{owner}}', { owner: ownerName }) : t('Created')}
                                                 </Text>
                                                 <br />
                                             </>
