@@ -204,7 +204,7 @@
     "Issue Tracker": "Issue Tracker",
     "Open the issue": "Open the issue",
     "Do you want to delete \"{{labelName}}\" label?": "Do you want to delete \"{{labelName}}\" label?",
-    "This action cannot be undone. All annotations associated to the label will be deleted.": "This action cannot beอนdone. All annotations associated to the label will be deleted.",
+    "This action cannot be undone. All annotations associated to the label will be deleted.": "This action cannot be undone. All annotations associated to the label will be deleted.",
     "Raw": "Raw",
     "Constructor": "Constructor",
     "Add label": "Add label",
@@ -274,5 +274,7 @@
     "System model": "System model",
     "Model": "Model",
     "Labels:": "Labels:",
-    "Provider": "Provider"
+    "Provider": "Provider",
+    "{{instanceType}} description": "{{instanceType}} description",
+    "Edit": "Edit"
 }

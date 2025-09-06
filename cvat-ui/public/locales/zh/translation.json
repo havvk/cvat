@@ -274,5 +274,7 @@
     "System model": "系统模型",
     "Model": "模型",
     "Labels:": "标签：",
-    "Provider": "提供商"
+    "Provider": "提供商",
+    "{{instanceType}} description": "{{instanceType}} 描述",
+    "Edit": "编辑"
 }
