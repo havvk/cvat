@@ -182,5 +182,18 @@
     "Go to the bug tracker": "转到错误跟踪器",
     "Import annotations": "导入注释",
     "Export annotations": "导出注释",
-    "Merge consensus job": "合并共识工作"
+    "Merge consensus job": "合并共识工作",
+    "No cloud storages attached yet...": "尚未附加云存储...",
+    "To get started with your cloud storage": "开始使用您的云存储",
+    "attach a new one": "附加一个新的",
+    "Provider type": "提供商类型",
+    "Display name": "显示名称",
+    "Resource": "资源",
+    "Credentials type": "凭据类型",
+    "Description": "描述",
+    "Please, confirm your action": "请确认您的操作",
+    "You are going to remove the cloudstorage \"{{displayName}}\". Continue?": "您将要删除云存储 \"{{displayName}}\". 是否继续？",
+    "Provider:": "提供商：",
+    "on": "于",
+    "Update": "更新"
 }

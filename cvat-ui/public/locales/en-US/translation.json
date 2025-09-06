@@ -182,5 +182,18 @@
     "Go to the bug tracker": "Go to the bug tracker",
     "Import annotations": "Import annotations",
     "Export annotations": "Export annotations",
-    "Merge consensus job": "Merge consensus job"
+    "Merge consensus job": "Merge consensus job",
+    "No cloud storages attached yet...": "No cloud storages attached yet...",
+    "To get started with your cloud storage": "To get started with your cloud storage",
+    "attach a new one": "attach a new one",
+    "Provider type": "Provider type",
+    "Display name": "Display name",
+    "Resource": "Resource",
+    "Credentials type": "Credentials type",
+    "Description": "Description",
+    "Please, confirm your action": "Please, confirm your action",
+    "You are going to remove the cloudstorage \"{{displayName}}\". Continue?": "You are going to remove the cloudstorage \"{{displayName}}\". Continue?",
+    "Provider:": "Provider:",
+    "on": "on",
+    "Update": "Update"
 }

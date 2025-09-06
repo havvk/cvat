@@ -13,6 +13,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import Text from 'antd/lib/typography/Text';
 import Modal from 'antd/lib/modal';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 import { CloudStorage, CombinedState } from 'reducers';
 import { deleteCloudStorageAsync } from 'actions/cloud-storage-actions';
@@ -30,6 +31,7 @@ interface Props {
 export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.Element {
     const history = useHistory();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
 
     const { cloudStorage, selected = false, onClick = () => {} } = props;
     const {
@@ -58,8 +60,8 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
 
     const onDelete = useCallback(() => {
         Modal.confirm({
-            title: 'Please, confirm your action',
-            content: `You are going to remove the cloudstorage "${displayName}". Continue?`,
+            title: t('Please, confirm your action'),
+            content: t('You are going to remove the cloudstorage "{{displayName}}". Continue?', { displayName }),
             className: 'cvat-delete-cloud-storage-modal',
             onOk: () => {
                 dispatch(deleteCloudStorageAsync(cloudStorage));
@@ -68,7 +70,7 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
                 type: 'primary',
                 danger: true,
             },
-            okText: 'Delete',
+            okText: t('Delete'),
         });
     }, [cloudStorage.id]);
 
@@ -111,17 +113,17 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
                         description={(
                             <>
                                 <Paragraph>
-                                    <Text type='secondary'>Provider: </Text>
+                                    <Text type='secondary'>{t('Provider:')} </Text>
                                     <Text>{providerType}</Text>
                                 </Paragraph>
                                 <Paragraph>
-                                    <Text type='secondary'>Created </Text>
-                                    {owner ? <Text type='secondary'>{`by ${owner.username}`}</Text> : null}
-                                    <Text type='secondary'> on </Text>
+                                    <Text type='secondary'>{t('Created')} </Text>
+                                    {owner ? <Text type='secondary'>{t('by {{owner}}', { owner: owner.username })}</Text> : null}
+                                    <Text type='secondary'> {t('on')} </Text>
                                     <Text type='secondary'>{moment(createdDate).format('MMMM Do YYYY')}</Text>
                                 </Paragraph>
                                 <Paragraph>
-                                    <Text type='secondary'>Last updated </Text>
+                                    <Text type='secondary'>{t('Last updated')} </Text>
                                     <Text type='secondary'>{moment(updatedDate).fromNow()}</Text>
                                 </Paragraph>
                                 <Status cloudStorage={cloudStorage} />
