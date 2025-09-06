@@ -20,5 +20,13 @@
     "MIT License": "MIT 许可证",
     "Find us on Discord": "在 Discord 上找到我们",
     "Server version": "服务器版本",
-    "UI version": "UI 版本"
+    "UI version": "UI 版本",
+    "Forgot password?": "忘记密码？",
+    "New user?": "新用户？",
+    "Create an account": "创建账户",
+    "Sign in": "登录",
+    "Email or username": "邮箱或用户名",
+    "Please specify a password": "请输入密码",
+    "Password": "密码",
+    "Next": "下一步"
 }

@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import Form from 'antd/lib/form';
 import Button from 'antd/lib/button';
@@ -38,6 +39,7 @@ function LoginFormComponent(props: Props): JSX.Element {
     const {
         fetching, onSubmit, renderResetPassword, renderRegistrationComponent, renderBasicLoginComponent,
     } = props;
+    const { t } = useTranslation();
 
     const authQuery = useAuthQuery();
     const [form] = Form.useForm();
@@ -58,7 +60,7 @@ function LoginFormComponent(props: Props): JSX.Element {
         <Col className='cvat-credentials-link'>
             <Text strong>
                 <Link to={{ pathname: '/auth/password/reset', search: resetSearch }}>
-                    Forgot password?
+                    {t('Forgot password?')}
                 </Link>
             </Text>
         </Col>
@@ -85,13 +87,14 @@ function LoginFormComponent(props: Props): JSX.Element {
                         <Row>
                             <Col className='cvat-credentials-link'>
                                 <Text strong>
-                                    New user?&nbsp;
+                                    {t('New user?')}
+                                    &nbsp;
                                     <Link to={{
                                         pathname: '/auth/register',
                                         search: authQuery ? new URLSearchParams(authQuery).toString() : '',
                                     }}
                                     >
-                                        Create an account
+                                        {t('Create an account')}
                                     </Link>
                                 </Text>
                             </Col>
@@ -103,7 +106,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                 }
             </Row>
             <Col>
-                <Title level={2}> Sign in </Title>
+                <Title level={2}> {t('Sign in')} </Title>
             </Col>
             <Form
                 className={`cvat-login-form ${credential ? 'cvat-login-form-extended' : ''}`}
@@ -120,7 +123,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                         >
                             <Input
                                 autoComplete='credential'
-                                prefix={<Text>Email or username</Text>}
+                                prefix={<Text>{t('Email or username')}</Text>}
                                 className={credential ? 'cvat-input-floating-label-above' : 'cvat-input-floating-label'}
                                 suffix={credential && (
                                     <Icon
@@ -146,14 +149,14 @@ function LoginFormComponent(props: Props): JSX.Element {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please specify a password',
+                                            message: t('Please specify a password'),
                                         },
                                     ]}
                                 >
                                     <CVATSigningInput
                                         type={CVATInputType.PASSWORD}
                                         id='password'
-                                        placeholder='Password'
+                                        placeholder={t('Password')}
                                         autoComplete='password'
                                     />
                                 </Form.Item>
@@ -168,7 +171,7 @@ function LoginFormComponent(props: Props): JSX.Element {
                                         disabled={!credential}
                                         htmlType='submit'
                                     >
-                                        Next
+                                        {t('Next')}
                                     </Button>
                                 </Form.Item>
                             )
