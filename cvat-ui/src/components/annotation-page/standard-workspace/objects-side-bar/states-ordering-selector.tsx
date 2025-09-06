@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { Col } from 'antd/lib/grid';
 import Select from 'antd/lib/select';
@@ -16,11 +17,12 @@ interface StatesOrderingSelectorComponentProps {
 }
 
 function StatesOrderingSelectorComponent(props: StatesOrderingSelectorComponentProps): JSX.Element {
+    const { t } = useTranslation();
     const { statesOrdering, changeStatesOrdering } = props;
 
     return (
         <Col>
-            <Text>Sort by</Text>
+            <Text>{t('Sort by')}</Text>
             <Select
                 size='small'
                 className='cvat-objects-sidebar-ordering-selector'

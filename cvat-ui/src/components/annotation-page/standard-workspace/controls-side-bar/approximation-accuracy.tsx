@@ -5,6 +5,7 @@
 
 import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
 import { Col, Row } from 'antd/lib/grid';
@@ -47,6 +48,7 @@ export function thresholdFromAccuracy(approxPolyAccuracy: number): number {
 }
 
 function ApproximationAccuracy(props: Props): React.ReactPortal | null {
+    const { t } = useTranslation();
     const { approxPolyAccuracy, onChange } = props;
     const target = window.document.getElementsByClassName('cvat-canvas-container')[0];
 
@@ -54,7 +56,7 @@ function ApproximationAccuracy(props: Props): React.ReactPortal | null {
         ReactDOM.createPortal(
             <Row align='middle' className='cvat-approx-poly-threshold-wrapper'>
                 <Col span={5}>
-                    <Text>Points: </Text>
+                    <Text>{t('Points: ')}</Text>
                 </Col>
                 <Col offset={1} span={18}>
                     <Slider

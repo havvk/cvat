@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+import { useTranslation } from 'react-i18next';
 import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -40,6 +41,7 @@ export enum Actions {
 }
 
 function AnnotationMenuComponent(): JSX.Element {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
     const jobInstance = useSelector((state: CombinedState) => state.annotation.job.instance as Job);
@@ -96,39 +98,39 @@ function AnnotationMenuComponent(): JSX.Element {
 
     menuItems.push({
         key: Actions.LOAD_JOB_ANNO,
-        label: 'Upload annotations',
+        label: t('Upload annotations'),
         onClick: uploadAnnotations,
     });
 
     menuItems.push({
         key: Actions.EXPORT_JOB_DATASET,
-        label: 'Export job dataset',
+        label: t('Export job dataset'),
         onClick: exportDataset,
     });
 
     menuItems.push({
         key: Actions.REMOVE_ANNOTATIONS,
-        label: 'Remove annotations',
+        label: t('Remove annotations'),
         onClick: () => {
             let removeFrom: number | undefined;
             let removeUpTo: number | undefined;
             let removeOnlyKeyframes = false;
             Modal.confirm({
-                title: 'Remove Annotations',
+                title: t('Remove Annotations'),
                 content: (
                     <div>
-                        <Text>You are going to remove the annotations from the client. </Text>
-                        <Text>It will stay on the server till you save the job. Continue?</Text>
+                        <Text>{t('You are going to remove the annotations from the client. ')}</Text>
+                        <Text>{t('It will stay on the server till you save the job. Continue?')}</Text>
                         <br />
                         <br />
                         <Collapse
                             bordered={false}
                             items={[{
                                 key: 1,
-                                label: <Text>Select Range</Text>,
+                                label: <Text>{t('Select Range')}</Text>,
                                 children: (
                                     <>
-                                        <Text>From: </Text>
+                                        <Text>{t('From: ')}</Text>
                                         <InputNumber
                                             min={0}
                                             max={stopFrame}
@@ -136,7 +138,7 @@ function AnnotationMenuComponent(): JSX.Element {
                                                 removeFrom = value;
                                             }}
                                         />
-                                        <Text>  To: </Text>
+                                        <Text>{t('  To: ')}</Text>
                                         <InputNumber
                                             min={0}
                                             max={stopFrame}
@@ -144,7 +146,7 @@ function AnnotationMenuComponent(): JSX.Element {
                                                 removeUpTo = value;
                                             }}
                                         />
-                                        <CVATTooltip title='Applicable only for annotations in range'>
+                                        <CVATTooltip title={t('Applicable only for annotations in range')}>
                                             <br />
                                             <br />
                                             <Checkbox
@@ -152,7 +154,7 @@ function AnnotationMenuComponent(): JSX.Element {
                                                     removeOnlyKeyframes = check.target.checked;
                                                 }}
                                             >
-                                                Delete only keyframes for tracks
+                                                {t('Delete only keyframes for tracks')}
                                             </Checkbox>
                                         </CVATTooltip>
                                     </>
@@ -169,14 +171,14 @@ function AnnotationMenuComponent(): JSX.Element {
                     type: 'primary',
                     danger: true,
                 },
-                okText: 'Delete',
+                okText: t('Delete'),
             });
         },
     });
 
     menuItems.push({
         key: Actions.RUN_ACTIONS,
-        label: 'Run actions',
+        label: t('Run actions'),
         onClick: () => {
             openAnnotationsActionModal();
         },
@@ -184,14 +186,14 @@ function AnnotationMenuComponent(): JSX.Element {
 
     menuItems.push({
         key: Actions.OPEN_TASK,
-        label: 'Open the task',
+        label: t('Open the task'),
         onClick: openTask,
     });
 
     menuItems.push({
         key: 'job-state-submenu',
         popupClassName: 'cvat-annotation-menu-job-state-submenu',
-        label: 'Change job state',
+        label: t('Change job state'),
         children: [{
             key: `state:${JobState.NEW}`,
             label: JobState.NEW,
@@ -217,13 +219,13 @@ function AnnotationMenuComponent(): JSX.Element {
 
     menuItems.push({
         key: Actions.FINISH_JOB,
-        label: 'Finish the job',
+        label: t('Finish the job'),
         onClick: () => {
             Modal.confirm({
-                title: 'Would you like to finish the job?',
-                content: 'It will save annotations and set the job state to "completed"',
-                okText: 'Continue',
-                cancelText: 'Cancel',
+                title: t('Would you like to finish the job?'),
+                content: t('It will save annotations and set the job state to "completed"'),
+                okText: t('Continue'),
+                cancelText: t('Cancel'),
                 className: 'cvat-modal-content-finish-job',
                 onOk: finishJob,
             });
@@ -242,7 +244,7 @@ function AnnotationMenuComponent(): JSX.Element {
         >
             <Button type='link' className='cvat-annotation-header-menu-button cvat-annotation-header-button'>
                 <Icon component={MainMenuIcon} />
-                Menu
+                {t('Menu')}
             </Button>
         </Dropdown>
     );

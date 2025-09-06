@@ -193,9 +193,10 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
 
     /* eslint-disable class-methods-use-this */
     private renderCopyDataChechbox(): JSX.Element {
+        const { t } = this.props;
         return (
             <Form.Item
-                help='If you have a low data transfer rate over the network you can copy data into CVAT to speed up work'
+                help={t('copyDataHelpText')}
                 name='copyData'
                 valuePropName='checked'
             >
@@ -207,7 +208,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
     }
 
     private renderSortingMethodRadio(): JSX.Element {
-        const { onChangeSortingMethod } = this.props;
+        const { onChangeSortingMethod, t } = this.props;
 
         return (
             <Form.Item
@@ -219,7 +220,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
                         message: 'The field is required.',
                     },
                 ]}
-                help='Specify how to sort images. It is not relevant for videos.'
+                help={t('sortingMethodHelpText')}
             >
                 <Radio.Group buttonStyle='solid' onChange={(e) => onChangeSortingMethod(e.target.value)}>
                     <Radio.Button value={SortingMethod.LEXICOGRAPHICAL} key={SortingMethod.LEXICOGRAPHICAL}>
@@ -236,8 +237,9 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
     }
 
     private renderImageQuality(): JSX.Element {
+        const { t } = this.props;
         return (
-            <CVATTooltip title='Defines images compression level'>
+            <CVATTooltip title={t('imageQualityTooltip')}>
                 <Form.Item
                     label='Image quality'
                     name='imageQuality'
@@ -256,8 +258,9 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
     }
 
     private renderOverlap(): JSX.Element {
+        const { t } = this.props;
         return (
-            <CVATTooltip title='Defines a number of intersected frames between different segments'>
+            <CVATTooltip title={t('overlapSizeTooltip')}>
                 <Form.Item
                     label='Overlap size'
                     name='overlapSize'
@@ -271,8 +274,9 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
     }
 
     private renderSegmentSize(): JSX.Element {
+        const { t } = this.props;
         return (
-            <CVATTooltip title='Defines a number of frames in a segment'>
+            <CVATTooltip title={t('segmentSizeTooltip')}>
                 <Form.Item label='Segment size' name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
                     <Input size='large' type='number' min={1} />
                 </Form.Item>
@@ -310,12 +314,13 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
     }
 
     private renderBugTracker(): JSX.Element {
+        const { t } = this.props;
         return (
             <Form.Item
                 hasFeedback
                 name='bugTracker'
                 label='Issue tracker'
-                extra='Attach issue tracker where the task is described'
+                extra={t('issueTrackerExtra')}
                 rules={[{ validator: validateURL }]}
             >
                 <Input size='large' />
@@ -335,7 +340,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
                     <Switch />
                 </Form.Item>
                 <Text className='cvat-text-color'>Prefer zip chunks</Text>
-                <Tooltip title='ZIP chunks have better quality, but they require more disk space and time to download. Relevant for video only'>
+                <Tooltip title={t('zipChunksTooltip')}>
                     <QuestionCircleOutlined style={{ opacity: 0.5 }} />
                 </Tooltip>
             </Space>
@@ -362,24 +367,10 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
     }
 
     private renderChunkSize(): JSX.Element {
+        const { t } = this.props;
         return (
             <CVATTooltip
-                title={(
-                    <>
-                        Defines a number of frames to be packed in a chunk when send from client to server. Server
-                        defines automatically if empty.
-                        <br />
-                        Recommended values:
-                        <br />
-                        1080p or less: 36
-                        <br />
-                        2k or less: 8 - 16
-                        <br />
-                        4k or less: 4 - 8
-                        <br />
-                        More: 1 - 4
-                    </>
-                )}
+                title={t('chunkSizeTooltip')}
             >
                 <Form.Item label='Chunk size' name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
                     <Input size='large' type='number' />
