@@ -15,6 +15,7 @@ import Meta from 'antd/lib/card/Meta';
 import Divider from 'antd/lib/divider';
 import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
+import { useTranslation } from 'react-i18next';
 
 import Preview from 'components/common/preview';
 import { useCardHeightHOC, usePlugins } from 'utils/hooks';
@@ -38,6 +39,7 @@ const useCardHeight = useCardHeightHOC({
 
 export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
     const { model, selected, onClick } = props;
+    const { t } = useTranslation();
     const [isModalShown, setIsModalShown] = useState(false);
     const height = useCardHeight();
     const style: React.CSSProperties = { height };
@@ -55,8 +57,8 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
 
     const created = moment(model.createdDate).fromNow();
     const modelDescription = !systemModel ?
-        <Text type='secondary'>{`Added ${created}`}</Text> :
-        <Text type='secondary'>System model</Text>;
+        <Text type='secondary'>{t('Added {{created}}', { created })}</Text> :
+        <Text type='secondary'>{t('System model')}</Text>;
 
     const topBarItems: [JSX.Element, number][] = [];
 
@@ -82,7 +84,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
         <>
             <Modal
                 className='cvat-model-info-modal'
-                title='Model'
+                title={t('Model')}
                 open={isModalShown}
                 onCancel={onCloseModel}
                 footer={null}
@@ -107,7 +109,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                     model.labels?.length ? (
                         <>
                             <div className='cvat-model-info-container'>
-                                <Text className='cvat-model-info-modal-labels-title'>Labels:</Text>
+                                <Text className='cvat-model-info-modal-labels-title'>{t('Labels:')}</Text>
                             </div>
                             <div className='cvat-model-info-container cvat-model-info-modal-labels-list'>
                                 {model.labels.map((label) => <Tag key={label.name}>{label.name}</Tag>)}
@@ -120,10 +122,10 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                     <Col span={15}>
                         <Row>
                             <Col span={8}>
-                                <Text strong>Provider</Text>
+                                <Text strong>{t('Provider')}</Text>
                             </Col>
                             <Col>
-                                <Text strong>Type</Text>
+                                <Text strong>{t('Type')}</Text>
                             </Col>
                         </Row>
                         <Row>
@@ -139,7 +141,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                         <Col>
                             <Row>
                                 <Col>
-                                    <Text strong>Owner</Text>
+                                    <Text strong>{t('Owner')}</Text>
                                 </Col>
                             </Row>
                             <Row>
@@ -183,7 +185,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                                     <Row onClick={onOpenModel} className='cvat-models-item-text-description'>
                                         {model.owner && (
                                             <>
-                                                <Text type='secondary'>{`Created by ${model.owner}`}</Text>
+                                                <Text type='secondary'>{t('Created by {{owner}}', { owner: model.owner })}</Text>
                                                 <br />
                                             </>
                                         )}

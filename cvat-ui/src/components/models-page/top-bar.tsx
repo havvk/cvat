@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import { Row, Col } from 'antd/lib/grid';
 import Input from 'antd/lib/input';
+import { useTranslation } from 'react-i18next';
 import {
     SortingComponent,
     ResourceFilterHOC,
@@ -36,6 +37,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
     const {
         query, onApplyFilter, onApplySorting, onApplySearch, disabled, selectedCount, onSelectAll,
     } = props;
+    const { t } = useTranslation();
     const [visibility, setVisibility] = useState(defaultVisibility);
     const plugins = usePlugins((state: CombinedState) => state.plugins.components.modelsPage.topBar.items, props);
     const controls = [];
@@ -60,7 +62,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                             }}
                             defaultValue={query.search || ''}
                             className='cvat-models-page-search-bar'
-                            placeholder='Search ...'
+                            placeholder={t('Search ...')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>
@@ -72,7 +74,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                 setVisibility({ ...defaultVisibility, sorting: visible })
                             )}
                             defaultFields={query.sort?.split(',') || ['-ID']}
-                            sortingFields={['ID', 'Target URL', 'Owner', 'Description', 'Type', 'Updated date']}
+                            sortingFields={['ID', 'Target URL', 'Owner', 'Description', 'Type', 'Updated date'].map((field) => t(field))}
                             onApplySorting={onApplySorting}
                         />
                         <FilteringComponent

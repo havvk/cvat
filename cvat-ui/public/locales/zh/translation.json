@@ -219,7 +219,7 @@
     "Attribute name must be unique for the label": "属性名称对于标签必须是唯一的",
     "An HTML element representing the attribute": "代表属性的 HTML 元素",
     "You can only append new values": "您只能附加新值",
-    "Invalid attribute value: \"{{value}}\"" : "无效的属性值：“{{value}}”",
+    "Invalid attribute value: \"{{value}}\"" : "无效的属性值：\"{{value}}\"",
     "Press enter to add a new value": "按 Enter 添加新值",
     "Please specify values": "请指定值",
     "Attribute values": "属性值",
@@ -264,5 +264,15 @@
     "\u2022 {{count}} annotating ": "\u2022 {{count}} 标注中",
     "\u2022 {{count}} total": "\u2022 {{count}} 总计",
     "\u2022 {{count}} done ": "\u2022 {{count}} 完成",
-    "\u2022 {{count}} on review ": "\u2022 {{count}} 审核中"
+    "\u2022 {{count}} on review ": "\u2022 {{count}} 审核中",
+    "No models deployed yet...": "尚未部署模型...",
+    "To annotate your tasks automatically": "自动标注您的任务",
+    "deploy a model with": "使用 nuclio 部署模型",
+    "Target URL": "目标 URL",
+    "Type": "类型",
+    "Added {{created}}": "添加于 {{created}}",
+    "System model": "系统模型",
+    "Model": "模型",
+    "Labels:": "标签：",
+    "Provider": "提供商"
 }
