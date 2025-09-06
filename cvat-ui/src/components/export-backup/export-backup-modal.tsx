@@ -4,6 +4,7 @@
 
 import './styles.scss';
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import Modal from 'antd/lib/modal';
@@ -120,7 +121,7 @@ function ExportBackupModal(): JSX.Element {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
         setHelpMessage(t('Export backup to {{loc}} storage {{cloudId}}', { loc, cloudId }));
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultStorage(true);
@@ -298,7 +299,7 @@ function ExportBackupModal(): JSX.Element {
                             onChange={setLightweight}
                         />
                         <Text strong>Use lightweight backup whenever possible</Text>
-                        <Tooltip title='If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.'>
+                        <Tooltip title={t('If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.')}>
                             <QuestionCircleOutlined />
                         </Tooltip>
                     </Space>
@@ -309,4 +310,3 @@ function ExportBackupModal(): JSX.Element {
 }
 
 export default React.memo(ExportBackupModal);
-ckupModal);

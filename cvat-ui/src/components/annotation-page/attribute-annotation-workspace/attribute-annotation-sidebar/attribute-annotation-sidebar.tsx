@@ -151,7 +151,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch): DispatchToProps {
     };
 }
 
-function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Element {
+function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & WithTranslation): JSX.Element {
     const {
         labels,
         states,
@@ -419,3 +419,5 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AttributeAnnotationSidebar);
+
+pDispatchToProps)(AttributeAnnotationSidebar);

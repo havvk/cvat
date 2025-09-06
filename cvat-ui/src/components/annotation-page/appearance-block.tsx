@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { Dispatch } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import Text from 'antd/lib/typography/Text';
@@ -113,7 +114,7 @@ function mapDispatchToProps(dispatch: Dispatch<AnyAction>): DispatchToProps {
     };
 }
 
-type Props = StateToProps & DispatchToProps;
+type Props = StateToProps & DispatchToProps & WithTranslation;
 
 function AppearanceBlock(props: Props): JSX.Element {
     const {
@@ -155,7 +156,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                 key: 'appearance',
                 children: (
                     <div className='cvat-objects-appearance-content'>
-                        <Text type='secondary'>Color by</Text>
+                        <Text type='secondary'>{t('Color by')}</Text>
                         <Radio.Group
                             className='cvat-appearance-color-by-radio-group'
                             value={colorBy}
@@ -165,7 +166,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                             <Radio.Button value={ColorBy.INSTANCE}>{ColorBy.INSTANCE}</Radio.Button>
                             <Radio.Button value={ColorBy.GROUP}>{ColorBy.GROUP}</Radio.Button>
                         </Radio.Group>
-                        <Text type='secondary'>Opacity</Text>
+                        <Text type='secondary'>{t('Opacity')}</Text>
                         <Slider
                             className='cvat-appearance-opacity-slider'
                             onChange={changeShapesOpacity}
@@ -241,7 +242,4 @@ function AppearanceBlock(props: Props): JSX.Element {
     );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(AppearanceBlock));
-ock));
-pDispatchToProps)(React.memo(AppearanceBlock));
-nceBlock));
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(React.memo(AppearanceBlock)));
