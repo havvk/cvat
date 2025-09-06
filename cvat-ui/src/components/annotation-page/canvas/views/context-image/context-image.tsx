@@ -5,6 +5,7 @@
 import './styles.scss';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import notification from 'antd/lib/notification';
 import Spin from 'antd/lib/spin';
@@ -20,6 +21,7 @@ interface Props {
 }
 
 function ContextImage(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { offset } = props;
     const defaultFrameOffset = (offset[0] || 0);
     const defaultContextImageOffset = (offset[1] || 0);
@@ -99,7 +101,7 @@ function ContextImage(props: Props): JSX.Element {
                 </div>
             </div>
             { (hasError ||
-                (!fetching && contextImageOffset >= Object.keys(contextImageData).length)) && <Text> No data </Text>}
+                (!fetching && contextImageOffset >= Object.keys(contextImageData).length)) && <Text> {t('No data')} </Text>}
             { fetching && <Spin size='small' /> }
             {
                 contextImageOffset < Object.keys(contextImageData).length &&
