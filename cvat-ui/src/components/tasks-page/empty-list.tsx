@@ -7,6 +7,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Text from 'antd/lib/typography/Text';
 import { Row, Col } from 'antd/lib/grid';
+import { useTranslation } from 'react-i18next';
 
 import Empty from 'antd/lib/empty';
 
@@ -16,27 +17,28 @@ interface Props {
 
 function EmptyListComponent(props: Props): JSX.Element {
     const { notFound } = props;
+    const { t } = useTranslation();
 
     return (
         <div className='cvat-empty-tasks-list'>
             <Empty description={notFound ?
-                (<Text strong>No results matched your search...</Text>) : (
+                (<Text strong>{t('No results matched your search...')}</Text>) : (
                     <>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text strong>No tasks created yet...</Text>
+                                <Text strong>{t('No tasks created yet...')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text type='secondary'>To get started with your annotation project</Text>
+                                <Text type='secondary'>{t('To get started with your annotation project')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Link to='/tasks/create'>create a new task</Link>
-                                <Text type='secondary'> or try to </Text>
-                                <Link to='/projects/create'>create a new project</Link>
+                                <Link to='/tasks/create'>{t('create a new task')}</Link>
+                                <Text type='secondary'> {t('or try to')} </Text>
+                                <Link to='/projects/create'>{t('create a new project')}</Link>
                             </Col>
                         </Row>
                     </>

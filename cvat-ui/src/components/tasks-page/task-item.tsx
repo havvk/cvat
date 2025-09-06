@@ -13,6 +13,7 @@ import { MoreOutlined } from '@ant-design/icons';
 import Progress from 'antd/lib/progress';
 import Badge from 'antd/lib/badge';
 import moment from 'moment';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { Task, RQStatus, Request } from 'cvat-core-wrapper';
 import Preview from 'components/common/preview';
 import { ActiveInference, PluginComponent } from 'reducers';
@@ -40,17 +41,17 @@ interface State {
     } | null;
 }
 
-class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteComponentProps, State> {
+class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteComponentProps & WithTranslation, State> {
     #isUnmounted: boolean;
 
-    constructor(props: TaskItemProps & RouteComponentProps) {
+    constructor(props: TaskItemProps & RouteComponentProps & WithTranslation) {
         super(props);
-        const { taskInstance } = props;
+        const { taskInstance, t } = props;
         this.#isUnmounted = false;
         this.state = {
             importingState: taskInstance.size > 0 ? null : {
                 state: null,
-                message: 'Request current progress',
+                message: t('Request current progress'),
                 progress: 0,
             },
         };
@@ -125,7 +126,7 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
 
     private renderDescription(): JSX.Element {
         // Task info
-        const { taskInstance } = this.props;
+        const { taskInstance, t } = this.props;
         const { id } = taskInstance;
         const owner = taskInstance.owner ? taskInstance.owner.username : null;
         const updated = moment(taskInstance.updatedDate).fromNow();
@@ -142,17 +143,17 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                 <br />
                 {owner && (
                     <>
-                        <Text type='secondary'>{`Created ${owner ? `by ${owner}` : ''} on ${created}`}</Text>
+                        <Text type='secondary'>{t('Created {{owner}} on {{created}}', { owner, created })}</Text>
                         <br />
                     </>
                 )}
-                <Text type='secondary'>{`Last updated ${updated}`}</Text>
+                <Text type='secondary'>{t('Last updated {{updated}}', { updated })}</Text>
             </Col>
         );
     }
 
     private renderProgress(): JSX.Element {
-        const { taskInstance, activeInference, cancelAutoAnnotation } = this.props;
+        const { taskInstance, activeInference, cancelAutoAnnotation, t } = this.props;
         const { importingState } = this.state;
 
         if (importingState) {
@@ -193,23 +194,23 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                         <div>
                             { numOfCompleted > 0 && (
                                 <Text strong className='cvat-task-completed-progress'>
-                                    {`\u2022 ${numOfCompleted} done `}
+                                    {t('\u2022 {{count}} done ', { count: numOfCompleted })}
                                 </Text>
                             )}
 
                             { numOfValidation > 0 && (
                                 <Text strong className='cvat-task-validation-progress'>
-                                    {`\u2022 ${numOfValidation} on review `}
+                                    {t('\u2022 {{count}} on review ', { count: numOfValidation })}
                                 </Text>
                             )}
 
                             { numOfAnnotation > 0 && (
                                 <Text strong className='cvat-task-annotation-progress'>
-                                    {`\u2022 ${numOfAnnotation} annotating `}
+                                    {t('\u2022 {{count}} annotating ', { count: numOfAnnotation })}
                                 </Text>
                             )}
                             <Text strong type='secondary'>
-                                {`\u2022 ${numOfJobs} total`}
+                                {t('\u2022 {{count}} total', { count: numOfJobs })}
                             </Text>
                         </div>
                         <Progress
@@ -233,7 +234,7 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
 
     private renderNavigation(): JSX.Element {
         const { importingState } = this.state;
-        const { taskInstance, history } = this.props;
+        const { taskInstance, history, t } = this.props;
         const { id } = taskInstance;
 
         return (
@@ -252,7 +253,7 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                                 history.push(`/tasks/${id}`);
                             }}
                         >
-                            Open
+                            {t('Open')}
                         </Button>
                     </Col>
                 </Row>
@@ -262,7 +263,7 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                             taskInstance={taskInstance}
                             triggerElement={(
                                 <div className='cvat-task-item-actions-button cvat-actions-menu-button'>
-                                    <Text className='cvat-text-color'>Actions</Text>
+                                    <Text className='cvat-text-color'>{t('Actions')}</Text>
                                     <MoreOutlined className='cvat-menu-icon' />
                                 </div>
                             )}
@@ -324,4 +325,4 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
     }
 }
 
-export default withRouter(TaskItemComponent);
+export default withRouter(withTranslation()(TaskItemComponent));
