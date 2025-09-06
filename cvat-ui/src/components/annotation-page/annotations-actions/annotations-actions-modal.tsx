@@ -655,9 +655,6 @@ export function openAnnotationsActionModal({
                     div.remove();
                 }}
             />
-        </Provider>,
-    );
-}
-       </Provider>,
+        </Provider>
     );
 }

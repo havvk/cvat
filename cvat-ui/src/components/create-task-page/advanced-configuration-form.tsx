@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+import { withTranslation, WithTranslation } from 'react-i18next';
 import React, { RefObject } from 'react';
 import { Row, Col } from 'antd/lib/grid';
 import { PercentageOutlined, QuestionCircleOutlined } from '@ant-design/icons';
@@ -127,7 +128,7 @@ const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
     },
 });
 
-class AdvancedConfigurationForm extends React.PureComponent<Props> {
+class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslation> {
     private formRef: RefObject<FormInstance>;
 
     public constructor(props: Props) {
@@ -323,6 +324,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
     }
 
     private renderUzeZipChunks(): JSX.Element {
+        const { t } = this.props;
         return (
             <Space>
                 <Form.Item
@@ -341,6 +343,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
     }
 
     private renderCreateTaskMethod(): JSX.Element {
+        const { t } = this.props;
         return (
             <Space>
                 <Form.Item
@@ -351,7 +354,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
                     <Switch defaultChecked />
                 </Form.Item>
                 <Text className='cvat-text-color'>Use cache</Text>
-                                <Tooltip title={this.props.t('Using cache to store data.')}>
+                                <Tooltip title={t('Using cache to store data.')}>
                     <QuestionCircleOutlined style={{ opacity: 0.5 }} />
                 </Tooltip>
             </Space>
@@ -514,5 +517,4 @@ class AdvancedConfigurationForm extends React.PureComponent<Props> {
     }
 }
 
-export default AdvancedConfigurationForm;
-efault AdvancedConfigurationForm;
+export default withTranslation()(AdvancedConfigurationForm);

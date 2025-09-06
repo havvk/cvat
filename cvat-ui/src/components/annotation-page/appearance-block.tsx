@@ -135,6 +135,7 @@ function AppearanceBlock(props: Props): JSX.Element {
         changeShowProjections,
         changeOrientationVisibility,
         jobInstance,
+        t,
     } = props;
 
     const is2D = jobInstance.dimension === DimensionType.DIMENSION_2D;
@@ -172,7 +173,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                             min={0}
                             max={100}
                         />
-                        <Text type='secondary'>Selected opacity</Text>
+                        <Text type='secondary'>{t('Selected opacity')}</Text>
                         <Slider
                             className='cvat-appearance-selected-opacity-slider'
                             onChange={changeSelectedShapesOpacity}
@@ -241,3 +242,6 @@ function AppearanceBlock(props: Props): JSX.Element {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(React.memo(AppearanceBlock));
+ock));
+pDispatchToProps)(React.memo(AppearanceBlock));
+nceBlock));

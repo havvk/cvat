@@ -46,6 +46,7 @@ const initialValues: FormValues = {
 };
 
 function ExportBackupModal(): JSX.Element {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
     const [form] = Form.useForm();
@@ -308,5 +309,4 @@ function ExportBackupModal(): JSX.Element {
 }
 
 export default React.memo(ExportBackupModal);
-act.memo(ExportBackupModal);
 ckupModal);
