@@ -99,7 +99,7 @@
     "Project name": "Project name",
     "Create multi tasks": "Create multi tasks",
     "Request current progress": "Request current progress",
-    "Created {{owner}} on {{created}}": "Created {{owner}} on {{created}}",
+    "Created by {{owner}} on {{date}}": "Created by {{owner}} on {{date}}",
     "{{count}} done": "{{count}} done",
     "{{count}} on review": "{{count}} on review",
     "{{count}} annotating": "{{count}} annotating",

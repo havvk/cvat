@@ -42,12 +42,12 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
         onClick,
     } = props;
 
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const history = useHistory();
     const ribbonPlugins = usePlugins((state: CombinedState) => state.plugins.components.projectItem.ribbon, props);
     const height = useCardHeight();
     const ownerName = instance.owner ? instance.owner.username : null;
-    const updated = moment(instance.updatedDate).fromNow();
+    const updated = moment(instance.updatedDate).locale(i18n.language).fromNow();
     const deletes = useSelector((state: CombinedState) => state.projects.activities.deletes);
     const deleted = instance.id in deletes ? deletes[instance.id] : false;
 

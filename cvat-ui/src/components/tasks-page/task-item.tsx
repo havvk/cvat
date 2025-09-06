@@ -126,11 +126,11 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
 
     private renderDescription(): JSX.Element {
         // Task info
-        const { taskInstance, t } = this.props;
+        const { taskInstance, t, i18n } = this.props;
         const { id } = taskInstance;
         const owner = taskInstance.owner ? taskInstance.owner.username : null;
-        const updated = moment(taskInstance.updatedDate).fromNow();
-        const created = moment(taskInstance.createdDate).format('MMMM Do YYYY');
+        const updated = moment(taskInstance.updatedDate).locale(i18n.language).fromNow();
+        const created = moment(taskInstance.createdDate).format('L');
 
         return (
             <Col span={10} className='cvat-task-item-description'>
@@ -143,7 +143,7 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                 <br />
                 {owner && (
                     <>
-                        <Text type='secondary'>{t('Created {{owner}} on {{created}}', { owner, created })}</Text>
+                        <Text type='secondary'>{t('Created by {{owner}} on {{date}}', { owner, date: created })}</Text>
                         <br />
                     </>
                 )}
@@ -194,23 +194,23 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                         <div>
                             { numOfCompleted > 0 && (
                                 <Text strong className='cvat-task-completed-progress'>
-                                    {t('\u2022 {{count}} done ', { count: numOfCompleted })}
+                                    {t('{{count}} done', { count: numOfCompleted })}
                                 </Text>
                             )}
 
                             { numOfValidation > 0 && (
                                 <Text strong className='cvat-task-validation-progress'>
-                                    {t('\u2022 {{count}} on review ', { count: numOfValidation })}
+                                    {t('{{count}} on review', { count: numOfValidation })}
                                 </Text>
                             )}
 
                             { numOfAnnotation > 0 && (
                                 <Text strong className='cvat-task-annotation-progress'>
-                                    {t('\u2022 {{count}} annotating ', { count: numOfAnnotation })}
+                                    {t('{{count}} annotating', { count: numOfAnnotation })}
                                 </Text>
                             )}
                             <Text strong type='secondary'>
-                                {t('\u2022 {{count}} total', { count: numOfJobs })}
+                                {t('{{count}} total', { count: numOfJobs })}
                             </Text>
                         </div>
                         <Progress

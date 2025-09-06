@@ -98,7 +98,7 @@
     "Project name": "项目名称",
     "Create multi tasks": "创建多个任务",
     "Request current progress": "请求当前进度",
-    "Created {{owner}} on {{created}}": "由 {{owner}} 创建于 {{created}}",
+    "Created by {{owner}} on {{date}}": "由 {{owner}} 创建于 {{date}}",
     "{{count}} done": "{{count}} 完成",
     "{{count}} on review": "{{count}} 审核中",
     "{{count}} annotating": "{{count}} 标注中",
