@@ -4,10 +4,14 @@
 // SPDX-License-Identifier: MIT
 
 import './i18n';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
+import i18n from './i18n';
 
 import { getAboutAsync } from 'actions/about-actions';
 import { authenticatedAsync } from 'actions/auth-actions';
@@ -134,15 +138,35 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 const ReduxAppWrapper = connect(mapStateToProps, mapDispatchToProps)(CVATApplication);
 
 const root = createRoot(document.getElementById('root') as HTMLDivElement);
-root.render((
-    <Provider store={cvatStore}>
-        <BrowserRouter>
-            <PluginsEntrypoint />
-            <ReduxAppWrapper />
-        </BrowserRouter>
-        <LayoutGrid />
-    </Provider>
-));
+
+const App = () => {
+    const [locale, setLocale] = useState(i18n.language === 'zh' ? zhCN : enUS);
+
+    useEffect(() => {
+        const listener = (lng: string) => {
+            setLocale(lng === 'zh' ? zhCN : enUS);
+        };
+        i18n.on('languageChanged', listener);
+
+        return () => {
+            i18n.off('languageChanged', listener);
+        };
+    }, []);
+
+    return (
+        <Provider store={cvatStore}>
+            <ConfigProvider locale={locale}>
+                <BrowserRouter>
+                    <PluginsEntrypoint />
+                    <ReduxAppWrapper />
+                </BrowserRouter>
+                <LayoutGrid />
+            </ConfigProvider>
+        </Provider>
+    );
+};
+
+root.render(<App />);
 
 window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
     logError(event.reason, false, { type: 'unhandledrejection' });

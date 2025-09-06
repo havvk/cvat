@@ -276,5 +276,7 @@
     "Labels:": "标签：",
     "Provider": "提供商",
     "{{instanceType}} description": "{{instanceType}} 描述",
-    "Edit": "编辑"
+    "Edit": "编辑",
+    "Select a user": "选择一个用户",
+    "Reset assignee": "重置负责人"
 }
