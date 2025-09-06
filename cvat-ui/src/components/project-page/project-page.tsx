@@ -20,6 +20,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import Empty from 'antd/lib/empty';
 import Input from 'antd/lib/input';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { getCore, Project, Task } from 'cvat-core-wrapper';
 import { CombinedState, TasksQuery, SelectedResourceType } from 'reducers';
@@ -59,6 +60,7 @@ export default function ProjectPageComponent(): JSX.Element {
     const id = +useParams<ParamType>().id;
     const dispatch = useDispatch();
     const history = useHistory();
+    const { t } = useTranslation();
     const selectedCount = useSelector((state: CombinedState) => state.tasks.selected.length);
     const bulkFetching = useSelector((state: CombinedState) => state.bulkActions.fetching);
 
@@ -100,7 +102,7 @@ export default function ProjectPageComponent(): JSX.Element {
                 }).catch((error: Error) => {
                     if (mounted.current) {
                         notification.error({
-                            message: 'Could not receive the requested project from the server',
+                            message: t('Could not receive the requested project from the server'),
                             description: error.toString(),
                         });
                     }
@@ -111,8 +113,8 @@ export default function ProjectPageComponent(): JSX.Element {
                 });
         } else {
             notification.error({
-                message: 'Could not receive the requested project from the server',
-                description: `Requested project id "${id}" is not valid`,
+                message: t('Could not receive the requested project from the server'),
+                description: t('Requested project id "{{id}}" is not valid', { id }),
             });
             setFetchingProject(false);
         }
@@ -235,7 +237,7 @@ export default function ProjectPageComponent(): JSX.Element {
             )}
         </BulkWrapper>
     ) : (
-        <Empty description='No tasks found' />
+        <Empty description={t('No tasks found')} />
     );
 
     return (
@@ -272,7 +274,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                     }}
                                     defaultValue={tasksQuery.search ?? ''}
                                     className='cvat-project-page-tasks-search-bar'
-                                    placeholder='Search ...'
+                                    placeholder={t('Search ...')}
                                 />
                                 <ResourceSelectionInfo
                                     selectedCount={selectedCount}
@@ -286,7 +288,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         setVisibility({ ...defaultVisibility, sorting: visible })
                                     )}
                                     defaultFields={tasksQuery.sort?.split(',') || ['-ID']}
-                                    sortingFields={['ID', 'Owner', 'Status', 'Assignee', 'Updated date', 'Subset', 'Mode', 'Dimension', 'Name']}
+                                    sortingFields={['ID', 'Owner', 'Status', 'Assignee', 'Updated date', 'Subset', 'Mode', 'Dimension', 'Name'].map((field) => t(field))}
                                     onApplySorting={(sorting: string | null) => {
                                         dispatch(getProjectTasksAsync({
                                             ...tasksQuery,
@@ -337,7 +339,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-task-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}`)}
                                     >
-                                        Create a new task
+                                        {t('Create a new task')}
                                     </Button>
                                     <Button
                                         type='primary'
@@ -345,7 +347,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-multi-tasks-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}&many=true`)}
                                     >
-                                        Create multi tasks
+                                        {t('Create multi tasks')}
                                     </Button>
                                 </CvatDropdownMenuPaper>
                             )}
