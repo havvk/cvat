@@ -216,4 +216,3 @@ function AllocationTableWrap(props: Readonly<Props>): JSX.Element {
 }
 
 export default React.memo(AllocationTableWrap);
-'''
