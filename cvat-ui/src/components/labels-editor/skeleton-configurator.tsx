@@ -668,7 +668,7 @@ class SkeletonConfigurator extends React.PureComponent<Props, State> {
 
     public render(): JSX.Element {
         const { canvasRef, svgRef } = this;
-        const { disabled } = this.props;
+        const { disabled, t } = this.props;
         const {
             activeTool, contextMenuVisible, contextMenuElement, error,
         } = this.state;
@@ -728,7 +728,6 @@ class SkeletonConfigurator extends React.PureComponent<Props, State> {
                             accept='.jpg,.jpeg,.png'
                             showUploadList={false}
                             beforeUpload={(file: RcFile) => {
-                                const { t } = this.props;
                                 if (!['image/jpeg', 'image/png'].includes(file.type)) {
                                     notification.error({
                                         message: t('fileMustBeJpegOrPng', { fileType: file.type }),

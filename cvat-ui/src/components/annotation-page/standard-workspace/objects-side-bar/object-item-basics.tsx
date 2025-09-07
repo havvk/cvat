@@ -8,6 +8,7 @@ import { Row, Col } from 'antd/lib/grid';
 import { MoreOutlined } from '@ant-design/icons';
 import Dropdown from 'antd/lib/dropdown';
 import Text from 'antd/lib/typography/Text';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import { ColorBy } from 'reducers';
 import CVATTooltip from 'components/common/cvat-tooltip';
@@ -16,7 +17,7 @@ import { ObjectType, ShapeType } from 'cvat-core-wrapper';
 import ItemMenu from './object-item-menu';
 import ColorPicker from './color-picker';
 
-interface Props {
+interface Props extends WithTranslation {
     jobInstance: any;
     readonly: boolean;
     clientID: number;
@@ -56,6 +57,7 @@ interface Props {
 
 function ItemTopComponent(props: Props): JSX.Element {
     const {
+        t,
         readonly,
         clientID,
         serverID,
@@ -185,4 +187,4 @@ function ItemTopComponent(props: Props): JSX.Element {
     );
 }
 
-export default React.memo(ItemTopComponent);
+export default withTranslation()(React.memo(ItemTopComponent));

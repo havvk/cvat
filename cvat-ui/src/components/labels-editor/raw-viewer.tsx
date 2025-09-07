@@ -204,7 +204,7 @@ class RawViewer extends React.PureComponent<Props> {
     };
 
     public render(): JSX.Element {
-        const { labels } = this.props;
+        const { labels, t } = this.props;
         const convertedLabels = convertLabels(labels);
         const textLabels = JSON.stringify(convertedLabels, null, 2);
         return (
