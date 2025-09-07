@@ -55,12 +55,12 @@
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/slice-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/split-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
-      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx"
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx"
     ],
     "todo_files": [
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/label-item.tsx",
-      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-buttons.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-menu.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/objects-list-header.tsx",

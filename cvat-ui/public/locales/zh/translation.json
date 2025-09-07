@@ -541,5 +541,6 @@
     "probablyYouShouldConsiderUpdatingTheServerlessFunction": "也许您应该考虑更新无服务器功能",
     "detectionErrorOccurred": "发生检测错误",
     "Ok": "确定",
-    "Select color": "选择颜色"
+    "Select color": "选择颜色",
+    "changeCurrentLabel": "更改当前标签"
 }

@@ -110,7 +110,7 @@ function ItemTopComponent(props: Props): JSX.Element {
                 </Text>
             </Col>
             <Col span={12}>
-                <CVATTooltip title='Change current label'>
+                <CVATTooltip title={t('changeCurrentLabel')}>
                     <LabelSelector
                         disabled={readonly || shapeType === ShapeType.SKELETON}
                         size='small'

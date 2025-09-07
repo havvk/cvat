@@ -541,5 +541,6 @@
     "detectionErrorOccurred": "Detection error occurred",
     "Close": "Close",
     "Ok": "Ok",
-    "Select color": "Select color"
+    "Select color": "Select color",
+    "changeCurrentLabel": "Change current label"
 }
