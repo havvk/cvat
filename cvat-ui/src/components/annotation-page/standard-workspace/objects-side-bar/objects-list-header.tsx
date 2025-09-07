@@ -49,7 +49,7 @@ function LockAllSwitcher(props: Props): JSX.Element {
     } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title={t('Switch lock property for all {{shortcut}}', { shortcut: switchLockAllShortcut })}>
+            <CVATTooltip title={t('switchLockAll', { shortcut: switchLockAllShortcut })}>
                 {statesLocked ? <LockFilled onClick={unlockAllStates} /> : <UnlockOutlined onClick={lockAllStates} />}
             </CVATTooltip>
         </Col>
@@ -63,7 +63,7 @@ function HideAllSwitcher(props: Props): JSX.Element {
     } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title={t('Switch hidden property for all {{shortcut}}', { shortcut: switchHiddenAllShortcut })}>
+            <CVATTooltip title={t('switchHiddenAll', { shortcut: switchHiddenAllShortcut })}>
                 {statesHidden ? (
                     <EyeInvisibleFilled onClick={showAllStates} />
                 ) : (
@@ -81,7 +81,7 @@ function GTSwitcher(props: Props): JSX.Element {
     } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title={t('Show Ground truth annotations and conflicts')}>
+            <CVATTooltip title={t('showGroundTruthAndConflicts')}>
                 <Icon
                     className={
                         `cvat-objects-sidebar-show-ground-truth ${showGroundTruth ? 'cvat-objects-sidebar-show-ground-truth-active' : ''}`
@@ -99,7 +99,7 @@ function CollapseAllSwitcher(props: Props): JSX.Element {
     const { statesCollapsed, expandAllStates, collapseAllStates } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title={t('Expand/collapse all')}>
+            <CVATTooltip title={t('expandCollapseAll')}>
                 {statesCollapsed ? (
                     <CaretDownOutlined onClick={expandAllStates} />
                 ) : (
@@ -120,7 +120,7 @@ function ObjectListHeader(props: Props): JSX.Element {
         <div className='cvat-objects-sidebar-states-header'>
             <Row justify='space-between' align='middle'>
                 <Col span={24}>
-                    <Text>{t('Items: {{count}}', { count })}</Text>
+                    <Text>{t('itemsCount', { count })}</Text>
                     <StatesOrderingSelector
                         statesOrdering={statesOrdering}
                         changeStatesOrdering={changeStatesOrdering}

@@ -21,6 +21,7 @@ import {
     FileOutlined, FolderOutlined, RightOutlined, SearchOutlined, InfoCircleOutlined, SyncOutlined,
 } from '@ant-design/icons';
 
+import { useTranslation } from 'react-i18next';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { getCore } from 'cvat-core-wrapper';
 import config from 'config';
@@ -118,6 +119,7 @@ function RemoteBrowser(props: Props): JSX.Element {
     const {
         resource, manifestPath, defaultPrefix, onSelectFiles,
     } = props;
+    const { t } = useTranslation();
 
     const pathFromDefPrefix = prefixToPath(defaultPrefix);
 
@@ -198,7 +200,7 @@ function RemoteBrowser(props: Props): JSX.Element {
             } catch (error: any) {
                 if (isRelevant()) {
                     notification.error({
-                        message: 'Storage content fetching failed',
+                        message: t('storageContentFetchingFailed'),
                         description: error.toString(),
                     });
                 }
@@ -291,7 +293,7 @@ function RemoteBrowser(props: Props): JSX.Element {
 
     const columns = [
         {
-            title: 'Name',
+            title: t('name'),
             dataIndex: 'name',
             key: 'name',
             render: (name: string, node: Node) => {
@@ -359,12 +361,12 @@ function RemoteBrowser(props: Props): JSX.Element {
                     <Input
                         addonBefore={<SearchOutlined />}
                         suffix={resource !== 'share' && !!resource.prefix && (
-                            <CVATTooltip title={`Default prefix "${resource.prefix}" is used`}>
+                            <CVATTooltip title={t('defaultPrefixUsed', { prefix: resource.prefix })}>
                                 <InfoCircleOutlined style={{ opacity: 0.5 }} />
                             </CVATTooltip>
                         )}
                         disabled={isFetching}
-                        placeholder='Search by prefix'
+                        placeholder={t('searchByPrefix')}
                         value={curSearchString}
                         onBlur={() => resetDataSource()}
                         onPressEnter={() => resetDataSource()}
@@ -374,7 +376,7 @@ function RemoteBrowser(props: Props): JSX.Element {
                     />
                 </Col>
                 <Col>
-                    <CVATTooltip title='Refresh'>
+                    <CVATTooltip title={t('refresh')}>
                         <Button
                             disabled={isFetching}
                             onClick={() => {
@@ -398,7 +400,7 @@ function RemoteBrowser(props: Props): JSX.Element {
                             message={(
                                 <>
                                     <Text>
-                                        There is no intersection between the specified prefix and the default one
+                                        {t('noIntersectionWithDefaultPrefix')}
                                     </Text>
                                     <Text strong>{` "${defaultPrefix}". `}</Text>
                                 </>

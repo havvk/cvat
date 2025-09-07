@@ -229,10 +229,10 @@ function ExportBackupModal(): JSX.Element {
             title={
                 isBulkMode ? (
                     <Text strong>
-                        {`Export ${selectedInstances.length} ${instanceType}s`}
+                        {t('exportInstances', { count: selectedInstances.length, instanceType: `${instanceType}s` })}
                     </Text>
                 ) : (
-                    <Text strong>{`Export ${instanceType} #${instance?.id}`}</Text>
+                    <Text strong>{t('exportInstance', { instanceType, instanceId: instance?.id })}</Text>
                 )
             }
             open={!!instance}
@@ -248,7 +248,7 @@ function ExportBackupModal(): JSX.Element {
                 onFinish={handleExport}
             >
                 {isBulkMode ? (
-                    <Form.Item label={<Text strong>Name template</Text>} required>
+                    <Form.Item label={<Text strong>{t('nameTemplate')}</Text>} required>
                         <Input
                             value={nameTemplate}
                             onChange={(e) => setNameTemplate(e.target.value)}
@@ -273,7 +273,7 @@ function ExportBackupModal(): JSX.Element {
                 ) : (
                     <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
                         <Input
-                            placeholder='Custom name for a backup file'
+                            placeholder={t('customNameForBackup')}
                             suffix='.zip'
                             className='cvat-modal-export-filename-input'
                         />
@@ -298,7 +298,7 @@ function ExportBackupModal(): JSX.Element {
                             checked={lightweight}
                             onChange={setLightweight}
                         />
-                        <Text strong>Use lightweight backup whenever possible</Text>
+                        <Text strong>{t('useLightweightBackup')}</Text>
                         <Tooltip title={t('If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.')}>
                             <QuestionCircleOutlined />
                         </Tooltip>

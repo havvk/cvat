@@ -16,6 +16,7 @@ import Space from 'antd/lib/space';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import CVATTooltip from 'components/common/cvat-tooltip';
 
+import { useTranslation } from 'react-i18next';
 import { JobType } from 'cvat-core/src/enums';
 import { Task } from 'cvat-core-wrapper';
 import { createJobAsync } from 'actions/jobs-actions';
@@ -52,6 +53,7 @@ function JobForm(props: Props): JSX.Element {
     const { task } = props;
     const { size: taskSize, segmentSize } = task;
     const [form] = Form.useForm();
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
     const [fetching, setFetching] = useState(false);
@@ -180,8 +182,8 @@ function JobForm(props: Props): JSX.Element {
                                     label={(
                                         <Space>
                                             {frameSelectionMethod === FrameSelectionMethod.RANDOM ?
-                                                'Quantity' : 'Quantity per job'}
-                                            <CVATTooltip title={description}>
+                                                t('quantity') : t('quantityPerJob')}
+                                            <CVATTooltip title={t('jobCreationTooltip')}>
                                                 <QuestionCircleOutlined
                                                     style={{ opacity: 0.5 }}
                                                 />
@@ -207,8 +209,8 @@ function JobForm(props: Props): JSX.Element {
                                             name='frameCount'
                                             label={(
                                                 <Space>
-                                                    Frame count
-                                                    <CVATTooltip title={description}>
+                                                    {t('frameCount')}
+                                                    <CVATTooltip title={t('jobCreationTooltip')}>
                                                         <QuestionCircleOutlined
                                                             style={{ opacity: 0.5 }}
                                                         />
@@ -231,7 +233,7 @@ function JobForm(props: Props): JSX.Element {
                             <Col>
                                 <Form.Item
                                     name='randomSeed'
-                                    label='Seed'
+                                    label={t('seed')}
                                 >
                                     <InputNumber
                                         className='cvat-input-seed'

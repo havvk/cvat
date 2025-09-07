@@ -260,10 +260,10 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
             title={
                 isBulkMode ? (
                     <Text strong>
-                        {`Export ${selectedInstances.length} ${instanceType}s as datasets`}
+                        {t('exportInstancesAsDatasets', { count: selectedInstances.length, instanceType: `${instanceType}s` })}
                     </Text>
                 ) : (
-                    <Text strong>{`Export ${instanceType} as a dataset`}</Text>
+                    <Text strong>{t('exportInstanceAsDataset', { instanceType })}</Text>
                 )
             }
             open={!!instance}
@@ -315,7 +315,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                     <Text strong>Save images</Text>
                 </Space>
                 {isBulkMode ? (
-                    <Form.Item label={<Text strong>Name template</Text>} required>
+                    <Form.Item label={<Text strong>{t('nameTemplate')}</Text>} required>
                         <Input
                             value={nameTemplate}
                             onChange={(e) => setNameTemplate(e.target.value)}
@@ -340,7 +340,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                 ) : (
                     <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
                         <Input
-                            placeholder='Custom name for a dataset'
+                            placeholder={t('customNameForDataset')}
                             suffix='.zip'
                             className='cvat-modal-export-filename-input'
                         />
@@ -351,7 +351,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                     switchDescription='Use default settings'
                     switchHelpMessage={helpMessage}
                     useDefaultStorage={isBulkMode ? false : useDefaultTargetStorage}
-                    storageDescription='Specify target storage for export dataset'
+                    storageDescription={t('specifyTargetStorageForExport')}
                     locationValue={targetStorage.location}
                     onChangeUseDefaultStorage={isBulkMode ? undefined : (value: boolean) => {
                         setUseDefaultTargetStorage(value);

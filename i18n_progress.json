@@ -56,11 +56,9 @@
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/split-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
-      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx"
-    ],
-    "todo_files": [
-      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/label-item.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-buttons.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-menu.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/objects-list-header.tsx",
@@ -83,14 +81,16 @@
       "cvat-ui/src/components/create-task-page/basic-configuration-form.tsx",
       "cvat-ui/src/components/export-backup/export-backup-modal.tsx",
       "cvat-ui/src/components/export-dataset/export-dataset-modal.tsx",
-      "cvat-ui/src/components/file-manager/remote-browser.tsx",
+      "cvat-ui/src/components/file-manager/remote-browser.tsx"
+    ],
+    "todo_files": [
       "cvat-ui/src/components/header/header.tsx",
       "cvat-ui/src/components/import-dataset/import-dataset-modal.tsx",
       "cvat-ui/src/components/job-item/job-item.tsx",
       "cvat-ui/src/components/labels-editor/constructor-viewer-item.tsx",
       "cvat-ui/src/components/labels-editor/label-form.tsx",
       "cvat-ui/src/components/labels-editor/raw-viewer.tsx",
-      "cvat-ui/src/components/labels-editor/skeleton-configurator.tsx",
+      "cvat-ui/src/components/labels-editor/skeleton-config-editor.tsx",
       "cvat-ui/src/components/model-runner-modal/detector-runner.tsx",
       "cvat-ui/src/components/model-runner-modal/object-mapper.tsx",
       "cvat-ui/src/components/move-task-modal/label-mapper-item.tsx",

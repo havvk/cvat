@@ -61,7 +61,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
                 className='cvat-manifests-manager-form-item'
                 label={(
                     <>
-                        Manifests
+                        {t('manifests')}
                         <Tooltip title={t('Click to open guide')}>
                             <Button
                                 type='link'
@@ -90,18 +90,18 @@ export default function ManifestsManager(props: Props): JSX.Element {
                                                 rules={[
                                                     {
                                                         required: true,
-                                                        message: 'Please specify a manifest name',
+                                                        message: t('pleaseSpecifyManifestName'),
                                                     },
                                                     {
                                                         type: 'string',
                                                         pattern: /^.*\.(jsonl)$/,
-                                                        message: 'Manifest file must have .jsonl extension',
+                                                        message: t('manifestFileExtensionError'),
                                                     },
                                                 ]}
                                                 initialValue={field.name}
                                             >
                                                 <Input
-                                                    placeholder='manifest.jsonl'
+                                                    placeholder={t('manifestPlaceholder')}
                                                     className='cvat-cloud-storage-manifest-field'
                                                     onChange={(event) => onChangeManifestPath(event.target.value, idx)}
                                                 />
@@ -129,7 +129,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
             <Row justify='start'>
                 <Col>
                     <Button onClick={onAddManifestItem} className='cvat-add-manifest-button'>
-                        Add manifest
+                        {t('addManifest')}
                         <PlusCircleOutlined />
                     </Button>
                 </Col>
@@ -140,7 +140,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
                         <Alert
                             showIcon
                             type='info'
-                            message='We highly recommend attaching a manifest file to reduce the number of requests to the bucket'
+                            message={t('attachManifestRecommendation')}
                         />
                     </Col>
                 </Row>

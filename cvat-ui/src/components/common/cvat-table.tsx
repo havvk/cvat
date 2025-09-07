@@ -15,6 +15,7 @@ import { DownloadOutlined, MoreOutlined } from '@ant-design/icons';
 import { Config } from '@react-awesome-query-builder/antd';
 import jsonLogic from 'json-logic-js';
 
+import { useTranslation } from 'react-i18next';
 import { ResourceFilterHOC, defaultVisibility } from 'components/resource-sorting-filtering';
 import CVATTooltip from './cvat-tooltip';
 
@@ -73,6 +74,7 @@ function CVATTable(props: Props): JSX.Element {
         columns,
         ...rest
     } = props;
+    const { t } = useTranslation();
 
     const [FilteringComponent, setFilteringComponent] = useState<ReturnType<typeof ResourceFilterHOC> | null>(null);
     const [filterValue, setFilterValue] = useState<string | null>(null);
@@ -188,8 +190,10 @@ function CVATTable(props: Props): JSX.Element {
                     <Space align='center'>
                         {Array.isArray(searchDataIndex) && !!searchDataIndex.length && (
                             <CVATTooltip
-                                title={`Search across fields: ${searchDataIndex
-                                    .map((dataIndex) => stringifyDataIndex(dataIndex)).join(', ')}`}
+                                title={t('searchAcrossFields', {
+                                    fields: searchDataIndex
+                                        .map((dataIndex) => stringifyDataIndex(dataIndex)).join(', '),
+                                })}
                             >
                                 <Input.Search
                                     className='cvat-table-search-bar'

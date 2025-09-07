@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { QuestionCircleOutlined } from '@ant-design/icons/lib/icons';
 import Text from 'antd/lib/typography/Text';
 import InputNumber from 'antd/lib/input-number';
@@ -21,6 +22,7 @@ interface Props {
 
 export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Element | null {
     const { form, settings, onSave } = props;
+    const { t } = useTranslation();
 
     const initialValues = {
         quorum: settings.quorum * 100,
@@ -44,7 +46,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
 
     const generalTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Quorum', settings.descriptions.quorum.replace(
+            {makeTooltipFragment(t('quorum'), settings.descriptions.quorum.replace(
                 'required share of',
                 'required percent of',
             ))}
@@ -53,7 +55,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
 
     const shapeComparisonTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Min overlap threshold (IoU)', settings.descriptions.iouThreshold)}
+            {makeTooltipFragment(t('minOverlapThresholdIoU'), settings.descriptions.iouThreshold)}
         </>,
     );
 
@@ -67,12 +69,12 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
             <Row justify='end' className='cvat-consensus-settings-save-btn'>
                 <Col>
                     <Button onClick={onSave} type='primary'>
-                        Save
+                        {t('save')}
                     </Button>
                 </Col>
             </Row>
             <Row className='cvat-consensus-settings-title'>
-                <Text strong>General</Text>
+                <Text strong>{t('general')}</Text>
                 <CVATTooltip
                     title={generalTooltip}
                     className='cvat-settings-tooltip'
@@ -85,8 +87,8 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
                 <Col span={6}>
                     <Form.Item
                         name='quorum'
-                        label='Quorum (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('quorumPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -94,7 +96,7 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
             </Row>
             <Divider />
             <Row className='cvat-consensus-settings-title'>
-                <Text strong>Shape comparison</Text>
+                <Text strong>{t('shapeComparison')}</Text>
                 <CVATTooltip
                     title={shapeComparisonTooltip}
                     className='cvat-settings-tooltip'
@@ -107,8 +109,8 @@ export default function ConsensusSettingsForm(props: Readonly<Props>): JSX.Eleme
                 <Col span={6}>
                     <Form.Item
                         name='iouThreshold'
-                        label='Min Overlap (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('minOverlapPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>

@@ -119,7 +119,7 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
                                 <Paragraph>
                                     <Text type='secondary'>{t('Created')} </Text>
                                     {owner ? <Text type='secondary'>{t('by {{owner}}', { owner: owner.username })}</Text> : null}
-                                    <Text type='secondary'> {t('on')} </Text>
+                                    <Text type='secondary'>{t('onDate')}</Text>
                                     <Text type='secondary'>{moment(createdDate).format('MMMM Do YYYY')}</Text>
                                 </Paragraph>
                                 <Paragraph>

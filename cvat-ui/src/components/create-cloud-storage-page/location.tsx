@@ -41,12 +41,12 @@ export default function Location(props: Props): JSX.Element {
     const handleAddingRegion = (): void => {
         if (!newRegionKey || !newRegionName) {
             notification.warning({
-                message: 'Incorrect region',
+                message: t('incorrectRegion'),
                 className: 'cvat-incorrect-add-region-notification',
             });
         } else if (locations[newRegionKey]) {
             notification.warning({
-                message: 'This region already exists',
+                message: t('regionAlreadyExists'),
                 className: 'cvat-incorrect-add-region-notification',
             });
         } else {
@@ -91,19 +91,19 @@ export default function Location(props: Props): JSX.Element {
                                 value={newRegionKey}
                                 onChange={(event: any) => setNewRegionKey(event.target.value)}
                                 maxLength={14}
-                                placeholder='key'
+                                placeholder={t('keyPlaceholder')}
                             />
                             <Input
                                 value={newRegionName}
                                 onChange={(event: any) => setNewRegionName(event.target.value)}
-                                placeholder='name'
+                                placeholder={t('namePlaceholder')}
                             />
                             <Button
                                 className='cvat-cloud-storage-region-add-button'
                                 type='link'
                                 onClick={handleAddingRegion}
                             >
-                                Add region
+                                {t('addRegion')}
                                 <PlusCircleOutlined />
                             </Button>
                         </div>

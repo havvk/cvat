@@ -80,20 +80,20 @@ export default function LabelsListComponent(): JSX.Element {
             <div className='cvat-objects-sidebar-issues-list-header'>
                 <Row justify='start' align='middle'>
                     <Col>
-                        <Text>{t('Items: {{count}}', { count: frameIssues.length })}</Text>
+                        <Text>{t('itemsCount', { count: frameIssues.length })}</Text>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title={t('Find the previous frame with issues')}>
+                        <CVATTooltip title={t('findPreviousFrameWithIssues')}>
                             <LeftOutlined className='cvat-issues-sidebar-previous-frame' {...dynamicLeftProps} />
                         </CVATTooltip>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title={t('Find the next frame with issues')}>
+                        <CVATTooltip title={t('findNextFrameWithIssues')}>
                             <RightOutlined className='cvat-issues-sidebar-next-frame' {...dynamicRightProps} />
                         </CVATTooltip>
                     </Col>
                     <Col offset={2}>
-                        <CVATTooltip title={t('Show/hide all issues')}>
+                        <CVATTooltip title={t('showHideAllIssues')}>
                             {issuesHidden ? (
                                 <EyeInvisibleFilled
                                     className='cvat-issues-sidebar-hidden-issues'
@@ -108,7 +108,7 @@ export default function LabelsListComponent(): JSX.Element {
                         </CVATTooltip>
                     </Col>
                     <Col offset={2}>
-                        <CVATTooltip title={t('Show/hide resolved issues')}>
+                        <CVATTooltip title={t('showHideResolvedIssues')}>
                             { issuesResolvedHidden ? (
                                 <CheckCircleFilled
                                     className='cvat-issues-sidebar-hidden-resolved-status'
@@ -126,7 +126,7 @@ export default function LabelsListComponent(): JSX.Element {
                     {
                         workspace === Workspace.REVIEW ? (
                             <Col offset={2}>
-                                <CVATTooltip title={t('Show Ground truth annotations and conflicts')}>
+                                <CVATTooltip title={t('showGroundTruthAndConflicts')}>
                                     <Icon
                                         className={
                                             `cvat-objects-sidebar-show-ground-truth ${showGroundTruth ? 'cvat-objects-sidebar-show-ground-truth-active' : ''}`
@@ -176,12 +176,12 @@ export default function LabelsListComponent(): JSX.Element {
                                 <Row justify='space-between'>
                                     <Col>
                                         <Text strong>
-                                            {t('#{{id}} • Issue', { id: frameIssue.id })}
+                                            {t('issueIdTag', { id: frameIssue.id })}
                                         </Text>
                                     </Col>
                                     <Col offset={1}>
                                         <Text type='secondary'>
-                                            {t('created {{time}}', { time: moment(frameIssue.createdDate).fromNow() })}
+                                            {t('createdTimeAgo', { time: moment(frameIssue.createdDate).fromNow() })}
                                         </Text>
                                     </Col>
                                 </Row>
@@ -238,8 +238,8 @@ export default function LabelsListComponent(): JSX.Element {
                             <Row>
                                 <Text strong>
                                     {frameConflict.severity === ConflictSeverity.WARNING ?
-                                        t('#{{id}} • Warning', { id: frameConflict.id }) :
-                                        t('#{{id}} • Conflict', { id: frameConflict.id })}
+                                        t('warningIdTag', { id: frameConflict.id }) :
+                                        t('conflictIdTag', { id: frameConflict.id })}
                                 </Text>
                             </Row>
                             <Row>

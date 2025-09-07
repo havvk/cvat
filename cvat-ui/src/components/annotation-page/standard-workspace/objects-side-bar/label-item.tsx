@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
 import {
@@ -25,6 +26,7 @@ interface Props {
 }
 
 function LabelItemComponent(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         labelName,
         labelColor,
@@ -71,16 +73,24 @@ function LabelItemComponent(props: Props): JSX.Element {
             </Col>
             <Col span={2} offset={1}>
                 {statesLocked ? (
-                    <LockFilled {...classes.lock.enabled} onClick={unlockStates} />
+                    <CVATTooltip title={t('Unlock all states')}>
+                        <LockFilled {...classes.lock.enabled} onClick={unlockStates} />
+                    </CVATTooltip>
                 ) : (
-                    <UnlockOutlined {...classes.lock.disabled} onClick={lockStates} />
+                    <CVATTooltip title={t('Lock all states')}>
+                        <UnlockOutlined {...classes.lock.disabled} onClick={lockStates} />
+                    </CVATTooltip>
                 )}
             </Col>
             <Col span={3}>
                 {statesHidden ? (
-                    <EyeInvisibleFilled {...classes.hidden.enabled} onClick={showStates} />
+                    <CVATTooltip title={t('Show all states')}>
+                        <EyeInvisibleFilled {...classes.hidden.enabled} onClick={showStates} />
+                    </CVATTooltip>
                 ) : (
-                    <EyeOutlined {...classes.hidden.disabled} onClick={hideStates} />
+                    <CVATTooltip title={t('Hide all states')}>
+                        <EyeOutlined {...classes.hidden.disabled} onClick={hideStates} />
+                    </CVATTooltip>
                 )}
             </Col>
         </Row>

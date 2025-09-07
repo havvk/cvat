@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
@@ -57,6 +58,7 @@ const { Dragger } = Upload;
 
 export default function CreateCloudStorageForm(props: Props): JSX.Element {
     const { cloudStorage } = props;
+    const { t } = useTranslation();
     const cloudStorageId = cloudStorage ? cloudStorage.id : null;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -443,10 +445,7 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
                     name='key_file'
                     {...internalCommonProps}
                     label={(
-                        <CVATTooltip title='You can upload a key file.
-                                If you leave this field blank, the environment variable
-                                GOOGLE_APPLICATION_CREDENTIALS will be used.'
-                        >
+                        <CVATTooltip title={t('keyFileUploadHelpText')}>
                             Key file
                             <Button
                                 href='https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable'
@@ -672,7 +671,7 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
             {providerType === ProviderType.GOOGLE_CLOUD_STORAGE && googleCloudStorageConfiguration()}
             <Form.Item
                 label={(
-                    <CVATTooltip title='Prefix is used to filter bucket content'>
+                    <CVATTooltip title={t('prefixHelpText')}>
                         Prefix
                         <QuestionCircleOutlined className='cvat-cloud-storage-help-button' />
                     </CVATTooltip>

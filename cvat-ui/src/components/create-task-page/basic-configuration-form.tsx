@@ -21,12 +21,12 @@ interface Props {
     exampleMultiTaskName?: string;
 }
 
-export default class BasicConfigurationForm extends React.PureComponent<Props> {
+export default withTranslation()(class BasicConfigurationForm extends React.PureComponent<Props & WithTranslation> {
     private formRef: RefObject<FormInstance>;
     private inputRef: RefObject<Input>;
     private initialName: string;
 
-    public constructor(props: Props) {
+    public constructor(props: Props & WithTranslation) {
         super(props);
         this.formRef = React.createRef<FormInstance>();
         this.inputRef = React.createRef<Input>();
@@ -70,7 +70,9 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
     }
 
     public render(): JSX.Element {
-        const { many, exampleMultiTaskName } = this.props;
+        const {
+            many, exampleMultiTaskName, t,
+        } = this.props;
 
         return (
             <Form ref={this.formRef} layout='vertical'>
@@ -96,32 +98,27 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
                     <Text type='secondary'>
                         <Tooltip title={() => (
                             <>
-                                You can use in the template:
+                                {t('youCanUseInTheTemplate')}
                                 <ul>
                                     <li>
-                                        some_text - any text
+                                        {t('someTextAnyText')}
                                     </li>
                                     <li>
-                                        {'{{'}
-                                        index
-                                        {'}}'}
-                                        &nbsp;- index file in set
+                                        {t('indexFileInSet')}
                                     </li>
                                     <li>
-                                        {'{{'}
-                                        file_name
-                                        {'}}'}
-                                        &nbsp;- name of file
+                                        {t('nameOfFile')}
                                     </li>
                                 </ul>
-                                Example:&nbsp;
+                                {t('example')}
+                                &nbsp;
                                 <i>
                                     {exampleMultiTaskName || 'Task name 1 - video_1.mp4'}
                                 </i>
                             </>
                         )}
                         >
-                            When forming the name, a template is used.
+                            {t('whenFormingTheName')}
                             {' '}
                             <QuestionCircleOutlined />
                         </Tooltip>
@@ -130,4 +127,4 @@ export default class BasicConfigurationForm extends React.PureComponent<Props> {
             </Form>
         );
     }
-}
+});
