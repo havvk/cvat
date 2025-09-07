@@ -1,9 +1,10 @@
-// Copyright (C) CVAT.ai Corporation
+'''// Copyright (C) CVAT.ai Corporation
 //
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useCallback } from 'react';
 import { useHistory } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { CombinedState } from 'reducers';
 import Button from 'antd/lib/button';
@@ -43,6 +44,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
         onDeleteFrames, onRestoreFrames, pageSizeData,
     } = props;
 
+    const { t } = useTranslation();
     const history = useHistory();
     const [selection, setSelection] = useState<{ selectedRowKeys: Key[], selectedRows: RowData[] }>({
         selectedRowKeys: [],
@@ -94,7 +96,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
 
     const columns = [
         {
-            title: 'Frame',
+            title: t('Frames'),
             dataIndex: 'frame',
             key: 'frame',
             align: 'center' as const,
@@ -115,7 +117,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
             ),
         },
         {
-            title: 'Name',
+            title: t('Name'),
             dataIndex: 'name',
             key: 'name',
             align: 'center' as const,
@@ -142,12 +144,12 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
             },
         },
         {
-            title: 'Actions',
+            title: t('Actions'),
             dataIndex: 'active',
             key: 'actions',
             filters: [
-                { text: 'Active', value: true },
-                { text: 'Excluded', value: false },
+                { text: t('active'), value: true },
+                { text: t('excluded'), value: false },
             ],
             align: 'center' as const,
             sorter: sorter('active'),
@@ -171,7 +173,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
 
     return (
         <CVATTable
-            tableTitle='Frames'
+            tableTitle={t('Frames')}
             searchDataIndex={['name']}
             csvExport={{ filename: `allocation-table-task_${task.id}.csv` }}
             className='cvat-frame-allocation-table'
@@ -214,3 +216,4 @@ function AllocationTableWrap(props: Readonly<Props>): JSX.Element {
 }
 
 export default React.memo(AllocationTableWrap);
+'''

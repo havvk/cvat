@@ -184,7 +184,7 @@ function MoveTaskModal({
                 <span>
                     {t('Move task {{taskId}} to project', { taskId: taskInstance?.id })}
                     {/* TODO: replace placeholder */}
-                    <CVATTooltip title={t('Some moving process description here')}>
+                    <CVATTooltip title={t('moveTaskModalDescription')}>
                         <QuestionCircleOutlined className='ant-typography-secondary' />
                     </CVATTooltip>
                 </span>

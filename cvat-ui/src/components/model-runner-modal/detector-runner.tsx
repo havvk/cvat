@@ -214,7 +214,7 @@ function DetectorRunner(props: Props): JSX.Element {
                             <Text>{t('Threshold')}</Text>
                         </Col>
                         <Col offset={1}>
-                            <CVATTooltip title={t('Minimum similarity value for shapes that can be merged')}>
+                            <CVATTooltip title={t('minimumSimilarityValueForShapesThatCanBeMerged')}>
                                 <InputNumber
                                     min={0.01}
                                     step={0.01}
@@ -234,7 +234,7 @@ function DetectorRunner(props: Props): JSX.Element {
                             <Text>{t('Maximum distance')}</Text>
                         </Col>
                         <Col offset={1}>
-                            <CVATTooltip title={t('Maximum distance between shapes that can be merged')}>
+                            <CVATTooltip title={t('maximumDistanceBetweenShapesThatCanBeMerged')}>
                                 <InputNumber
                                     placeholder={t('Threshold')}
                                     min={1}

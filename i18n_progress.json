@@ -88,15 +88,15 @@
       "cvat-ui/src/components/labels-editor/constructor-viewer-item.tsx",
       "cvat-ui/src/components/labels-editor/label-form.tsx",
       "cvat-ui/src/components/labels-editor/raw-viewer.tsx",
-      "cvat-ui/src/components/labels-editor/skeleton-configurator.tsx"
-    ],
-    "todo_files": [
+      "cvat-ui/src/components/labels-editor/skeleton-configurator.tsx",
       "cvat-ui/src/components/model-runner-modal/detector-runner.tsx",
       "cvat-ui/src/components/model-runner-modal/object-mapper.tsx",
       "cvat-ui/src/components/move-task-modal/label-mapper-item.tsx",
       "cvat-ui/src/components/move-task-modal/move-task-modal.tsx",
       "cvat-ui/src/components/quality-control/task-quality/allocation-table.tsx",
-      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx"
+    ],
+    "todo_files": [
       "cvat-ui/src/components/resource-sorting-filtering/sorting.tsx",
       "cvat-ui/src/components/tasks-page/automatic-annotation-progress.tsx",
       "cvat-ui/src/components/update-linked-cs-modal/select-cs-updating-scheme-modal.tsx",
