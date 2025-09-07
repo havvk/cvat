@@ -13,6 +13,8 @@ import Modal from 'antd/lib/modal';
 import { Store } from 'antd/lib/form/interface';
 import Paragraph from 'antd/lib/typography/Paragraph';
 
+import { withTranslation, WithTranslation } from 'react-i18next';
+
 import { SerializedLabel, SerializedAttribute } from 'cvat-core-wrapper';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { validateParsedLabel, idGenerator, LabelOptColor } from './common';
@@ -80,7 +82,7 @@ function validateLabels(_: RuleObject, value: string): Promise<void> {
     return Promise.resolve();
 }
 
-interface Props {
+interface Props extends WithTranslation {
     labels: LabelOptColor[];
     onSubmit: (labels: LabelOptColor[]) => void;
 }
@@ -101,7 +103,7 @@ function convertLabels(labels: LabelOptColor[]): LabelOptColor[] {
     );
 }
 
-export default class RawViewer extends React.PureComponent<Props> {
+class RawViewer extends React.PureComponent<Props> {
     private formRef: RefObject<FormInstance>;
 
     public constructor(props: Props) {
@@ -156,14 +158,15 @@ export default class RawViewer extends React.PureComponent<Props> {
             });
 
         if (deletedLabels.length || deletedAttributes.length) {
+            const { t } = this.props;
             Modal.confirm({
-                title: 'You are going to remove existing labels/attributes',
+                title: t('youAreGoingToRemoveExistingLabelsAttributes'),
                 className: 'cvat-modal-confirm-remove-existing-labels',
                 content: (
                     <>
                         {deletedLabels.length ? (
                             <Paragraph>
-                                Following labels are going to be removed:
+                                {t('followingLabelsAreGoingToBeRemoved')}
                                 <div className='cvat-modal-confirm-content-remove-existing-labels'>
                                     {deletedLabels
                                         .map((_label: LabelOptColor): JSX.Element => (
@@ -175,7 +178,7 @@ export default class RawViewer extends React.PureComponent<Props> {
                         ) : null}
                         {deletedAttributes.length ? (
                             <Paragraph>
-                                Following attributes are going to be removed:
+                                {t('followingAttributesAreGoingToBeRemoved')}
                                 <div className='cvat-modal-confirm-content-remove-existing-attributes'>
                                     {deletedAttributes.map((_attr: SerializedAttribute) => (
                                         <Tag key={_attr.id as number}>{_attr.name}</Tag>
@@ -183,10 +186,10 @@ export default class RawViewer extends React.PureComponent<Props> {
                                 </div>
                             </Paragraph>
                         ) : null}
-                        <Paragraph type='danger'>All related annotations will be destroyed. Continue?</Paragraph>
+                        <Paragraph type='danger'>{t('allRelatedAnnotationsWillBeDestroyedContinue')}</Paragraph>
                     </>
                 ),
-                okText: 'Delete existing data',
+                okText: t('deleteExistingData'),
                 okButtonProps: {
                     danger: true,
                 },
@@ -235,7 +238,7 @@ export default class RawViewer extends React.PureComponent<Props> {
                 </Form.Item>
                 <Row justify='start' align='middle'>
                     <Col>
-                        <CVATTooltip title='Save labels'>
+                        <CVATTooltip title={t('saveLabels')}>
                             <Button
                                 className='cvat-submit-raw-labels-conf-button'
                                 style={{ width: '150px' }}
@@ -247,7 +250,7 @@ export default class RawViewer extends React.PureComponent<Props> {
                         </CVATTooltip>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title='Reset all changes'>
+                        <CVATTooltip title={t('resetAllChanges')}>
                             <Button
                                 className='cvat-reset-raw-labels-conf-button'
                                 type='primary'
@@ -268,3 +271,5 @@ export default class RawViewer extends React.PureComponent<Props> {
         );
     }
 }
+
+export default withTranslation()(RawViewer);

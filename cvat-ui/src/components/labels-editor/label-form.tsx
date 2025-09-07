@@ -187,7 +187,7 @@ class LabelForm extends React.Component<Props> {
         const locked = attr.id as number >= 0;
 
         return (
-            <CVATTooltip title={t('An HTML element representing the attribute')}>
+            <CVATTooltip title={t('anHTMLElementRepresentingTheAttribute')}>
                 <Form.Item name={[key, 'type']}>
                     <Select
                         className='cvat-attribute-type-input'
@@ -250,7 +250,7 @@ class LabelForm extends React.Component<Props> {
         };
 
         return (
-            <CVATTooltip title={t('Press enter to add a new value')}>
+            <CVATTooltip title={t('pressEnterToAddAValue')}>
                 <Form.Item
                     name={[key, 'values']}
                     rules={[
@@ -274,7 +274,7 @@ class LabelForm extends React.Component<Props> {
                             return (
                                 <CVATTooltip
                                     placement='bottom'
-                                    title={isDefault ? t('This value is default') : t('Click to set default value')}
+                                    title={isDefault ? t('thisIsDefaultValue') : t('clickToSetDefaultValue')}
                                 >
                                     <Tag
                                         visible
@@ -315,7 +315,7 @@ class LabelForm extends React.Component<Props> {
         const { key } = fieldInstance;
 
         return (
-            <CVATTooltip title={t('Specify a default value')}>
+            <CVATTooltip title={t('specifyADefaultValue')}>
                 <Form.Item
                     rules={[
                         {
@@ -404,7 +404,7 @@ class LabelForm extends React.Component<Props> {
         const locked = attr.id as number >= 0;
 
         return (
-            <CVATTooltip title={t('Can this attribute be changed frame to frame?')}>
+            <CVATTooltip title={t('canThisAttributeBeChangedFrameToFrame')}>
                 <Form.Item
                     name={[key, 'mutable']}
                     valuePropName='checked'
@@ -422,7 +422,7 @@ class LabelForm extends React.Component<Props> {
         const { key } = fieldInstance;
 
         return (
-            <CVATTooltip title={t('Delete the attribute')}>
+            <CVATTooltip title={t('deleteTheAttribute')}>
                 <Form.Item>
                     <Button
                         disabled={attr.id >= 0} // temporary disabled, does not work on the server
@@ -580,7 +580,7 @@ class LabelForm extends React.Component<Props> {
 
     private renderSaveButton(): JSX.Element {
         const { label, t } = this.props;
-        const tooltipTitle = label ? t('Save the label and return') : t('Save the label and create one more');
+        const tooltipTitle = label ? t('saveLabelAndReturn') : t('saveLabelAndCreateMore');
         const buttonText = label ? t('Done') : t('Continue');
 
         return (
@@ -601,7 +601,7 @@ class LabelForm extends React.Component<Props> {
         const { onCancel, t } = this.props;
 
         return (
-            <CVATTooltip title={t('Do not save the label and return')}>
+            <CVATTooltip title={t('doNotSaveAndReturn')}>
                 <Button
                     className='cvat-cancel-new-label-button'
                     type='primary'
@@ -624,7 +624,7 @@ class LabelForm extends React.Component<Props> {
                 {() => (
                     <Form.Item name='color'>
                         <ColorPicker placement='bottom'>
-                            <CVATTooltip title={t('Change color of the label')}>
+                            <CVATTooltip title={t('changeLabelColor')}>
                                 <Button type='default' className='cvat-change-task-label-color-button'>
                                     <Badge
                                         className='cvat-change-task-label-color-badge'

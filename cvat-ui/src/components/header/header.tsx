@@ -357,7 +357,7 @@ function HeaderComponent(props: Props): JSX.Element {
         key: 'settings',
         icon: <SettingOutlined />,
         onClick: () => switchSettingsModalVisible(true),
-        title: `Press ${switchSettingsShortcut} to switch`,
+        title: t('pressToSwitch', { switchSettingsShortcut }),
         label: t('Settings'),
     }, 20]);
 
@@ -508,7 +508,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         <GlobalOutlined />
                     </Button>
                 </Dropdown>
-                <CVATTooltip overlay='Click to open repository'>
+                <CVATTooltip overlay={t('clickToOpenRepository')}>
                     <Button
                         icon={<GithubOutlined />}
                         size='large'
@@ -521,7 +521,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip overlay='Click to open guide'>
+                <CVATTooltip overlay={t('clickToOpenGuide')}>
                     <Button
                         icon={<QuestionCircleOutlined />}
                         size='large'

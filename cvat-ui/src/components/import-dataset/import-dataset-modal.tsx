@@ -29,6 +29,7 @@ import {
 } from 'cvat-core-wrapper';
 import StorageField from 'components/storage/storage-field';
 import { createAction, ActionUnion } from 'utils/redux';
+import { useTranslation } from 'react-i18next';
 
 const { confirm } = Modal;
 
@@ -280,6 +281,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
         instance,
     } = props;
     const [form] = Form.useForm();
+    const { t } = useTranslation();
     const appDispatch = useDispatch();
     const history = useHistory();
 
@@ -350,11 +352,12 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
     }, [instance, resource]);
 
     useEffect(() => {
-        dispatch(reducerActions.setHelpMessage(
-            `Import from ${(defaultStorageLocation) ? defaultStorageLocation.split('_')[0] : 'local'} ` +
-            `storage ${(defaultStorageCloudId) ? `№${defaultStorageCloudId}` : ''}`,
-        ));
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        const help = t('importFromStorage', {
+            storageType: defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local',
+            storageId: defaultStorageCloudId ? ` №${defaultStorageCloudId}` : '',
+        });
+        dispatch(reducerActions.setHelpMessage(help));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const uploadLocalFile = (): JSX.Element => (
         <Form.Item
@@ -520,11 +523,9 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                     {
                         instance instanceof core.classes.Project && (
                             <CVATTooltip
-                                title={
-                                    instance && !instance.labels.length ?
-                                        'Labels will be imported from dataset' :
-                                        'Labels from project will be used'
-                                }
+                                title={t(instance && !instance.labels.length ?
+                                    'labelsImportedFromDataset' :
+                                    'labelsFromProjectUsed')}
                             >
                                 <QuestionCircleOutlined className='cvat-modal-import-header-question-icon' />
                             </CVATTooltip>
@@ -601,7 +602,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                         />
                     </Form.Item>
                     <Text strong>Convert masks to polygons</Text>
-                    <CVATTooltip title='The option is relevant for formats that work with masks only'>
+                    <CVATTooltip title={t('optionRelevantForMasksOnly')}>
                         <QuestionCircleOutlined />
                     </CVATTooltip>
                 </Space>

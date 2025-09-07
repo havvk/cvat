@@ -22,6 +22,7 @@ import {
     Job, JobStage, JobState, JobType, Task, User,
 } from 'cvat-core-wrapper';
 import { useIsMounted } from 'utils/hooks';
+import { useTranslation } from 'react-i18next';
 import UserSelector from 'components/task-page/user-selector';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { CombinedState } from 'reducers';
@@ -46,6 +47,7 @@ interface Props {
 }
 
 function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>): JSX.Element {
+    const { t } = useTranslation();
     const [summary, setSummary] = useState<Record<string, any> | null>(null);
     const [error, setError] = useState<any>(null);
     const isMounted = useIsMounted();
@@ -74,15 +76,15 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
     if (!summary) {
         if (error) {
             if (error.toString().includes('403')) {
-                return <p>You do not have permissions</p>;
+                return <p>{t('noPermissions')}</p>;
             }
 
-            return <p>Could not fetch, check console output</p>;
+            return <p>{t('couldNotFetchCheckConsole')}</p>;
         }
 
         return (
             <>
-                <p>Loading.. </p>
+                <p>{t('loading')}</p>
                 <LoadingOutlined />
             </>
         );
@@ -93,13 +95,13 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
             <tbody>
                 <tr>
                     <td>
-                        <Text strong>Unsolved issues</Text>
+                        <Text strong>{t('unsolvedIssues')}</Text>
                     </td>
                     <td>{summary.issues_unsolved}</td>
                 </tr>
                 <tr>
                     <td>
-                        <Text strong>Resolved issues</Text>
+                        <Text strong>{t('resolvedIssues')}</Text>
                     </td>
                     <td>{summary.issues_resolved}</td>
                 </tr>
