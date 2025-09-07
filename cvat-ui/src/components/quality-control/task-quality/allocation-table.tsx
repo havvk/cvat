@@ -1,4 +1,4 @@
-'''// Copyright (C) CVAT.ai Corporation
+// Copyright (C) CVAT.ai Corporation
 //
 // SPDX-License-Identifier: MIT
 
