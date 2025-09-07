@@ -25,7 +25,7 @@
     ]
   },
   "Tooltip": {
-    "status": "in_progress",
+    "status": "completed",
     "notes": "处理了高级配置中的硬编码 tooltips。本次修复了 create-task-page/advanced-configuration-form.tsx 中不规范的key以及硬编码的storage descriptions。",
     "completed_files": [
       "cvat-ui/src/components/create-task-page/advanced-configuration-form.tsx",
@@ -94,14 +94,13 @@
       "cvat-ui/src/components/move-task-modal/label-mapper-item.tsx",
       "cvat-ui/src/components/move-task-modal/move-task-modal.tsx",
       "cvat-ui/src/components/quality-control/task-quality/allocation-table.tsx",
-      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx"
-    ],
-    "todo_files": [
+      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx",
       "cvat-ui/src/components/resource-sorting-filtering/sorting.tsx",
       "cvat-ui/src/components/tasks-page/automatic-annotation-progress.tsx",
       "cvat-ui/src/components/update-linked-cs-modal/select-cs-updating-scheme-modal.tsx",
       "cvat-ui/src/components/webhooks-page/webhook-item.tsx"
-    ]
+    ],
+    "todo_files": []
   },
   "Button": {
     "status": "todo",

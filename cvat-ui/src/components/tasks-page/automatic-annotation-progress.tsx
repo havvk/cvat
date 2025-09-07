@@ -9,6 +9,7 @@ import { CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
 import Progress from 'antd/lib/progress';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { RQStatus } from 'cvat-core-wrapper';
@@ -21,6 +22,7 @@ interface Props {
 
 export default function AutomaticAnnotationProgress(props: Props): JSX.Element | null {
     const { activeInference, cancelAutoAnnotation } = props;
+    const { t } = useTranslation();
     if (!activeInference) return null;
 
     let textType: 'success' | 'danger' = 'success';
@@ -40,7 +42,7 @@ export default function AutomaticAnnotationProgress(props: Props): JSX.Element |
                             if (activeInference.status === RQStatus.QUEUED) {
                                 return (
                                     <>
-                                        Automatic annotation request queued
+                                        {t('automaticAnnotationRequestQueued')}
                                         <LoadingOutlined />
                                     </>
                                 );
@@ -49,21 +51,21 @@ export default function AutomaticAnnotationProgress(props: Props): JSX.Element |
                             if (activeInference.status === RQStatus.STARTED) {
                                 return (
                                     <>
-                                        Automatic annotation is in progress
+                                        {t('automaticAnnotationInProgress')}
                                         <LoadingOutlined />
                                     </>
                                 );
                             }
 
                             if (activeInference.status === RQStatus.FAILED) {
-                                return (<>Automatic annotation failed</>);
+                                return (<>{t('automaticAnnotationFailed')}</>);
                             }
 
                             if (activeInference.status === RQStatus.UNKNOWN) {
-                                return (<>Unknown status received</>);
+                                return (<>{t('unknownStatusReceived')}</>);
                             }
 
-                            return <>Automatic annotation accomplished</>;
+                            return <>{t('automaticAnnotationAccomplished')}</>;
                         })()}
                     </Text>
                 </div>
@@ -79,12 +81,12 @@ export default function AutomaticAnnotationProgress(props: Props): JSX.Element |
             </Col>
             <Col span={1} className='close-auto-annotation-icon'>
                 { activeInference.status !== RQStatus.FAILED && (
-                    <CVATTooltip title='Cancel automatic annotation'>
+                    <CVATTooltip title={t('cancelAutomaticAnnotation')}>
                         <CloseOutlined
                             onClick={() => {
                                 Modal.confirm({
-                                    title: 'You are going to cancel automatic annotation?',
-                                    content: 'Reached progress will be lost. Continue?',
+                                    title: t('cancelAutomaticAnnotationConfirmTitle'),
+                                    content: t('cancelAutomaticAnnotationConfirmContent'),
                                     okButtonProps: {
                                         type: 'primary',
                                         danger: true,

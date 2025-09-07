@@ -10,6 +10,7 @@ import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { MoreOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { groupEvents } from 'components/setup-webhook-pages/setup-webhook-content';
 import CVATTooltip from 'components/common/cvat-tooltip';
@@ -28,26 +29,27 @@ interface WebhookStatus {
     className: string;
 }
 
-function setUpWebhookStatus(status: number): WebhookStatus {
+function setUpWebhookStatus(status: number, t: (key: string, options?: any) => string): WebhookStatus {
     if (status?.toString().startsWith('2')) {
         return {
-            message: `Last delivery was successful. Response: ${status}`,
+            message: t('lastDeliverySuccessful', { status }),
             className: 'cvat-webhook-status-available',
         };
     }
     if (status?.toString().startsWith('5')) {
         return {
-            message: `Last delivery was not successful. Response: ${status}`,
+            message: t('lastDeliveryFailed', { status }),
             className: 'cvat-webhook-status-failed',
         };
     }
     return {
-        message: status ? `Response: ${status}` : undefined,
+        message: status ? t('responseStatusCode', { status }) : undefined,
         className: 'cvat-webhook-status-unavailable',
     };
 }
 
 function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
+    const { t } = useTranslation();
     const [pingFetching, setPingFetching] = useState<boolean>(false);
     const {
         webhookInstance, selected, onClick,
@@ -61,7 +63,7 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
     const username = owner ? owner.username : null;
 
     const { lastStatus } = webhookInstance;
-    const [webhookStatus, setWebhookStatus] = useState<WebhookStatus>(setUpWebhookStatus(lastStatus));
+    const [webhookStatus, setWebhookStatus] = useState<WebhookStatus>(setUpWebhookStatus(lastStatus, t));
 
     const deletes = useSelector((state: CombinedState) => state.webhooks.activities.deletes);
     const deleted = webhookInstance.id in deletes ? deletes[webhookInstance.id] : false;
@@ -73,11 +75,12 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
         webhookInstance.ping().then((deliveryInstance: any) => {
             setWebhookStatus(setUpWebhookStatus(
                 deliveryInstance.statusCode ? deliveryInstance.statusCode : 'Timeout',
+                t,
             ));
         }).finally(() => {
             setPingFetching(false);
         });
-    }, [webhookInstance]);
+    }, [webhookInstance, t]);
 
     const rowClassName = `cvat-webhooks-list-item${selected ? ' cvat-item-selected' : ''}`;
 
@@ -118,11 +121,11 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
                         </Paragraph>
                         {username && (
                             <>
-                                <Text type='secondary'>{`Created by ${username} on ${created}`}</Text>
+                                <Text type='secondary'>{t('createdByOn', { username, created })}</Text>
                                 <br />
                             </>
                         )}
-                        <Text type='secondary'>{`Last updated ${updated}`}</Text>
+                        <Text type='secondary'>{t('lastUpdated', { updated })}</Text>
                     </Col>
                     <Col span={6} offset={1}>
                         <Paragraph ellipsis={{
@@ -130,7 +133,7 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
                             rows: 3,
                         }}
                         >
-                            <Text type='secondary' className='cvat-webhook-info-text'>URL:</Text>
+                            <Text type='secondary' className='cvat-webhook-info-text'>{t('url')}</Text>
                             {targetURL}
                         </Paragraph>
                     </Col>
@@ -140,7 +143,7 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
                             rows: 3,
                         }}
                         >
-                            <Text type='secondary' className='cvat-webhook-info-text'>Events:</Text>
+                            <Text type='secondary' className='cvat-webhook-info-text'>{t('events')}</Text>
                             {eventsList}
                         </Paragraph>
                     </Col>
@@ -156,7 +159,7 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
                                     ghost
                                     onClick={onPing}
                                 >
-                                    Ping
+                                    {t('ping')}
                                 </Button>
                             </Col>
                         </Row>
@@ -166,7 +169,7 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
                                     webhookInstance={webhookInstance}
                                     triggerElement={(
                                         <div className='cvat-webhooks-page-actions-button cvat-actions-menu-button'>
-                                            <Text className='cvat-text-color'>Actions</Text>
+                                            <Text className='cvat-text-color'>{t('Actions')}</Text>
                                             <MoreOutlined className='cvat-menu-icon' />
                                         </div>
                                     )}

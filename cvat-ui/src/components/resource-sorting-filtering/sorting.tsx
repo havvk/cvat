@@ -63,7 +63,7 @@ const SortableItem = SortableElement(
             <div className='cvat-sorting-field'>
                 <Radio.Button disabled={valueIndex > anchorIndex}>{value}</Radio.Button>
                 <div>
-                    <CVATTooltip title={appliedSorting[value]?.startsWith('-') ? t('Descending sort') : t('Ascending sort')}>
+                                        <CVATTooltip title={appliedSorting[value]?.startsWith('-') ? t('descendingSort') : t('ascendingSort')}>
                         <Button className='cvat-switch-sort-order-button' type='text' disabled={!isActiveField} onClick={onClick}>
                             {
                                 isDescendingField ? (
