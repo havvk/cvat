@@ -583,13 +583,13 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
     };
 
     private setActiveInteractor = (value: string): void => {
-        const { interactors } = this.props;
+        const { interactors, t } = this.props;
         const [interactor] = interactors.filter((_interactor: MLModel) => _interactor.id === value);
 
         if (interactor.version < MIN_SUPPORTED_INTERACTOR_VERSION) {
             notification.warning({
-                message: 'Interactor API is outdated',
-                description: 'Probably, you should consider updating the serverless function',
+                message: t('interactorAPIIsOutdated'),
+                description: t('probablyYouShouldConsiderUpdatingTheServerlessFunction'),
             });
         }
 
@@ -627,7 +627,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         return ReactDOM.createPortal(
                             <Col>
                                 {isTracked ? (
-                                    <CVATTooltip overlay='Disable tracking'>
+                                    <CVATTooltip overlay={t('disableTracking')}>
                                         <EnvironmentFilled
                                             onClick={() => {
                                                 const filteredStates = trackedShapes.filter(
@@ -645,7 +645,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                         />
                                     </CVATTooltip>
                                 ) : (
-                                    <CVATTooltip overlay={`Enable tracking using ${activeTracker.name}`}>
+                                    <CVATTooltip overlay={t('enableTrackingUsing', { trackerName: activeTracker.name })}>
                                         <EnvironmentOutlined
                                             onClick={() => {
                                                 objectState.descriptions = [`Trackable (${activeTracker.name})`];
@@ -1171,6 +1171,238 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
 
                                     canvasInstance.interact({ shapeType: 'points', enabled: true, ...interactorParameters });
                                     onInteractionStart(activeInteractor, activeLabelID, interactorParameters);
+                                }
+                            }}
+                        >
+                            {t('Interact')}
+                        </Button>
+                    </Col>
+                </Row>
+            </>
+        );
+    }
+
+    private renderDetectorBlock(): JSX.Element {
+        const {
+            jobInstance, detectors, curZOrder, frame, labels, createAnnotations,
+        } = this.props;
+        const { t } = this.props;
+
+        if (!detectors.length) {
+            return (
+                <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
+                    <Col>
+                        <Text type='warning' className='cvat-text-color'>
+                            {t('No available detectors found')}
+                        </Text>
+                    </Col>
+                </Row>
+            );
+        }
+
+        return (
+            <DetectorRunner
+                withCleanup={false}
+                models={detectors}
+                labels={labels}
+                dimension={jobInstance.dimension}
+                runInference={async (model: MLModel, body: AnnotateTaskRequestBody) => {
+                    function loadAttributes(
+                        attributes: { spec_id: number; value: string }[],
+                    ): Record<number, string> {
+                        return Object.fromEntries(attributes.map((a) => [a.spec_id, a.value]));
+                    }
+
+                    try {
+                        this.setState({ mode: 'detection', fetching: true });
+
+                        // The function call endpoint doesn't support the cleanup parameter.
+                        const { cleanup, ...restOfBody } = body;
+
+                        const result = await core.lambda.call(jobInstance.taskId, model, {
+                            ...restOfBody, type: 'annotate_frame', frame, job: jobInstance.id,
+                        }) as DetectorResults;
+
+                        const tagStates = result.tags.map((tag) => {
+                            const jobLabel = jobInstance.labels
+                                .find((jLabel) => jLabel.id === tag.label_id)!;
+
+                            return new core.classes.ObjectState({
+                                attributes: loadAttributes(tag.attributes),
+                                frame,
+                                label: jobLabel,
+                                objectType: ObjectType.TAG,
+                                source: core.enums.Source.AUTO,
+                            });
+                        });
+
+                        const shapeStates = result.shapes.map((shape) => {
+                            const jobLabel = jobInstance.labels
+                                .find((jLabel) => jLabel.id === shape.label_id)!;
+
+                            return new core.classes.ObjectState({
+                                attributes: loadAttributes(shape.attributes),
+                                elements: shape.elements?.map((element) => {
+                                    const jobSublabel = jobLabel.structure!.sublabels
+                                        .find((sublabel) => sublabel.id === element.label_id)!;
+
+                                    return {
+                                        attributes: loadAttributes(element.attributes),
+                                        frame,
+                                        label: jobSublabel,
+                                        objectType: ObjectType.SHAPE,
+                                        occluded: element.occluded,
+                                        outside: element.outside,
+                                        points: element.points,
+                                        shapeType: element.type,
+                                        source: core.enums.Source.AUTO,
+                                    };
+                                }),
+                                frame,
+                                label: jobLabel,
+                                objectType: ObjectType.SHAPE,
+                                occluded: shape.occluded,
+                                points: shape.points,
+                                rotation: shape.rotation,
+                                shapeType: shape.type,
+                                source: core.enums.Source.AUTO,
+                                zOrder: curZOrder,
+                            });
+                        });
+
+                        createAnnotations([...tagStates, ...shapeStates]);
+                    } catch (error: any) {
+                        notification.error({
+                            description: <CVATMarkdown>{error.message}</CVATMarkdown>,
+                            message: 'Detection error occurred',
+                            duration: null,
+                        });
+                    } finally {
+                        this.setState({ fetching: false });
+                    }
+                }}
+            />
+        );
+    }
+
+    private renderPopoverContent(): JSX.Element {
+        const { t } = this.props;
+        return (
+            <div className='cvat-tools-control-popover-content'>
+                <Row justify='start'>
+                    <Col>
+                        <Text className='cvat-text-color' strong>
+                            {t('AI Tools')}
+                        </Text>
+                    </Col>
+                </Row>
+                <Tabs
+                    type='card'
+                    tabBarGutter={8}
+                    items={[{
+                        key: 'interactors',
+                        label: t('Interactors'),
+                        children: (
+                            <>
+                                {this.renderLabelBlock()}
+                                {this.renderInteractorBlock()}
+                            </>
+                        ),
+                    }, {
+                        key: 'detectors',
+                        label: t('Detectors'),
+                        children: this.renderDetectorBlock(),
+                    }, {
+                        key: 'trackers',
+                        label: t('Trackers'),
+                        children: (
+                            <>
+                                {this.renderLabelBlock()}
+                                {this.renderTrackerBlock()}
+                            </>
+                        ),
+                    }]}
+                />
+            </div>
+        );
+    }
+
+    public render(): JSX.Element | null {
+        const {
+            interactors, detectors, trackers, isActivated, canvasInstance, labels, frameIsDeleted,
+        } = this.props;
+        const {
+            fetching, approxPolyAccuracy, pointsReceived, mode, portals, convertMasksToPolygons,
+        } = this.state;
+        const { t } = this.props;
+
+        if (![...interactors, ...detectors, ...trackers].length) return null;
+
+        const dynamicPopoverProps = isActivated ?
+            {
+                overlayStyle: {
+                    display: 'none',
+                },
+            } :
+            {};
+
+        const dynamicIconProps = isActivated ?
+            {
+                className: 'cvat-tools-control cvat-active-canvas-control',
+                onClick: (): void => {
+                    canvasInstance.interact({ enabled: false });
+                },
+            } :
+            {
+                className: 'cvat-tools-control',
+            };
+
+        const showAnyContent = labels.length && !frameIsDeleted;
+        const showInteractionContent = isActivated && mode === 'interaction' && pointsReceived && convertMasksToPolygons;
+        const showDetectionContent = fetching && mode === 'detection';
+
+        const interactionContent: JSX.Element | null = showInteractionContent ? (
+            <ApproximationAccuracy
+                approxPolyAccuracy={approxPolyAccuracy}
+                onChange={(value: number) => {
+                    this.setState({ approxPolyAccuracy: value });
+                }}
+            />
+        ) : null;
+
+        const detectionContent: JSX.Element | null = showDetectionContent ? (
+            <Modal
+                title={t('Making a server request')}
+                zIndex={Number.MAX_SAFE_INTEGER}
+                open
+                destroyOnClose
+                closable={false}
+                footer={[]}
+            >
+                <Text>{t('Waiting for a server response..')}</Text>
+                <LoadingOutlined style={{ marginLeft: '10px' }} />
+            </Modal>
+        ) : null;
+
+        return showAnyContent ? (
+            <>
+                <CustomPopover {...dynamicPopoverProps} placement='right' content={this.renderPopoverContent()}>
+                    <Icon {...dynamicIconProps} component={AIToolsIcon} />
+                </CustomPopover>
+                {interactionContent}
+                {detectionContent}
+                {portals}
+            </>
+        ) : (
+            <Icon className=' cvat-tools-control cvat-disabled-canvas-control' component={AIToolsIcon} />
+        );
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ToolsControlComponent));
+olsControlComponent));
+omponent));
+                 onInteractionStart(activeInteractor, activeLabelID, interactorParameters);
                                 }
                             }}
                         >

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { getCVATStore } from 'cvat-store';
 import { Canvas } from 'cvat-canvas-wrapper';
@@ -40,6 +41,7 @@ function SliceControl(props: Props): JSX.Element {
         updateActiveControl, canvasInstance, activeControl, disabled,
     } = props;
 
+    const { t } = useTranslation();
     const { keyMap, normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     const dynamicIconProps =
@@ -81,7 +83,7 @@ function SliceControl(props: Props): JSX.Element {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Slice a mask/polygon shape ${normalizedKeyMap.SWITCH_SLICE_MODE_STANDARD_CONTROLS}`} placement='right'>
+            <CVATTooltip title={t('sliceTooltip', { shortcut: normalizedKeyMap.SWITCH_SLICE_MODE_STANDARD_CONTROLS })} placement='right'>
                 <Icon {...dynamicIconProps} component={SliceIcon} />
             </CVATTooltip>
         </>

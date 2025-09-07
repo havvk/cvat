@@ -1,4 +1,5 @@
 // Copyright (C) 2020-2022 Intel Corporation
+// Copyright (C) CVAT.ai Corporation
 //
 // SPDX-License-Identifier: MIT
 
@@ -6,6 +7,7 @@ import React from 'react';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import LabelSelector from 'components/label-selector/label-selector';
 import { PlusOutlined } from '@ant-design/icons';
@@ -23,6 +25,7 @@ function SetupTagPopover(props: Props): JSX.Element {
     const {
         labels, selectedLabelID, repeatShapeShortcut, onChangeLabel, onSetup,
     } = props;
+    const { t } = useTranslation();
 
     return (
         <div className='cvat-setup-tag-popover-content'>
@@ -46,7 +49,7 @@ function SetupTagPopover(props: Props): JSX.Element {
                         onChange={onChangeLabel}
                         onEnterPress={() => onSetup()}
                     />
-                    <CVATTooltip title={`Press ${repeatShapeShortcut} to add a tag again`}>
+                    <CVATTooltip title={t('pressToAddTagAgainTooltip', { shortcut: repeatShapeShortcut })}>
                         <Button
                             type='primary'
                             className='cvat-add-tag-button'

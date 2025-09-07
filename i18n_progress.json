@@ -46,9 +46,7 @@
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/fit-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/group-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/join-control.tsx",
-      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/merge-control.tsx"
-    ],
-    "todo_files": [
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/merge-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/move-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/opencv-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/resize-control.tsx",
@@ -57,7 +55,9 @@
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/slice-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/split-control.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
-      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx"
+    ],
+    "todo_files": [
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/label-item.tsx",
       "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx",
