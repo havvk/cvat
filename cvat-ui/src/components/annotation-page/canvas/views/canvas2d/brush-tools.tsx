@@ -7,6 +7,7 @@ import './brush-toolbox-styles.scss';
 import React, { useCallback, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Button from 'antd/lib/button';
 import Icon, { EyeInvisibleFilled, EyeOutlined, VerticalAlignBottomOutlined } from '@ant-design/icons';
 import InputNumber from 'antd/lib/input-number';
@@ -73,6 +74,7 @@ registerComponentShortcuts(componentShortcuts);
 const MIN_BRUSH_SIZE = 1;
 function BrushTools(): React.ReactPortal | null {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const {
         defaultLabelID, visible, canvasInstance, labels, activeObjectHidden, keyMap, normalizedKeyMap,
     } = useSelector((state: CombinedState) => ({
@@ -274,7 +276,7 @@ function BrushTools(): React.ReactPortal | null {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Finish ${normalizedKeyMap.SWITCH_DRAW_MODE_STANDARD_CONTROLS}`}>
+            <CVATTooltip title={t('finishBrushTooltip', { shortcut: normalizedKeyMap.SWITCH_DRAW_MODE_STANDARD_CONTROLS })}>
                 <Button
                     type='text'
                     className='cvat-brush-tools-finish'
@@ -291,7 +293,7 @@ function BrushTools(): React.ReactPortal | null {
                 />
             </CVATTooltip>
             {!editableState && (
-                <CVATTooltip title={`Continue ${normalizedKeyMap.SWITCH_REDRAW_MODE_STANDARD_CONTROLS}`}>
+                <CVATTooltip title={t('continueBrushTooltip', { shortcut: normalizedKeyMap.SWITCH_REDRAW_MODE_STANDARD_CONTROLS })}>
                     <Button
                         type='text'
                         disabled={!!editableState}
@@ -314,7 +316,7 @@ function BrushTools(): React.ReactPortal | null {
                 </CVATTooltip>
             )}
             <hr />
-            <CVATTooltip title={`Brush tool ${normalizedKeyMap.ACTIVATE_BRUSH_TOOL_STANDARD_CONTROLS}`}>
+            <CVATTooltip title={t('brushToolTooltip', { shortcut: normalizedKeyMap.ACTIVATE_BRUSH_TOOL_STANDARD_CONTROLS })}>
                 <Button
                     type='text'
                     className={['cvat-brush-tools-brush', ...(currentTool === 'brush' ? ['cvat-brush-tools-active-tool'] : [])].join(' ')}
@@ -322,7 +324,7 @@ function BrushTools(): React.ReactPortal | null {
                     onClick={setBrushTool}
                 />
             </CVATTooltip>
-            <CVATTooltip title={`Eraser tool ${normalizedKeyMap.ACTIVATE_ERASER_TOOL_STANDARD_CONTROLS}`}>
+            <CVATTooltip title={t('eraserToolTooltip', { shortcut: normalizedKeyMap.ACTIVATE_ERASER_TOOL_STANDARD_CONTROLS })}>
                 <Button
                     type='text'
                     className={['cvat-brush-tools-eraser', ...(currentTool === 'eraser' ? ['cvat-brush-tools-active-tool'] : [])].join(' ')}
@@ -331,7 +333,7 @@ function BrushTools(): React.ReactPortal | null {
                     disabled={blockedTools.eraser}
                 />
             </CVATTooltip>
-            <CVATTooltip title={`Polygon tool ${normalizedKeyMap.ACTIVATE_POLYGON_TOOL_STANDARD_CONTROLS}`}>
+            <CVATTooltip title={t('polygonToolTooltip', { shortcut: normalizedKeyMap.ACTIVATE_POLYGON_TOOL_STANDARD_CONTROLS })}>
                 <Button
                     type='text'
                     className={['cvat-brush-tools-polygon-plus', ...(currentTool === 'polygon-plus' ? ['cvat-brush-tools-active-tool'] : [])].join(' ')}
@@ -340,7 +342,7 @@ function BrushTools(): React.ReactPortal | null {
                 />
             </CVATTooltip>
             <CVATTooltip
-                title={`Polygon remove tool ${normalizedKeyMap.ACTIVATE_POLYGON_REMOVE_TOOL_STANDARD_CONTROLS}`}
+                title={t('polygonRemoveToolTooltip', { shortcut: normalizedKeyMap.ACTIVATE_POLYGON_REMOVE_TOOL_STANDARD_CONTROLS })}
             >
                 <Button
                     type='text'
@@ -351,7 +353,7 @@ function BrushTools(): React.ReactPortal | null {
                 />
             </CVATTooltip>
             { ['brush', 'eraser'].includes(currentTool) ? (
-                <CVATTooltip title='Brush size [Hold Alt + Right Mouse Click + Drag Left/Right]'>
+                <CVATTooltip title={t('brushSizeTooltip')}>
                     <InputNumber
                         className='cvat-brush-tools-brush-size'
                         value={brushSize}
@@ -376,7 +378,7 @@ function BrushTools(): React.ReactPortal | null {
                 icon={<VerticalAlignBottomOutlined />}
                 onClick={() => setRemoveUnderlyingPixels(!removeUnderlyingPixels)}
             />
-            <CVATTooltip title={`Hide mask ${normalizedKeyMap.SWITCH_HIDDEN}`}>
+            <CVATTooltip title={t('hideMaskTooltip', { shortcut: normalizedKeyMap.SWITCH_HIDDEN })}>
                 <Button
                     type='text'
                     className={['cvat-brush-tools-hide', ...(activeObjectHidden ? ['cvat-brush-tools-active-tool'] : [])].join(' ')}

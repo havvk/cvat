@@ -1,9 +1,0 @@
-Files with completed <Text> internationalization:
-- cvat-ui/src/components/annotation-page/canvas/views/canvas2d/image-setups-content.tsx
-- cvat-ui/src/components/annotation-page/canvas/views/context-image/context-image.tsx
-- cvat-ui/src/components/annotation-page/single-shape-workspace/single-shape-sidebar/single-shape-sidebar.tsx
-- cvat-ui/src/components/annotation-page/canvas/views/canvas2d/gamma-filter.tsx
-- cvat-ui/src/components/export-dataset/export-dataset-modal.tsx
-- cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-annotation-sidebar.tsx
-- cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-editor.tsx
-- cvat-ui/src/components/annotation-page/annotations-actions/annotations-actions-modal.tsx

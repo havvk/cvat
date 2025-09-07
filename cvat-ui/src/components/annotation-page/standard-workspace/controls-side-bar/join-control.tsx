@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { ActiveControl, CombinedState } from 'reducers';
@@ -41,6 +42,7 @@ function JoinControl(props: Props): JSX.Element {
         disabled,
     } = props;
 
+    const { t } = useTranslation();
     const { keyMap, normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     const dynamicIconProps =
@@ -75,7 +77,7 @@ function JoinControl(props: Props): JSX.Element {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Join masks ${normalizedKeyMap.SWITCH_JOIN_MODE_STANDARD_CONTROLS}`} placement='right'>
+            <CVATTooltip title={t('joinMasksTooltip', { shortcut: normalizedKeyMap.SWITCH_JOIN_MODE_STANDARD_CONTROLS })} placement='right'>
                 <Icon {...dynamicIconProps} component={JoinIcon} />
             </CVATTooltip>
         </>

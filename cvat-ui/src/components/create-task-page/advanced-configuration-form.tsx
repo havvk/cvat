@@ -359,7 +359,7 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
                     <Switch defaultChecked />
                 </Form.Item>
                 <Text className='cvat-text-color'>Use cache</Text>
-                                <Tooltip title={t('Using cache to store data.')}>
+                <Tooltip title={t('usingCacheTooltip')}>
                     <QuestionCircleOutlined style={{ opacity: 0.5 }} />
                 </Tooltip>
             </Space>
@@ -509,3 +509,4 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
 }
 
 export default withTranslation()(AdvancedConfigurationForm);
+

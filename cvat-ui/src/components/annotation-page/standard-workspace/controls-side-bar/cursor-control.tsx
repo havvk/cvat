@@ -5,6 +5,7 @@
 
 import React from 'react';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { CursorIcon } from 'icons';
 import { ActiveControl, CombinedState } from 'reducers';
@@ -39,6 +40,7 @@ function CursorControl(props: Props): JSX.Element {
         canvasInstance, activeControl, cursorShortkey,
     } = props;
 
+    const { t } = useTranslation();
     const { keyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     const handler = (): void => {
@@ -60,7 +62,7 @@ function CursorControl(props: Props): JSX.Element {
                 keyMap={subKeyMap(componentShortcuts, keyMap)}
                 handlers={handlers}
             />
-            <CVATTooltip title={`Cursor ${cursorShortkey}`} placement='right'>
+            <CVATTooltip title={t('cursorTooltip', { shortcut: cursorShortkey })} placement='right'>
                 <Icon
                     component={CursorIcon}
                     className={

@@ -5,6 +5,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'antd/lib/button';
+import { useTranslation } from 'react-i18next';
 import { DeleteOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
@@ -70,6 +71,7 @@ function CanvasPointContextMenu(props: Props): React.ReactPortal | null {
         onCloseContextMenu, onUpdateAnnotations, activatedState, visible, type, top, left,
     } = props;
 
+    const { t } = useTranslation();
     const [contextMenuFor, setContextMenuFor] = useState(activatedState);
 
     if (activatedState !== contextMenuFor) {
@@ -109,7 +111,7 @@ function CanvasPointContextMenu(props: Props): React.ReactPortal | null {
                     (contextMenuFor.shapeType === ShapeType.POLYLINE && contextMenuFor.points.length > 4) ||
                     (contextMenuFor.shapeType === ShapeType.POINTS && contextMenuFor.points.length > 2)) &&
                 (
-                    <CVATTooltip title='Delete point [Alt + dblclick]'>
+                    <CVATTooltip title={t('deletePointTooltip')}>
                         <Button
                             type='link'
                             icon={<DeleteOutlined />}

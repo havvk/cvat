@@ -7,6 +7,7 @@ import './styles.scss';
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import Slider from 'antd/lib/slider';
 import Spin from 'antd/lib/spin';
 import Popover from 'antd/lib/popover';
@@ -361,7 +362,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
     };
 }
 
-type Props = StateToProps & DispatchToProps;
+type Props = StateToProps & DispatchToProps & WithTranslation;
 
 class CanvasWrapperComponent extends React.PureComponent<Props> {
     private debouncedUpdate = debounce(this.updateCanvas.bind(this), 250, { leading: true });
@@ -1108,6 +1109,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             onSwitchAutomaticBordering,
             onSwitchZLayer,
             onAddZLayer,
+            t,
         } = this.props;
 
         const preventDefault = (event: KeyboardEvent | undefined): void => {
@@ -1172,7 +1174,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
                         defaultValue={0}
                         onChange={(value: number): void => onSwitchZLayer(value as number)}
                     />
-                    <CVATTooltip title={`Add new layer ${maxZLayer + 1} and switch to it`}>
+                    <CVATTooltip title={t('addNewLayerTooltip', { layer: maxZLayer + 1 })}>
                         <PlusCircleOutlined onClick={onAddZLayer} />
                     </CVATTooltip>
                 </div>
@@ -1187,4 +1189,4 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasWrapperComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(CanvasWrapperComponent));

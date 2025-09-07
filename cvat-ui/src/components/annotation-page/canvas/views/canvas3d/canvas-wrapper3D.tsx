@@ -6,6 +6,7 @@
 import './styles.scss';
 import React, { useEffect, useRef } from 'react';
 import { connect, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
     ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined, ArrowUpOutlined,
 } from '@ant-design/icons';
@@ -248,6 +249,7 @@ const Spinner = React.memo(() => (
 
 export const PerspectiveViewComponent = React.memo(
     (): JSX.Element => {
+        const { t } = useTranslation();
         const ref = useRef<HTMLDivElement>(null);
         const canvas = useSelector((state: CombinedState) => state.annotation.canvas.instance as Canvas3d);
         const canvasIsReady = useSelector((state: CombinedState) => state.annotation.canvas.ready);
@@ -274,7 +276,7 @@ export const PerspectiveViewComponent = React.memo(
             return (
                 <div className='cvat-canvas3d-perspective-arrow-directions'>
                     <div>
-                        <CVATTooltip title={normalizedKeyMap.TILT_UP} placement='topRight'>
+                        <CVATTooltip title={t('tiltUpTooltip', { shortcut: normalizedKeyMap.TILT_UP })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.TILT_UP, false, true)}
@@ -285,7 +287,7 @@ export const PerspectiveViewComponent = React.memo(
                         </CVATTooltip>
                     </div>
                     <div>
-                        <CVATTooltip title={normalizedKeyMap.ROTATE_LEFT} placement='topRight'>
+                        <CVATTooltip title={t('rotateLeftTooltip', { shortcut: normalizedKeyMap.ROTATE_LEFT })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.ROTATE_LEFT, false, true)}
@@ -294,7 +296,7 @@ export const PerspectiveViewComponent = React.memo(
                                 <ArrowLeftOutlined className='cvat-canvas3d-perspective-arrow-directions-icons-color' />
                             </Button>
                         </CVATTooltip>
-                        <CVATTooltip title={normalizedKeyMap.TILT_DOWN} placement='topRight'>
+                        <CVATTooltip title={t('tiltDownTooltip', { shortcut: normalizedKeyMap.TILT_DOWN })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.TILT_DOWN, false, true)}
@@ -303,7 +305,7 @@ export const PerspectiveViewComponent = React.memo(
                                 <ArrowDownOutlined className='cvat-canvas3d-perspective-arrow-directions-icons-color' />
                             </Button>
                         </CVATTooltip>
-                        <CVATTooltip title={normalizedKeyMap.ROTATE_RIGHT} placement='topRight'>
+                        <CVATTooltip title={t('rotateRightTooltip', { shortcut: normalizedKeyMap.ROTATE_RIGHT })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.ROTATE_RIGHT, false, true)}
@@ -320,7 +322,7 @@ export const PerspectiveViewComponent = React.memo(
         function ControlGroup(): JSX.Element {
             return (
                 <span className='cvat-canvas3d-perspective-directions'>
-                    <CVATTooltip title={normalizedKeyMap.MOVE_UP} placement='topLeft'>
+                    <CVATTooltip title={t('moveUpTooltip', { shortcut: normalizedKeyMap.MOVE_UP })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_UP, true, false)}
@@ -329,7 +331,7 @@ export const PerspectiveViewComponent = React.memo(
                             U
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.ZOOM_IN} placement='topLeft'>
+                    <CVATTooltip title={t('zoomInTooltip', { shortcut: normalizedKeyMap.ZOOM_IN })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.ZOOM_IN, true, false)}
@@ -338,7 +340,7 @@ export const PerspectiveViewComponent = React.memo(
                             I
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.MOVE_DOWN} placement='topLeft'>
+                    <CVATTooltip title={t('moveDownTooltip', { shortcut: normalizedKeyMap.MOVE_DOWN })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_DOWN, true, false)}
@@ -348,7 +350,7 @@ export const PerspectiveViewComponent = React.memo(
                         </Button>
                     </CVATTooltip>
                     <br />
-                    <CVATTooltip title={normalizedKeyMap.MOVE_LEFT} placement='topLeft'>
+                    <CVATTooltip title={t('moveLeftTooltip', { shortcut: normalizedKeyMap.MOVE_LEFT })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_LEFT, true, false)}
@@ -357,7 +359,7 @@ export const PerspectiveViewComponent = React.memo(
                             J
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.ZOOM_OUT} placement='topLeft'>
+                    <CVATTooltip title={t('zoomOutTooltip', { shortcut: normalizedKeyMap.ZOOM_OUT })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.ZOOM_OUT, true, false)}
@@ -366,7 +368,7 @@ export const PerspectiveViewComponent = React.memo(
                             K
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.MOVE_RIGHT} placement='topLeft'>
+                    <CVATTooltip title={t('moveRightTooltip', { shortcut: normalizedKeyMap.MOVE_RIGHT })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_RIGHT, true, false)}

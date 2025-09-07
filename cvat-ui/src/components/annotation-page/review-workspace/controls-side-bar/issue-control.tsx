@@ -5,6 +5,7 @@
 
 import React from 'react';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { ActiveControl, CombinedState } from 'reducers';
 import { Canvas } from 'cvat-canvas-wrapper';
@@ -39,6 +40,7 @@ function CreateIssueControl(props: Props): JSX.Element {
         activeControl, canvasInstance, updateActiveControl, disabled,
     } = props;
 
+    const { t } = useTranslation();
     const { keyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     const handler = (): void => {
@@ -68,7 +70,7 @@ function CreateIssueControl(props: Props): JSX.Element {
                     keyMap={subKeyMap(componentShortcuts, keyMap)}
                     handlers={handlers}
                 />
-                <CVATTooltip title='Open an issue' placement='right'>
+                <CVATTooltip title={t('openAnIssueTooltip')} placement='right'>
                     <Icon
                         component={RectangleIcon}
                         className={

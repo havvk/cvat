@@ -9,6 +9,7 @@ import Button from 'antd/lib/button';
 import InputNumber from 'antd/lib/input-number';
 import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 import { RectDrawingMethod, CuboidDrawingMethod } from 'cvat-canvas-wrapper';
 
 import { ShapeType, Label, DimensionType } from 'cvat-core-wrapper';
@@ -53,6 +54,7 @@ function DrawShapePopoverComponent(props: Props): JSX.Element {
         jobInstance,
     } = props;
 
+    const { t } = useTranslation();
     const is2D = jobInstance.dimension === DimensionType.DIMENSION_2D;
     return (
         <div className='cvat-draw-shape-popover-content'>
@@ -150,11 +152,11 @@ function DrawShapePopoverComponent(props: Props): JSX.Element {
             ) : null}
             <Row justify='space-around'>
                 <Col span={24}>
-                    <CVATTooltip title={`Press ${repeatShapeShortcut} to draw again`}>
+                    <CVATTooltip title={t('pressToDrawAgainTooltip', { shortcut: repeatShapeShortcut })}>
                         <Button className={`cvat-draw-${shapeType}-shape-button`} onClick={onDrawShape}>Shape</Button>
                     </CVATTooltip>
                     {shapeType !== ShapeType.MASK && (
-                        <CVATTooltip title={`Press ${repeatShapeShortcut} to draw again`}>
+                        <CVATTooltip title={t('pressToDrawAgainTooltip', { shortcut: repeatShapeShortcut })}>
                             <Button
                                 className={`cvat-draw-${shapeType}-track-button`}
                                 onClick={onDrawTrack}

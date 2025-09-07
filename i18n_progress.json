@@ -1,0 +1,111 @@
+{
+  "_comment": {
+    "description": "此文件用于跟踪不同UI组件的国际化（i18n）改造进度。",
+    "structure": {
+      "ComponentName": {
+        "status": "组件国际化改造的整体状态 (例如, 'completed', 'in_progress', 'todo')",
+        "notes": "关于此组件状态的任何相关备注或详细信息",
+        "completed_files": "已完成此组件改造的文件路径列表",
+        "todo_files": "待办文件列表"
+      }
+    }
+  },
+  "Text": {
+    "status": "completed",
+    "notes": "所有来自原始 i18n_progress.txt 的文件",
+    "completed_files": [
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/image-setups-content.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/context-image/context-image.tsx",
+      "cvat-ui/src/components/annotation-page/single-shape-workspace/single-shape-sidebar/single-shape-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/gamma-filter.tsx",
+      "cvat-ui/src/components/export-dataset/export-dataset-modal.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-annotation-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-editor.tsx",
+      "cvat-ui/src/components/annotation-page/annotations-actions/annotations-actions-modal.tsx"
+    ]
+  },
+  "Tooltip": {
+    "status": "in_progress",
+    "notes": "处理了高级配置中的硬编码 tooltips。本次修复了 create-task-page/advanced-configuration-form.tsx 中不规范的key以及硬编码的storage descriptions。",
+    "completed_files": [
+      "cvat-ui/src/components/create-task-page/advanced-configuration-form.tsx",
+      "cvat-ui/src/components/storage/storage-with-switch-field.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/object-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/grid-layout/canvas-layout.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/brush-tools.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-point-context-menu.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-wrapper.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas3d/canvas-wrapper3D.tsx",
+      "cvat-ui/src/components/annotation-page/review-workspace/controls-side-bar/issue-control.tsx",
+      "cvat-ui/src/components/annotation-page/review/conflict-label.tsx",
+      "cvat-ui/src/components/annotation-page/review/hidden-issue-label.tsx",
+      "cvat-ui/src/components/annotation-page/review/issue-dialog.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/cursor-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/draw-shape-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/fit-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/group-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/join-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/merge-control.tsx"
+    ],
+    "todo_files": [
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/move-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/opencv-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/resize-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/rotate-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/setup-tag-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/slice-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/split-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/label-item.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-buttons.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-menu.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/objects-list-header.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/annotation-menu.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/left-group.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/player-buttons.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/player-navigation.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/save-annotations-button.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/search-modal.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/statistics-modal.tsx",
+      "cvat-ui/src/components/cloud-storages-page/cloud-storage-item.tsx",
+      "cvat-ui/src/components/common/cvat-card.tsx",
+      "cvat-ui/src/components/common/cvat-table.tsx",
+      "cvat-ui/src/components/common/cvat-tooltip.tsx",
+      "cvat-ui/src/components/consensus-management-page/task-consensus/consensus-settings-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/cloud-storage-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/location.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/manifests-manager.tsx",
+      "cvat-ui/src/components/create-job-page/job-form.tsx",
+      "cvat-ui/src/components/create-task-page/basic-configuration-form.tsx",
+      "cvat-ui/src/components/export-backup/export-backup-modal.tsx",
+      "cvat-ui/src/components/export-dataset/export-dataset-modal.tsx",
+      "cvat-ui/src/components/file-manager/remote-browser.tsx",
+      "cvat-ui/src/components/header/header.tsx",
+      "cvat-ui/src/components/import-dataset/import-dataset-modal.tsx",
+      "cvat-ui/src/components/job-item/job-item.tsx",
+      "cvat-ui/src/components/labels-editor/constructor-viewer-item.tsx",
+      "cvat-ui/src/components/labels-editor/label-form.tsx",
+      "cvat-ui/src/components/labels-editor/raw-viewer.tsx",
+      "cvat-ui/src/components/labels-editor/skeleton-configurator.tsx",
+      "cvat-ui/src/components/model-runner-modal/detector-runner.tsx",
+      "cvat-ui/src/components/model-runner-modal/object-mapper.tsx",
+      "cvat-ui/src/components/move-task-modal/label-mapper-item.tsx",
+      "cvat-ui/src/components/move-task-modal/move-task-modal.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/allocation-table.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx",
+      "cvat-ui/src/components/resource-sorting-filtering/sorting.tsx",
+      "cvat-ui/src/components/tasks-page/automatic-annotation-progress.tsx",
+      "cvat-ui/src/components/update-linked-cs-modal/select-cs-updating-scheme-modal.tsx",
+      "cvat-ui/src/components/webhooks-page/webhook-item.tsx"
+    ]
+  },
+  "Button": {
+    "status": "todo",
+    "notes": "",
+    "completed_files": []
+  }
+}

@@ -11,6 +11,7 @@ import RGL, { WidthProvider } from 'react-grid-layout';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
 import Layout from 'antd/lib/layout';
+import { useTranslation } from 'react-i18next';
 import {
     CloseOutlined,
     DragOutlined,
@@ -142,6 +143,7 @@ const fitLayout = (type: DimensionType, layoutConfig: ItemLayout[]): ItemLayout[
 };
 
 function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
+    const { t } = useTranslation();
     const relatedFiles = useSelector((state: CombinedState) => state.annotation.player.frame.relatedFiles);
     const canvasInstance = useSelector((state: CombinedState) => state.annotation.canvas.instance);
     const canvasBackgroundColor = useSelector((state: CombinedState) => state.settings.player.canvasBackgroundColor);
@@ -300,7 +302,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
             )}
             { type === DimensionType.DIMENSION_3D && <CanvasWrapper3DComponent /> }
             <div className='cvat-grid-layout-common-setups'>
-                <CVATTooltip title='Fit views'>
+                <CVATTooltip title={t('fitViewsTooltip')}>
                     <PicCenterOutlined
                         onClick={() => {
                             setLayoutConfig(fitLayout(type as DimensionType, layoutConfig));
@@ -308,7 +310,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Add context image'>
+                <CVATTooltip title={t('addContextImageTooltip')}>
                     <PlusOutlined
                         style={{
                             pointerEvents: !relatedFiles ? 'none' : undefined,
@@ -347,7 +349,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Reload layout'>
+                <CVATTooltip title={t('reloadLayoutTooltip')}>
                     <ReloadOutlined onClick={() => {
                         setLayoutConfig([...getLayout()]);
                         window.dispatchEvent(new Event('resize'));

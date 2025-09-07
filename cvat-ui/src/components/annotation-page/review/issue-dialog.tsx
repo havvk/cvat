@@ -16,6 +16,7 @@ import Text from 'antd/lib/typography/Text';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { Issue, Comment as CommentModel } from 'cvat-core-wrapper';
 import { deleteIssueAsync } from 'actions/review-actions';
@@ -43,6 +44,7 @@ export default function IssueDialog(props: Props): JSX.Element {
     const ref = useRef<HTMLDivElement>(null);
     const [currentText, setCurrentText] = useState<string>('');
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const {
         issue,
         left,
@@ -155,7 +157,7 @@ export default function IssueDialog(props: Props): JSX.Element {
                     <Text strong>{typeof id === 'number' ? `Issue #${id}` : 'Issue'}</Text>
                 </Col>
                 <Col>
-                    <CVATTooltip title='Collapse the chat'>
+                    <CVATTooltip title={t('collapseTheChatTooltip')}>
                         <CloseOutlined onClick={collapse} />
                     </CVATTooltip>
                 </Col>
