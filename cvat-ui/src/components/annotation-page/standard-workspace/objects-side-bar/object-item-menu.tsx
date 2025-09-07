@@ -21,6 +21,54 @@ import {
     DimensionType, Job, ObjectType, ShapeType,
 } from 'cvat-core-wrapper';
 
+interface Props {
+    jobInstance: any;
+    readonly: boolean;
+    serverID: number | null;
+    locked: boolean;
+    shapeType: ShapeType;
+    objectType: ObjectType;
+    color: string;
+    colorBy: ColorBy;
+    changeColorShortcut: string;
+    copyShortcut: string;
+    pasteShortcut: string;
+    propagateShortcut: string;
+    toBackgroundShortcut: string;
+    toForegroundShortcut: string;
+    removeShortcut: string;
+    sliceShortcut: string;
+    runAnnotationsActionShortcut: string;
+    changeColor(color: string): void;
+    copy(): void;
+    remove(): void;
+    propagate(): void;
+    createURL(): void;
+    switchOrientation(): void;
+    toBackground(): void;
+    toForeground(): void;
+    resetCuboidPerspective(): void;
+    runAnnotationAction(): void;
+    edit(): void;
+    slice(): void;
+    setColorPickerVisible(visible: boolean): void;
+}
+
+enum MenuKeys {
+    CREATE_URL = 'create_url',
+    COPY = 'copy',
+    EDIT_MASK = 'edit_mask',
+    SLICE_ITEM = 'slice_item',
+    PROPAGATE = 'propagate',
+    SWITCH_ORIENTATION = 'switch_orientation',
+    RESET_PERSPECTIVE = 'reset_perspective',
+    TO_BACKGROUND = 'to_background',
+    TO_FOREGROUND = 'to_foreground',
+    SWITCH_COLOR = 'switch_color',
+    REMOVE_ITEM = 'remove_item',
+    RUN_ANNOTATION_ACTION = 'run_annotation_action',
+}
+
 // ... (Props interface remains the same)
 
 interface ItemProps {
