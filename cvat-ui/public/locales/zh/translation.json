@@ -12,7 +12,6 @@
     "Settings": "设置",
     "Invitations": "邀请",
     "Create": "创建",
-    "Switch organization": "切换组织",
     "Personal workspace": "个人工作区",
     "About": "关于",
     "Change password": "修改密码",
@@ -883,5 +882,6 @@
     "everything": "所有事件",
     "selectIndividualEvents": "选择单个事件",
     "noWebhooksCreatedYet": "尚未创建 webhook...",
-    "noResultsMatchedYourSearch": "没有与您的搜索匹配的结果"
+    "noResultsMatchedYourSearch": "没有与您的搜索匹配的结果",
+    "switchOrganization": "切换组织"
 }

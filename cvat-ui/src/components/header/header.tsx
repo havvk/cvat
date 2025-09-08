@@ -332,7 +332,7 @@ function HeaderComponent(props: Props): JSX.Element {
             },
             ...(!!organizationsList && viewType === 'list' ? [{
                 key: 'switch_organization',
-                label: t('Switch organization'),
+                label: t('switchOrganization')),
                 onClick: () => {
                     openSelectOrganizationModal(setNewOrganization);
                 },

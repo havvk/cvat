@@ -64,9 +64,8 @@ def run_refactoring():
             file_replacements = 0
 
             for old_key, new_key in key_map.items():
-                # Use negative lookbehind to ensure 't' is not part of another word.
-                # Also captures the quote type (' or ") to preserve it in replacement.
-                pattern = re.compile(f"(?<!\w)t\((['"]){re.escape(old_key)}\1\)")
+                # Use the corrected regex with raw f-string and escaped quotes
+                pattern = re.compile(rf"(?<!\w)t\((['\"]){re.escape(old_key)}\1")
                 
                 # The replacement function ensures we keep the original quote style.
                 content, count = pattern.subn(lambda m: f"t({m.group(1)}{new_key}{m.group(1)})", content)

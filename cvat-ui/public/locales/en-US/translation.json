@@ -12,7 +12,6 @@
     "Settings": "Settings",
     "Invitations": "Invitations",
     "Create": "Create",
-    "Switch organization": "Switch organization",
     "Personal workspace": "Personal workspace",
     "About": "About",
     "Change password": "Change password",
@@ -458,7 +457,7 @@
     "FROM": "FROM",
     "TO": "TO",
     "Would you like to update current job state?": "Would you like to update current job state?",
-    "Job state will be switched to \"{{state}}\"" : "Job state will be switched to \"{{state}}\"",
+    "Job state will be switched to \"{{state}}\"": "Job state will be switched to \"{{state}}\"",
     "removeAnnotations": "Remove Annotations",
     "You are going to remove the annotations from the client. ": "You are going to remove the annotations from the client. ",
     "It will stay on the server till you save the job. Continue?": "It will stay on the server till you save the job. Continue?",
@@ -883,5 +882,6 @@
     "everything": "everything",
     "selectIndividualEvents": "Select individual events",
     "noWebhooksCreatedYet": "No webhooks created yet ...",
-    "noResultsMatchedYourSearch": "No results matched your search"
+    "noResultsMatchedYourSearch": "No results matched your search",
+    "switchOrganization": "Switch organization"
 }
