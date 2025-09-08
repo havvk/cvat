@@ -219,7 +219,12 @@
     "status": "in_progress",
     "notes": "Fixing keys with spaces to camelCase.",
     "todo_keys": [
-      ["Switch organization", "switchOrganization"],
+      ["Switch organization", "switchOrganization"]
+    ],
+    "pending_keys": [],
+    "completed_keys": [],
+    "failed_keys": [],
+    "long_keys_to_review": [
       ["Personal workspace", "personalWorkspace"],
       ["Change password", "changePassword"],
       ["What's new?", "whatsNew"],
@@ -463,12 +468,7 @@
       ["Redo: {{redoAction}} {{redoShortcut}}", "redoActionWithShortcut"],
       ["Press \"{{drawShortcut}}\" to finish", "pressDrawshortcutToFinish"],
       ["No data", "noData"],
-      ["Select color", "selectColor"]
-    ],
-    "pending_keys": [],
-    "completed_keys": [],
-    "failed_keys": [],
-    "long_keys_to_review": [
+      ["Select color", "selectColor"],
       ["When forming the name, a template is used.", "templateIsUsedForName"],
       ["Password must have at least 1 numeric characters", "passwordRequiresNumeric"],
       ["Password must have at least 1 uppercase alphabetical character", "passwordRequiresUppercase"],

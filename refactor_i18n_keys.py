@@ -1,128 +1,125 @@
-
 import json
 import os
 import re
 import sys
-
-def to_camel_case(text):
-    # 移除大部分特殊字符，但保留字母、数字和空格
-    s = re.sub(r'[^a-zA-Z0-9\s]', '', text).strip()
-    if not s:
-        return ""
-    parts = s.split()
-    # 将第一个单词小写，其余单词首字母大写
-    return parts[0].lower() + ''.join(word.capitalize() for word in parts[1:])
+from pathlib import Path
 
 def run_refactoring():
-    # 定义文件和目录的绝对路径
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    progress_file_path = os.path.join(base_dir, 'i18n_progress.json')
-    en_translation_path = os.path.join(base_dir, 'cvat-ui/public/locales/en-US/translation.json')
-    zh_translation_path = os.path.join(base_dir, 'cvat-ui/public/locales/zh/translation.json')
-    search_directory = os.path.join(base_dir, 'cvat-ui/src')
-
-    # 检查所有文件路径是否存在
-    for path in [progress_file_path, en_translation_path, zh_translation_path, search_directory]:
-        if not os.path.exists(path):
-            print(f"错误：路径不存在 - {path}")
-            sys.exit(1)
-
-    # 读取国际化进度文件
+    """
+    Refactors i18n keys from a progress file, applying changes to specified source files
+    and updating translation and progress files.
+    """
     try:
+        # --- 1. Initialization and Path Setup ---
+        base_dir = Path(__file__).parent.resolve()
+        progress_file_path = base_dir / 'i18n_progress.json'
+        en_translation_path = base_dir / 'cvat-ui/public/locales/en-US/translation.json'
+        zh_translation_path = base_dir / 'cvat-ui/public/locales/zh/translation.json'
+
+        print("--- Refactoring I18n Keys ---")
+
+        # --- 2. Load All Necessary Data ---
+        print("Loading data files...")
         with open(progress_file_path, 'r', encoding='utf-8') as f:
             progress_data = json.load(f)
-    except Exception as e:
-        print(f"错误：无法读取或解析 {progress_file_path}: {e}")
-        sys.exit(1)
-
-
-    # 确保 CamelCaseKeys 部分存在
-    if 'CamelCaseKeys' not in progress_data:
-        progress_data['CamelCaseKeys'] = {'todo_keys': [], 'completed_keys': []}
-
-    todo_keys = progress_data['CamelCaseKeys'].get('todo_keys', [])
-    completed_keys = progress_data['CamelCaseKeys'].get('completed_keys', [])
-
-    if not todo_keys:
-        print("没有在 todo_keys 中找到需要处理的键。")
-        return
-
-    # 读取语言文件
-    try:
         with open(en_translation_path, 'r', encoding='utf-8') as f:
             en_data = json.load(f)
         with open(zh_translation_path, 'r', encoding='utf-8') as f:
             zh_data = json.load(f)
-    except Exception as e:
-        print(f"错误：无法读取语言文件: {e}")
-        sys.exit(1)
 
+        # --- 3. Consolidate Keys and Files to Process ---
+        camel_case_keys_section = progress_data.get('CamelCaseKeys', {})
+        todo_keys = camel_case_keys_section.get('todo_keys', [])
 
-    # 遍历待办列表中的键
-    for key in list(todo_keys):
-        # 只处理包含空格的键
-        if ' ' in key:
-            new_key = to_camel_case(key)
-            if not new_key or new_key == key:
+        if not todo_keys:
+            print("No keys found in 'todo_keys'. Nothing to process.")
+            return
+
+        # Create a replacement map from the todo list
+        key_map = {old: new for old, new in todo_keys if old and new}
+        print(f"Found {len(key_map)} keys to refactor.")
+
+        # Get the unique list of files to modify, as per user's request
+        files_to_process = set()
+        for component in ['Text', 'Tooltip']:
+            files = progress_data.get(component, {}).get('completed_files', [])
+            files_to_process.update(files)
+
+        if not files_to_process:
+            print("Warning: No completed files found for Text and Tooltip components. Source code will not be modified.")
+            # We can still proceed to update language and progress files
+            
+        print(f"Will process {len(files_to_process)} unique source files.")
+
+        # --- 4. Process Source Files ---
+        total_replacements = 0
+        for file_rel_path in sorted(list(files_to_process)):
+            file_abs_path = base_dir / file_rel_path
+            if not file_abs_path.exists():
+                print(f"  - WARNING: File not found, skipping: {file_rel_path}")
                 continue
 
-            print(f"正在处理键: '{key}' -> '{new_key}'")
+            content = file_abs_path.read_text(encoding='utf-8')
+            original_content = content
+            file_replacements = 0
 
-            # 1. 在 .tsx 文件中搜索并替换
-            for root, _, files in os.walk(search_directory):
-                for file in files:
-                    if file.endswith('.tsx'):
-                        file_path = os.path.join(root, file)
-                        try:
-                            with open(file_path, 'r', encoding='utf-8') as f_read:
-                                content = f_read.read()
+            for old_key, new_key in key_map.items():
+                # Use negative lookbehind to ensure 't' is not part of another word.
+                # Also captures the quote type (' or ") to preserve it in replacement.
+                pattern = re.compile(f"(?<!\w)t\((['"]){re.escape(old_key)}\1\)")
+                
+                # The replacement function ensures we keep the original quote style.
+                content, count = pattern.subn(lambda m: f"t({m.group(1)}{new_key}{m.group(1)})", content)
+                if count > 0:
+                    file_replacements += count
+            
+            if file_replacements > 0:
+                print(f"  - Updating {file_rel_path} ({file_replacements} replacements)")
+                file_abs_path.write_text(content, encoding='utf-8')
+                total_replacements += file_replacements
 
-                            # 使用正则表达式精确匹配 t('key') 或 t("key")
-                            # 以避免错误地替换出现在其他地方的子字符串
-                            # Pattern explanation:
-                            # t\(          # Matches "t(" literally
-                            # ['"]        # Matches a single or double quote
-                            # {re.escape(key)} # Matches the literal key, escaping any special regex characters in it
-                            # ['"]        # Matches the closing single or double quote
-                            # \)           # Matches the closing parenthesis
-                            pattern = f"(?<!\w)t\(['\"]{re.escape(key)}['\"]\)"
-                            new_content = re.sub(pattern, f"t('{new_key}')", content)
+        print(f"Total replacements made in source files: {total_replacements}")
 
-                            if new_content != content:
-                                print(f"  - 正在更新文件: {file_path}")
-                                with open(file_path, 'w', encoding='utf-8') as f_write:
-                                    f_write.write(new_content)
-                        except Exception as e:
-                            print(f"  - 处理文件时出错 {file_path}: {e}")
+        # --- 5. Update Language Files ---
+        print("Updating language files...")
+        updated_lang_keys = 0
+        for old_key, new_key in key_map.items():
+            if old_key in en_data:
+                en_data[new_key] = en_data.pop(old_key)
+                updated_lang_keys += 1
+            if old_key in zh_data:
+                zh_data[new_key] = zh_data.pop(old_key)
+        
+        print(f"Updated {updated_lang_keys} keys in language files.")
 
-            # 2. 更新语言文件
-            if key in en_data:
-                en_data[new_key] = en_data.pop(key)
-            if key in zh_data:
-                zh_data[new_key] = zh_data.pop(key)
-
-            # 3. 更新进度文件
-            if key in todo_keys:
-                todo_keys.remove(key)
-            if new_key not in completed_keys:
-                completed_keys.append(key)
-
-    # 写回更新后的数据
-    progress_data['CamelCaseKeys']['todo_keys'] = todo_keys
-    progress_data['CamelCaseKeys']['completed_keys'] = completed_keys
-
-    try:
-        with open(progress_file_path, 'w', encoding='utf-8') as f:
-            json.dump(progress_data, f, indent=2, ensure_ascii=False)
         with open(en_translation_path, 'w', encoding='utf-8') as f:
             json.dump(en_data, f, indent=4, ensure_ascii=False)
         with open(zh_translation_path, 'w', encoding='utf-8') as f:
             json.dump(zh_data, f, indent=4, ensure_ascii=False)
-    except Exception as e:
-        print(f"错误：写入文件失败: {e}")
-        sys.exit(1)
 
-    print("所有键处理完毕。")
+        # --- 6. Update Progress File ---
+        print("Updating progress file...")
+        completed_keys = camel_case_keys_section.get('completed_keys', [])
+        # Ensure we don't add duplicates if script is run multiple times on same todo list
+        processed_pairs = [pair for pair in todo_keys if pair[0] in key_map]
+        completed_keys.extend(processed_pairs)
+        camel_case_keys_section['todo_keys'] = []
+        camel_case_keys_section['completed_keys'] = completed_keys
+
+        with open(progress_file_path, 'w', encoding='utf-8') as f:
+            json.dump(progress_data, f, indent=2, ensure_ascii=False)
+
+        print("--- Refactoring Complete ---")
+
+    except FileNotFoundError as e:
+        print(f"Error: Required file not found - {e}", file=sys.stderr)
+        sys.exit(1)
+    except json.JSONDecodeError as e:
+        print(f"Error: Could not parse JSON file - {e}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == '__main__':
     run_refactoring()
