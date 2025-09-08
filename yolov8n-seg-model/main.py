@@ -20,6 +20,7 @@ def handler(context, event):
     data = event.body
     buf = io.BytesIO(base64.b64decode(data["image"]))
     threshold = float(data.get("threshold", 0.5))
+    tolerance = float(data.get("tolerance", 2.5))
     
     image = Image.open(buf)
     
@@ -40,7 +41,7 @@ def handler(context, event):
             # 将掩码转换为多边形
             contours = find_contours(mask, 0.5)
             for contour in contours:
-                contour = approximate_polygon(contour, tolerance=2.5)
+                contour = approximate_polygon(contour, tolerance=tolerance)
 
                 # Swap (row, col) to (x, y) for CVAT
                 contour = contour[:, [1, 0]]
