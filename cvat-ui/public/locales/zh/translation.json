@@ -818,7 +818,6 @@
     "lastDeliveryFailed": "上次交付失败。响应：{{status}}",
     "responseStatusCode": "响应：{{status}}",
     "createdByOn": "由 {{username}} 创建于 {{created}}",
-    "lastUpdated": "最后更新 {{updated}}",
     "url": "URL：",
     "events": "事件：",
     "ping": "Ping",

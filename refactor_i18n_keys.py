@@ -85,7 +85,7 @@ def run_refactoring():
                             # {re.escape(key)} # Matches the literal key, escaping any special regex characters in it
                             # ['"]        # Matches the closing single or double quote
                             # \)           # Matches the closing parenthesis
-                            pattern = f"t\(['"]{re.escape(key)}['"]\)"
+                            pattern = f"(?<!\w)t\(['\"]{re.escape(key)}['\"]\)"
                             new_content = re.sub(pattern, f"t('{new_key}')", content)
 
                             if new_content != content:

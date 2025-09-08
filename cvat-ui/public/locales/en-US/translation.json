@@ -818,7 +818,6 @@
     "lastDeliveryFailed": "Last delivery was not successful. Response: {{status}}",
     "responseStatusCode": "Response: {{status}}",
     "createdByOn": "Created by {{username}} on {{created}}",
-    "lastUpdated": "Last updated {{updated}}",
     "url": "URL:",
     "events": "Events:",
     "ping": "Ping",
