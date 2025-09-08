@@ -41,6 +41,10 @@ def handler(context, event):
             contours = find_contours(mask, 0.5)
             for contour in contours:
                 contour = approximate_polygon(contour, tolerance=2.5)
+
+                # Swap (row, col) to (x, y) for CVAT
+                contour = contour[:, [1, 0]]
+
                 if len(contour) < 3:
                     continue
                 
