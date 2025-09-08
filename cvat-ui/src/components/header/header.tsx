@@ -299,7 +299,7 @@ function HeaderComponent(props: Props): JSX.Element {
             onClick: (): void => {
                 window.open('/admin', '_blank');
             },
-            label: t('Admin page'),
+            label: t('adminPage'),
         }, 0]);
     }
 
@@ -460,7 +460,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/cloudstorages');
                     }}
                 >
-                    {t('Cloud Storages')}
+                    {t('cloudStorages')}
                 </Button>
                 <Button
                     className={getButtonClassName('requests')}

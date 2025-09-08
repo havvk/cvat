@@ -111,6 +111,7 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
 }
 
 function JobItem(props: Readonly<Props>): JSX.Element {
+    const { t } = useTranslation();
     const {
         job, task, onJobUpdate, childJobs, defaultCollapsed, onCollapseChange, selected, onClick,
     } = props;
@@ -185,13 +186,13 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                     </Row>
                     <Row className='cvat-job-item-dates-info'>
                         <Col>
-                            <Text>Created: </Text>
+                            <Text>{t('created:')}</Text>
                             <Text type='secondary'>{`${formatDate(created)}`}</Text>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Text>Updated: </Text>
+                            <Text>{t('updated:')}</Text>
                             <Text type='secondary'>{`${formatDate(updated)}`}</Text>
                         </Col>
                     </Row>
@@ -202,7 +203,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col className='cvat-job-item-select'>
                                     <Row>
-                                        <Text>Assignee:</Text>
+                                        <Text>{t('Assignee')}:</Text>
                                     </Row>
                                     <UserSelector
                                         className='cvat-job-assignee-selector'
@@ -216,7 +217,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Col className='cvat-job-item-select'>
                                     <Row justify='space-between' align='middle'>
                                         <Col>
-                                            <Text>Stage:</Text>
+                                            <Text>{t('Stage')}:</Text>
                                         </Col>
                                     </Row>
                                     <JobStageSelector
@@ -229,7 +230,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Col className='cvat-job-item-select'>
                                     <Row justify='space-between' align='middle'>
                                         <Col>
-                                            <Text>State:</Text>
+                                            <Text>{t('State')}:</Text>
                                         </Col>
                                     </Row>
                                     <JobStateSelector
@@ -249,7 +250,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col>
                                     <Icon component={DurationIcon} />
-                                    <Text>Duration: </Text>
+                                    <Text>{t('duration:')}</Text>
                                     <Text type='secondary'>
                                         {`${moment
                                             .duration(now.diff(created))
@@ -260,7 +261,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col>
                                     <BorderOutlined />
-                                    <Text>Frame count: </Text>
+                                    <Text>{t('frameCount:')}</Text>
                                     <Text type='secondary' className='cvat-job-item-frames'>
                                         {`${job.frameCount} (${frameCountPercentRepresentation}%)`}
                                     </Text>
@@ -270,7 +271,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Row>
                                     <Col>
                                         <Icon component={FramesIcon} />
-                                        <Text>Frame range: </Text>
+                                        <Text>{t('frameRange:')}</Text>
                                         <Text type='secondary' className='cvat-job-item-frame-range'>
                                             {`${job.startFrame}-${job.stopFrame}`}
                                         </Text>
@@ -296,7 +297,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                     items={[
                         {
                             key: '1',
-                            label: <Text>{`${childJobViews.length} Replicas`}</Text>,
+                            label: <Text>{t('replicas', { count: childJobViews.length })}</Text>,
                             children: childJobViews,
                         },
                     ]}

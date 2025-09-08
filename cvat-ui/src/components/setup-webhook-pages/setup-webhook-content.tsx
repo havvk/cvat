@@ -15,6 +15,7 @@ import Input from 'antd/lib/input';
 import Radio, { RadioChangeEvent } from 'antd/lib/radio';
 import Select from 'antd/lib/select';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { getCore, Webhook } from 'cvat-core-wrapper';
 import ProjectSearchField from 'components/create-task-page/project-search-field';
@@ -66,6 +67,7 @@ function collectEvents(method: EventsMethod, submittedGroups: Record<string, any
 }
 
 function SetupWebhookContent(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const { webhook, defaultProjectId } = props;
     const [form] = Form.useForm();
@@ -120,7 +122,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
         try {
             const values: Store = await form.validateFields();
             let notificationConfig = {
-                message: 'Webhook has been successfully updated',
+                message: t('webhookUpdatedSuccessfully'),
                 className: 'cvat-notification-update-webhook-success',
             };
             if (webhook) {
@@ -147,7 +149,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
                     type: projectId ? WebhookSourceType.PROJECT : WebhookSourceType.ORGANIZATION,
                 };
                 notificationConfig = {
-                    message: 'Webhook has been successfully added',
+                    message: t('webhookAddedSuccessfully'),
                     className: 'cvat-notification-create-webhook-success',
                 };
                 await dispatch(createWebhookAsync(rawWebhookData));
@@ -170,7 +172,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
     return (
         <Row justify='start' align='middle' className='cvat-setup-webhook-content'>
             <Col span={24}>
-                <Text className='cvat-title'>Setup a webhook</Text>
+                <Text className='cvat-title'>{t('setupAWebhook')}</Text>
             </Col>
             <Col span={24}>
                 <Form
@@ -186,20 +188,20 @@ function SetupWebhookContent(props: Props): JSX.Element {
                     <Form.Item
                         hasFeedback
                         name='targetURL'
-                        label='Target URL'
+                        label={t('Target URL')}
                         rules={[
                             {
                                 required: true,
-                                message: 'Target URL cannot be empty',
+                                message: t('targetUrlCannotBeEmpty'),
                             },
                         ]}
                     >
-                        <Input placeholder='https://example.com/postreceive' />
+                        <Input placeholder={t('targetUrlPlaceholder')} />
                     </Form.Item>
                     <Form.Item
                         hasFeedback
                         name='description'
-                        label='Description'
+                        label={t('Description')}
                     >
                         <Input />
                     </Form.Item>
@@ -207,7 +209,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
                         !webhook && (
                             <Row className='ant-form-item'>
                                 <Col className='ant-form-item-label' span={24}>
-                                    <Text className='cvat-text-color'>Project</Text>
+                                    <Text className='cvat-text-color'>{t('project')}</Text>
                                 </Col>
                                 <Col span={24}>
                                     <ProjectSearchField
@@ -222,11 +224,11 @@ function SetupWebhookContent(props: Props): JSX.Element {
                     <Form.Item
                         hasFeedback
                         name='contentType'
-                        label='Content type'
+                        label={t('contentType')}
                         rules={[{ required: true }]}
                     >
                         <Select
-                            placeholder='Select an option and change input text above'
+                            placeholder={t('selectAnOptionAndChangeInput')}
                         >
                             <Select.Option value={WebhookContentType.APPLICATION_JSON}>
                                 {WebhookContentType.APPLICATION_JSON}
@@ -235,42 +237,42 @@ function SetupWebhookContent(props: Props): JSX.Element {
                     </Form.Item>
                     <Form.Item
                         name='secret'
-                        label='Secret'
+                        label={t('secret')}
                     >
                         <Input />
                     </Form.Item>
                     <Form.Item
-                        help='Verify SSL certificates when delivering payloads'
+                        help={t('verifySslHelpText')}
                         name='enableSSL'
                         valuePropName='checked'
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Enable SSL</Text>
+                            <Text className='cvat-text-color'>{t('enableSsl')}</Text>
                         </Checkbox>
                     </Form.Item>
                     <Form.Item
-                        help='CVAT will deliver events for active webhooks only'
+                        help={t('activeWebhookHelpText')}
                         name='isActive'
                         valuePropName='checked'
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Active</Text>
+                            <Text className='cvat-text-color'>{t('Active')}</Text>
                         </Checkbox>
                     </Form.Item>
                     <Form.Item
                         name='eventsMethod'
                         rules={[{
                             required: true,
-                            message: 'The field is required',
+                            message: t('theFieldIsRequired'),
                         }]}
                     >
                         <Radio.Group onChange={onEventsMethodChange}>
                             <Radio value={EventsMethod.SEND_EVERYTHING} key={EventsMethod.SEND_EVERYTHING}>
-                                <Text>Send </Text>
-                                <Text strong>everything</Text>
+                                <Text>{t('Send')} </Text>
+                                <Text strong>{t('everything')}</Text>
                             </Radio>
                             <Radio value={EventsMethod.SELECT_INDIVIDUAL} key={EventsMethod.SELECT_INDIVIDUAL}>
-                                Select individual events
+                                {t('selectIndividualEvents')}
                             </Radio>
                         </Radio.Group>
                     </Form.Item>
@@ -299,7 +301,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
                 <Row justify='end'>
                     <Col>
                         <Button className='cvat-submit-webhook-button' type='primary' onClick={handleSubmit}>
-                            Submit
+                            {t('Submit')}
                         </Button>
                     </Col>
                 </Row>

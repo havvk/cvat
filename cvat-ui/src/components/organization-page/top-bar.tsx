@@ -7,7 +7,7 @@ import React, {
     useState, useRef, useEffect, useCallback,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
@@ -21,6 +21,7 @@ import {
     EditTwoTone, EnvironmentOutlined,
     MailOutlined, PhoneOutlined, PlusCircleOutlined, MoreOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import {
     inviteOrganizationMembersAsync,
@@ -28,7 +29,7 @@ import {
     removeOrganizationAsync,
     updateOrganizationAsync,
 } from 'actions/organization-actions';
-import { OrganizationMembersQuery } from 'reducers';
+import { OrganizationMembersQuery, CombinedState } from 'reducers';
 import { Organization, User } from 'cvat-core-wrapper';
 import {
     SortingComponent,
@@ -65,11 +66,12 @@ const FilteringComponent = ResourceFilterHOC(
 );
 
 function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
-    const {
+    const { t } = useTranslation();
+    const { 
         organizationInstance, userInstance, fetchMembers, query,
         onApplyFilter, onApplySearch, onApplySorting, selectedCount, onSelectAll,
     } = props;
-    const {
+    const { 
         owner, createdDate, description, updatedDate, slug, name, contact,
     } = organizationInstance;
     const { id: userID } = userInstance;
@@ -132,7 +134,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                 disabled: true,
                 danger: true,
             },
-            okText: 'Remove',
+            okText: t('Remove'),
         });
     };
 
@@ -148,7 +150,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                         <Row justify='space-between'>
                             <Col>
                                 <Text>
-                                    <Text className='cvat-title'>{`Organization: ${slug} `}</Text>
+                                    <Text className='cvat-title'>{t('organizationSlug', { slug })}</Text>
                                 </Text>
                             </Col>
                             <Col>
@@ -157,14 +159,14 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                                         items: [
                                             {
                                                 key: MenuActions.SET_WEBHOOKS,
-                                                label: <Link to='/organization/webhooks'>Setup webhooks</Link>,
+                                                label: <Link to='/organization/webhooks'>{t('Setup webhooks')}</Link>,
                                             },
                                             ...(owner && userID === owner.id ? [{
                                                 type: 'divider' as const,
                                             }, {
                                                 key: MenuActions.REMOVE_ORGANIZATION,
                                                 onClick: onRemove,
-                                                label: 'Remove organization',
+                                                label: t('removeOrganization'),
                                             }] : []),
                                         ],
                                         className: 'cvat-organization-actions-menu',
@@ -172,7 +174,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                                     trigger={['click']}
                                 >
                                     <Button size='middle' className='cvat-organization-page-actions-button'>
-                                        <Text className='cvat-text-color'>Actions</Text>
+                                        <Text className='cvat-text-color'>{t('Actions')}</Text>
                                         <MoreOutlined className='cvat-menu-icon' />
                                     </Button>
                                 </Dropdown>
@@ -194,7 +196,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                         </Text>
                         {!editingDescription ? (
                             <span style={{ display: 'grid' }}>
-                                {(description || 'Add description').split('\n').map((val: string, idx: number) => (
+                                {(description || t('addDescription')).split('\n').map((val: string, idx: number) => (
                                     <Text key={idx} type='secondary'>
                                         {val}
                                         {idx === 0 ? <EditTwoTone onClick={() => setEditingDescription(true)} /> : null}
@@ -221,7 +223,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                                         setEditingDescription(false);
                                     }}
                                 >
-                                    Submit
+                                    {t('Submit')}
                                 </Button>
                             </div>
                         )}
@@ -231,7 +233,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                     <div className='cvat-organization-top-bar-contacts'>
                         <div>
                             <PhoneOutlined />
-                            { !contact.phoneNumber ? <Text type='secondary'>Add phone number</Text> : null }
+                            { !contact.phoneNumber ? <Text type='secondary'>{t('addPhoneNumber')}</Text> : null }
                             <Text
                                 type='secondary'
                                 editable={{
@@ -251,7 +253,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                         </div>
                         <div>
                             <MailOutlined />
-                            { !contact.email ? <Text type='secondary'>Add email</Text> : null }
+                            { !contact.email ? <Text type='secondary'>{t('addEmail')}</Text> : null }
                             <Text
                                 type='secondary'
                                 editable={{
@@ -271,7 +273,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                         </div>
                         <div>
                             <EnvironmentOutlined />
-                            { !contact.location ? <Text type='secondary'>Add location</Text> : null }
+                            { !contact.location ? <Text type='secondary'>{t('addLocation')}</Text> : null }
                             <Text
                                 type='secondary'
                                 editable={{
@@ -289,8 +291,8 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                                 {contact.location}
                             </Text>
                         </div>
-                        <Text type='secondary'>{`Created ${moment(createdDate).format('MMMM Do YYYY')}`}</Text>
-                        <Text type='secondary'>{`Updated ${moment(updatedDate).fromNow()}`}</Text>
+                        <Text type='secondary'>{t('createdOn', { date: moment(createdDate).format('MMMM Do YYYY') })}</Text>
+                        <Text type='secondary'>{t('updatedOn', { date: moment(updatedDate).fromNow() })}</Text>
                     </div>
                 </Col>
                 <Col span={12} className='cvat-organization-top-bar-buttons-block'>
@@ -311,19 +313,19 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                                         className: 'cvat-modal-organization-leave-confirm',
                                         content: (
                                             <>
-                                                <Text>Please, confirm leaving the organization</Text>
+                                                <Text>{t('confirmLeavingOrganization')}</Text>
                                                 <Text strong>{` ${organizationInstance.slug}`}</Text>
-                                                <Text>. You will not have access to the organization data anymore</Text>
+                                                <Text>{t('noAccessToOrganizationData')}</Text>
                                             </>
                                         ),
-                                        okText: 'Leave',
+                                        okText: t('leave'),
                                         okButtonProps: {
                                             danger: true,
                                         },
                                     });
                                 }}
                             >
-                                Leave organization
+                                {t('leaveOrganization')}
                             </Button>
                         ) : null}
                         <Button
@@ -332,7 +334,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                             onClick={() => setVisibleInviteModal(true)}
                             icon={<PlusCircleOutlined />}
                         >
-                            Invite members
+                            {t('inviteMembers')}
                         </Button>
                     </Space>
                 </Col>
@@ -346,7 +348,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                         }}
                         defaultValue={query.search ?? ''}
                         className='cvat-organization-page-search-bar'
-                        placeholder='Search ...'
+                        placeholder={t('Search ...')}
                     />
                     <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                 </Col>
@@ -357,7 +359,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                             setVisibility({ ...defaultVisibility, sorting: visible })
                         )}
                         defaultFields={query.sort?.split(',') || ['-ID']}
-                        sortingFields={['User', 'Role']}
+                        sortingFields={[t('user'), t('role')]}
                         onApplySorting={onApplySorting}
                     />
                     <FilteringComponent

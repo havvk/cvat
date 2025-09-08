@@ -64,7 +64,7 @@ export default function Location(props: Props): JSX.Element {
             label={(
                 <>
                     {label}
-                    <Tooltip title={t('More information')}>
+                    <Tooltip title={t('moreInformation')}>
                         <Button
                             className='cvat-cloud-storage-help-button'
                             type='link'

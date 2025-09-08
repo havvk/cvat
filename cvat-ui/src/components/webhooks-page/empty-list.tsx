@@ -5,6 +5,7 @@
 import React from 'react';
 import Text from 'antd/lib/typography/Text';
 import { Row, Col } from 'antd/lib/grid';
+import { useTranslation } from 'react-i18next';
 
 import Empty from 'antd/lib/empty';
 import { WebhooksQuery } from 'reducers';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 function EmptyWebhooksListComponent(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { query } = props;
 
     return (
@@ -21,10 +23,10 @@ function EmptyWebhooksListComponent(props: Props): JSX.Element {
             <Empty description={!query.filter && !query.search ? (
                 <Row justify='center' align='middle'>
                     <Col>
-                        <Text strong>No webhooks created yet ...</Text>
+                        <Text strong>{t('noWebhooksCreatedYet')}</Text>
                     </Col>
                 </Row>
-            ) : (<Text>No results matched your search</Text>)}
+            ) : (<Text>{t('noResultsMatchedYourSearch')}</Text>)}
             />
         </div>
     );
