@@ -90,27 +90,27 @@ def handler(context, event):
     data = event.body
     buf = io.BytesIO(base64.b64decode(data["image"]))
     threshold = float(data.get("threshold", 0.5))
-    
+
     image = Image.open(buf)
-    
+
     yolo_results = context.user_data.model(image, conf=threshold)[0]
     labels = yolo_results.names
-    
+
     detections = sv.Detections.from_yolov8(yolo_results)
     detections = detections[detections.confidence > threshold]
-    
+
     results = []
     if len(detections) > 0 and detections.mask is not None:
         for i in range(len(detections.xyxy)):
             mask = detections.mask[i]
             class_id = detections.class_id[i]
-            
+
             contours = find_contours(mask, 0.5)
             for contour in contours:
                 contour = approximate_polygon(contour, tolerance=2.5)
                 if len(contour) < 3:
                     continue
-                
+
                 results.append({
                     "confidence": str(detections.confidence[i]),
                     "label": labels[class_id],
@@ -198,7 +198,7 @@ docker build -t yolov8-seg-base .
 
 # 2. 部署函数。Nuclio 会自动读取 function.yaml 并使用我们刚构建的 yolov8-seg-base 镜像
 nuctl deploy yolov8-seg --project-name cvat \
-    --path .
+    --path .  \
     --platform local
 ```
 
