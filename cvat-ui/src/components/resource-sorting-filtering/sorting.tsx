@@ -213,7 +213,7 @@ function SortingModalComponent(props: Props): JSX.Element {
                 type='default'
                 onClick={() => onVisibleChange(!visible)}
             >
-                {t('Sort by')}
+                {t('sortBy')}
                 <OrderedListOutlined />
             </Button>
         </Popover>

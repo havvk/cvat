@@ -110,7 +110,7 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
             title={(
                 <Row justify='space-between' align='middle'>
                     <Col span={12}>
-                        <Text strong>{t('Select color')}</Text>
+                        <Text strong>{t('selectColor')}</Text>
                     </Col>
                     <Col span={4}>
                         <CVATTooltip title={t('Close')}>

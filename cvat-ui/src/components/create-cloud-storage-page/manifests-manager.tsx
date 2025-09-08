@@ -62,7 +62,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
                 label={(
                     <>
                         {t('manifests')}
-                        <Tooltip title={t('Click to open guide')}>
+                        <Tooltip title={t('clickToOpenGuide')}>
                             <Button
                                 type='link'
                                 target='_blank'

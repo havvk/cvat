@@ -70,7 +70,7 @@ function makeMessage(label: Label, labelType: State['labelType'], pointsCount: n
         <>
             <Text>{t('Annotate')}</Text>
             <Text strong>{` ${label.name} `}</Text>
-            <Text>{t('on the image, using')}</Text>
+            <Text>{t('onTheImageUsing')}</Text>
             <Text strong>{` ${readableShape} `}</Text>
         </>
     );
@@ -432,7 +432,7 @@ function SingleShapeSidebar(): JSX.Element {
         return (
             <Layout.Sider {...siderProps}>
                 <div className='cvat-single-shape-annotation-sidebar-not-found-wrapper'>
-                    <Text strong>{t('No available labels found')}</Text>
+                    <Text strong>{t('noAvailableLabelsFound')}</Text>
                 </div>
             </Layout.Sider>
         );
@@ -461,7 +461,7 @@ function SingleShapeSidebar(): JSX.Element {
                                     </Button>
                                 ) : (
                                     <Button size='large' type='primary' onClick={() => finishOnThisFrame(true)}>
-                                        {t('Submit Results')}
+                                        {t('submitResults')}
                                     </Button>
                                 )}
                             </Col>
@@ -546,7 +546,7 @@ function SingleShapeSidebar(): JSX.Element {
                 <>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label'>
                         <Col>
-                            <Text strong>{t('Label selector')}</Text>
+                            <Text strong>{t('labelSelector')}</Text>
                         </Col>
                     </Row>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label-select'>
@@ -564,7 +564,7 @@ function SingleShapeSidebar(): JSX.Element {
                 <>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label-type'>
                         <Col>
-                            <Text strong>{t('Label type selector')}</Text>
+                            <Text strong>{t('labelTypeSelector')}</Text>
                         </Col>
                     </Row>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-label-type-selector'>
@@ -596,7 +596,7 @@ function SingleShapeSidebar(): JSX.Element {
                             dispatch(actionCreators.switchAutoNextFrame(!state.autoNextFrame));
                         }}
                     >
-                        {t('Automatically go to the next frame')}
+                        {t('automaticallyGoToTheNextFrame')}
                     </Checkbox>
                 </Col>
             </Row>
@@ -609,7 +609,7 @@ function SingleShapeSidebar(): JSX.Element {
                             dispatch(actionCreators.switchAutoSaveOnFinish());
                         }}
                     >
-                        {t('Automatically save when finish')}
+                        {t('automaticallySaveWhenFinish')}
                     </Checkbox>
                 </Col>
             </Row>
@@ -626,7 +626,7 @@ function SingleShapeSidebar(): JSX.Element {
                             }
                         }}
                     >
-                        {t('Navigate only empty frames')}
+                        {t('navigateOnlyEmptyFrames')}
                     </Checkbox>
                 </Col>
             </Row>
@@ -640,7 +640,7 @@ function SingleShapeSidebar(): JSX.Element {
                                 dispatch(actionCreators.switchCountOfPointsIsPredefined());
                             }}
                         >
-                            {t('Predefined number of points')}
+                            {t('predefinedNumberOfPoints')}
                         </Checkbox>
                     </Col>
                 </Row>
@@ -649,7 +649,7 @@ function SingleShapeSidebar(): JSX.Element {
                 <>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-points-count'>
                         <Col>
-                            <Text strong>{t('Number of points')}</Text>
+                            <Text strong>{t('numberOfPoints')}</Text>
                         </Col>
                     </Row>
                     <Row justify='start' className='cvat-single-shape-annotation-sidebar-points-count-input'>

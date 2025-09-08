@@ -160,7 +160,7 @@ class LabelForm extends React.Component<Props> {
                 rules={[
                     {
                         required: true,
-                        message: t('Please specify a name'),
+                        message: t('pleaseSpecifyAName'),
                     },
                     {
                         pattern: patterns.validateAttributeName.pattern,
@@ -169,7 +169,7 @@ class LabelForm extends React.Component<Props> {
                     {
                         validator: (_rule: any, attrName: string) => {
                             if (attrNames.includes(attrName) && attr.name !== attrName) {
-                                return Promise.reject(new Error(t('Attribute name must be unique for the label')));
+                                return Promise.reject(new Error(t('attributeNameUnique')));
                             }
                             return Promise.resolve();
                         },
@@ -236,7 +236,7 @@ class LabelForm extends React.Component<Props> {
         const validator = (_: any, values: string[]): Promise<void> => {
             if (locked && existingValues) {
                 if (!equalArrayHead(existingValues, values)) {
-                    return Promise.reject(new Error(t('You can only append new values')));
+                    return Promise.reject(new Error(t('youCanOnlyAppendNewValues')));
                 }
             }
 
@@ -256,7 +256,7 @@ class LabelForm extends React.Component<Props> {
                     rules={[
                         {
                             required: true,
-                            message: t('Please specify values'),
+                            message: t('pleaseSpecifyValues'),
                         },
                         {
                             validator,
@@ -266,7 +266,7 @@ class LabelForm extends React.Component<Props> {
                     <Select
                         className='cvat-attribute-values-input'
                         mode='tags'
-                        placeholder={t('Attribute values')}
+                        placeholder={t('attributeValues')}
                         dropdownStyle={{ display: 'none' }}
                         tagRender={(props) => {
                             const attrs = this.formRef.current?.getFieldValue('attributes');
@@ -320,7 +320,7 @@ class LabelForm extends React.Component<Props> {
                     rules={[
                         {
                             required: true,
-                            message: t('Please, specify a default value'),
+                            message: t('pleaseSpecifyADefaultValue'),
                         }]}
                     name={[key, 'values']}
                 >
@@ -343,7 +343,7 @@ class LabelForm extends React.Component<Props> {
 
             const numbers = strNumbers.split(';').map((number): number => Number.parseFloat(number));
             if (numbers.length !== 3) {
-                return Promise.reject(new Error(t('Three numbers are expected')));
+                return Promise.reject(new Error(t('threeNumbersAreExpected')));
             }
 
             for (const number of numbers) {
@@ -355,15 +355,15 @@ class LabelForm extends React.Component<Props> {
             const [min, max, step] = numbers;
 
             if (min >= max) {
-                return Promise.reject(new Error(t('Minimum must be less than maximum')));
+                return Promise.reject(new Error(t('minimumMustBeLessThanMaximum')));
             }
 
             if (max - min < step) {
-                return Promise.reject(new Error(t('Step must be less than minmax difference')));
+                return Promise.reject(new Error(t('stepLessThanMinMax')));
             }
 
             if (step <= 0) {
-                return Promise.reject(new Error(t('Step must be a positive number')));
+                return Promise.reject(new Error(t('stepMustBeAPositiveNumber')));
             }
 
             return Promise.resolve();
@@ -375,7 +375,7 @@ class LabelForm extends React.Component<Props> {
                 rules={[
                     {
                         required: true,
-                        message: t('Please set a range'),
+                        message: t('pleaseSetARange'),
                     },
                     {
                         validator,
@@ -393,7 +393,7 @@ class LabelForm extends React.Component<Props> {
 
         return (
             <Form.Item name={[key, 'values']}>
-                <Input.TextArea className='cvat-attribute-values-input' placeholder={t('Default value')} />
+                <Input.TextArea className='cvat-attribute-values-input' placeholder={t('defaultValue')} />
             </Form.Item>
         );
     }
@@ -434,7 +434,7 @@ class LabelForm extends React.Component<Props> {
                                     className: 'cvat-modal-delete-label-attribute',
                                     icon: <ExclamationCircleOutlined />,
                                     title: t('Do you want to remove the "{{attrName}}" attribute?', { attrName: attr.name }),
-                                    content: t('This action cannot be undone. All annotations associated to the attribute will be removed'),
+                                    content: t('deleteAttributeWarning'),
                                     type: 'warning',
                                     okButtonProps: { type: 'primary', danger: true },
                                     onOk: () => {
@@ -507,7 +507,7 @@ class LabelForm extends React.Component<Props> {
                 rules={[
                     {
                         required: true,
-                        message: t('Please specify a name'),
+                        message: t('pleaseSpecifyAName'),
                     },
                     {
                         pattern: patterns.validateAttributeName.pattern,
@@ -516,7 +516,7 @@ class LabelForm extends React.Component<Props> {
                     {
                         validator: (_rule: any, labelName: string) => {
                             if (labelNames.includes(labelName) && label?.name !== labelName) {
-                                return Promise.reject(new Error(t('Label name must be unique')));
+                                return Promise.reject(new Error(t('labelNameMustBeUnique')));
                             }
                             return Promise.resolve();
                         },
@@ -525,7 +525,7 @@ class LabelForm extends React.Component<Props> {
             >
                 <Input
                     ref={this.inputNameRef}
-                    placeholder={t('Label name')}
+                    placeholder={t('labelName')}
                     className='cvat-label-name-input'
                     onKeyUp={(event): void => {
                         if (event.key === 'Escape' || event.key === 'Esc' || event.keyCode === 27) {
@@ -571,7 +571,7 @@ class LabelForm extends React.Component<Props> {
         return (
             <Form.Item>
                 <Button onClick={this.addAttribute} className='cvat-new-attribute-button'>
-                    {t('Add an attribute')}
+                    {t('addAnAttribute')}
                     <PlusCircleOutlined />
                 </Button>
             </Form.Item>

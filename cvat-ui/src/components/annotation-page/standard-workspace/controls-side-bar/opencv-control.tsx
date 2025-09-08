@@ -345,7 +345,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                 </Row>
                 <Row justify='start' className='cvat-opencv-drawing-tools'>
                     <Col>
-                        <CVATTooltip title={t('Intelligent scissors')} className='cvat-opencv-drawing-tool'>
+                        <CVATTooltip title={t('intelligentScissors')} className='cvat-opencv-drawing-tool'>
                             <Button
                                 className='cvat-opencv-scissors-tool-button'
                                 onClick={() => {
@@ -375,7 +375,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
         return (
             <Row justify='start'>
                 <Col>
-                    <CVATTooltip title={t('Histogram equalization')} className='cvat-opencv-image-tool'>
+                    <CVATTooltip title={t('histogramEqualization')} className='cvat-opencv-image-tool'>
                         <Button
                             className={
                                 hasFilter(filters, ImageFilterAlias.HISTOGRAM_EQUALIZATION) ?
@@ -421,7 +421,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
             <>
                 <Row justify='start'>
                     <Col className='cvat-opencv-tracker-help-message'>
-                        <Alert type='info' message={t('The tracker will be applied to drawn rectangles')} />
+                        <Alert type='info' message={t('trackerAppliedToRects')} />
                     </Col>
                 </Row>
                 <Row justify='start'>
@@ -505,12 +505,12 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                         <Col>
                             {
                                 initializationProgress >= 0 ?
-                                    <Text>{t('OpenCV is loading')}</Text> : (
+                                    <Text>{t('opencvIsLoading')}</Text> : (
                                         <Button
                                             className='cvat-opencv-initialization-button'
                                             onClick={() => { this.initializeOpenCV(); }}
                                         >
-                                            {t('Reload OpenCV')}
+                                            {t('reloadOpenCV')}
                                         </Button>
                                     )
                             }

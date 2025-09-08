@@ -67,7 +67,7 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
     items.push([(
         <Row key='player-step' align='bottom' className='cvat-player-settings-step cvat-player-setting'>
             <Col>
-                <Text className='cvat-text-color'> {t('Player step')} </Text>
+                <Text className='cvat-text-color'> {t('playerStep')} </Text>
                 <InputNumber
                     min={minFrameStep}
                     max={maxFrameStep}
@@ -81,7 +81,7 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
             </Col>
             <Col offset={1}>
                 <Text type='secondary'>
-                    {t('Number of frames skipped when selecting')}
+                    {t('framesSkippedOnSelect')}
                     <Icon component={BackJumpIcon} />
                     {t('or')}
                     <Icon component={ForwardJumpIcon} />
@@ -93,7 +93,7 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
     items.push([(
         <Row key='player-speed' align='middle' className='cvat-player-settings-speed cvat-player-setting'>
             <Col>
-                <Text className='cvat-text-color'> {t('Player speed')} </Text>
+                <Text className='cvat-text-color'> {t('playerSpeed')} </Text>
                 <Select
                     className='cvat-player-settings-speed-select'
                     value={frameSpeed}
@@ -158,7 +158,7 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
                         className='cvat-select-canvas-background-color-button'
                         type='default'
                     >
-                        {t('Select canvas background color')}
+                        {t('selectCanvasBackgroundColor')}
                     </Button>
                 </Popover>
             </Col>
@@ -177,11 +177,11 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
                                 onSwitchResetZoom(event.target.checked);
                             }}
                         >
-                            {t('Reset zoom')}
+                            {t('resetZoom')}
                         </Checkbox>
                     </Col>
                     <Col span={24}>
-                        <Text type='secondary'> {t('Fit image after changing frame')} </Text>
+                        <Text type='secondary'> {t('fitImageAfterChangingFrame')} </Text>
                     </Col>
                 </Row>
             </Col>
@@ -195,11 +195,11 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
                                 onSwitchRotateAll(event.target.checked);
                             }}
                         >
-                            {t('Rotate all images')}
+                            {t('rotateAllImages')}
                         </Checkbox>
                     </Col>
                     <Col span={24}>
-                        <Text type='secondary'> {t('Rotate all images simultaneously')} </Text>
+                        <Text type='secondary'> {t('rotateAllImagesSimultaneously')} </Text>
                     </Col>
                 </Row>
             </Col>
@@ -218,11 +218,11 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
                                 onSwitchSmoothImage(event.target.checked);
                             }}
                         >
-                            {t('Smooth image')}
+                            {t('smoothImage')}
                         </Checkbox>
                     </Col>
                     <Col span={24}>
-                        <Text type='secondary'> {t('Smooth image when zoom-in it')} </Text>
+                        <Text type='secondary'> {t('smoothImageWhenZoominIt')} </Text>
                     </Col>
                 </Row>
             </Col>
@@ -235,11 +235,11 @@ export default function PlayerSettingsComponent(props: Props): JSX.Element {
                             onSwitchShowingDeletedFrames(event.target.checked);
                         }}
                     >
-                        {t('Show deleted frames')}
+                        {t('showDeletedFrames')}
                     </Checkbox>
                 </Row>
                 <Row>
-                    <Text type='secondary'>{t('You will be able to navigate and restore deleted frames')}</Text>
+                    <Text type='secondary'>{t('canNavigateRestoreDeleted')}</Text>
                 </Row>
             </Col>
         </Row>

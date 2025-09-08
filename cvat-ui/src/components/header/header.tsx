@@ -231,9 +231,9 @@ function HeaderComponent(props: Props): JSX.Element {
 
     const aboutPlugins = usePlugins((state: CombinedState) => state.plugins.components.about.links.items, props);
     const aboutLinks: [JSX.Element, number][] = [];
-    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t("What's new?")}</a></Col>), 0]);
-    aboutLinks.push([(<Col key='license'><a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>{t('MIT License')}</a></Col>), 10]);
-    aboutLinks.push([(<Col key='discord'><a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>{t('Find us on Discord')}</a></Col>), 20]);
+    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t("whatsNew")}</a></Col>), 0]);
+    aboutLinks.push([(<Col key='license'><a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>{t('mitLicense')}</a></Col>), 10]);
+    aboutLinks.push([(<Col key='discord'><a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>{t('findUsOnDiscord')}</a></Col>), 20]);
 
     aboutLinks.push(...aboutPlugins.map(({ component: Component, weight }, index: number) => (
         [<Component key={index} targetProps={props} />, weight] as [JSX.Element, number]
@@ -245,8 +245,8 @@ function HeaderComponent(props: Props): JSX.Element {
             content: (
                 <div>
                     <p>{`${about.server.description}`}</p>
-                    <p><Text strong>{t('Server version')}:</Text><Text type='secondary'>{` ${about.server.version}`}</Text></p>
-                    <p><Text strong>{t('UI version')}:</Text><Text type='secondary'>{` ${about.packageVersion.ui}`}</Text></p>
+                    <p><Text strong>{t('serverVersion')}:</Text><Text type='secondary'>{` ${about.server.version}`}</Text></p>
+                    <p><Text strong>{t('uiVersion')}:</Text><Text type='secondary'>{` ${about.packageVersion.ui}`}</Text></p>
                     <Row justify='space-around'>
                         { aboutLinks.sort((item1, item2) => item1[1] - item2[1])
                             .map((item) => item[0]) }
@@ -332,7 +332,7 @@ function HeaderComponent(props: Props): JSX.Element {
             },
             ...(!!organizationsList && viewType === 'list' ? [{
                 key: 'switch_organization',
-                label: t('switch Organization'),
+                label: t('switchOrganization'),
                 onClick: () => {
                     openSelectOrganizationModal(setNewOrganization);
                 },
@@ -341,7 +341,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 type: 'divider' as const,
             }, {
                 key: '$personal',
-                label: t('Personal workspace'),
+                label: t('personalWorkspace'),
                 className: !currentOrganization ? 'cvat-header-menu-active-organization-item' : 'cvat-header-menu-organization-item',
                 onClick: resetOrganization,
             }, ...organizationsList.map((organization: Organization) => ({
@@ -374,7 +374,7 @@ function HeaderComponent(props: Props): JSX.Element {
             icon: changePasswordFetching ? <LoadingOutlined /> : <EditOutlined />,
             className: 'cvat-header-menu-change-password',
             onClick: () => switchChangePasswordModalVisible(true),
-            label: t('Change password'),
+            label: t('changePassword'),
             disabled: changePasswordFetching,
         }, 40]);
     }

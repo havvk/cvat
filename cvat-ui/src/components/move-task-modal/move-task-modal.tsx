@@ -71,17 +71,17 @@ function MoveTaskModal({
 
     const submitMove = async (): Promise<void> => {
         if (!taskInstance) {
-            throw new Error(t('Task to move is not specified'));
+            throw new Error(t('taskToMoveIsNotSpecified'));
         }
 
         if (!projectId) {
-            notification.error({ message: t('Please, select a project') });
+            notification.error({ message: t('pleaseSelectAProject') });
             return;
         }
 
         if (Object.values(labelMap).some((map) => map.newLabelName === null)) {
             notification.error({
-                message: t('Please, specify mapping for all the labels'),
+                message: t('specifyMappingForAllLabels'),
             });
             return;
         }
@@ -109,7 +109,7 @@ function MoveTaskModal({
                     setIsUpdating(false);
                 }
             }).catch((error: Error) => notification.error({
-                message: t('Could not update the task'),
+                message: t('couldNotUpdateTheTask'),
                 className: 'cvat-notification-notice-update-task-failed',
                 description: error.toString(),
             }));
@@ -129,7 +129,7 @@ function MoveTaskModal({
                     }
                 })
                 .catch((error: Error) => notification.error({
-                    message: t('Could not fetch task from the server'),
+                    message: t('couldNotFetchTaskFromTheServer'),
                     description: error.toString(),
                 })).finally(() => {
                     if (mounted.current) {
@@ -202,7 +202,7 @@ function MoveTaskModal({
                     />
                 </Col>
             </Row>
-            <Divider orientation='left'>{t('Label mapping')}</Divider>
+            <Divider orientation='left'>{t('labelMapping')}</Divider>
             {!!Object.keys(labelMap).length &&
                 !isUpdating &&
                 taskInstance?.labels.map((label: any) => (

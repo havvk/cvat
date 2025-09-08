@@ -47,7 +47,7 @@ function ResetPasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element 
             </Row>
             <Row>
                 <Col>
-                    <Title level={2}>{t('Forgot password?')}</Title>
+                    <Title level={2}>{t('forgotPassword')}</Title>
                 </Col>
             </Row>
             <Row>
@@ -71,11 +71,11 @@ function ResetPasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element 
                     rules={[
                         {
                             type: 'email',
-                            message: t('The input is not valid E-mail!'),
+                            message: t('invalidEmail'),
                         },
                         {
                             required: true,
-                            message: t('Please specify an email address'),
+                            message: t('specifyEmailAddress'),
                         },
                     ]}
                 >

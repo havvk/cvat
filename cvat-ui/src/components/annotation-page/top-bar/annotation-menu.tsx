@@ -98,7 +98,7 @@ function AnnotationMenuComponent(): JSX.Element {
 
     menuItems.push({
         key: Actions.LOAD_JOB_ANNO,
-        label: t('Upload annotations'),
+        label: t('uploadAnnotations'),
         onClick: uploadAnnotations,
     });
 

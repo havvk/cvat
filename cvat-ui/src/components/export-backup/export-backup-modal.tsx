@@ -264,7 +264,7 @@ function ExportBackupModal(): JSX.Element {
                                     />
                                 )}
                             >
-                                {t('When forming the backup name, a template is used.')}
+                                {t('templateUsedForBackupName')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>
@@ -299,7 +299,7 @@ function ExportBackupModal(): JSX.Element {
                             onChange={setLightweight}
                         />
                         <Text strong>{t('useLightweightBackup')}</Text>
-                        <Tooltip title={t('If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.')}>
+                        <Tooltip title={t('lightweightBackupTooltip')}>
                             <QuestionCircleOutlined />
                         </Tooltip>
                     </Space>

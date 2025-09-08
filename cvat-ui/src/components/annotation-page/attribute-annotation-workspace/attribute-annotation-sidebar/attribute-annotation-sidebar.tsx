@@ -394,7 +394,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & With
                     </>
                 ) : (
                     <div className='attribute-annotations-sidebar-not-found-wrapper'>
-                        <Text strong>{t('No attributes found')}</Text>
+                        <Text strong>{t('noAttributesFound')}</Text>
                     </div>
                 )}
 
@@ -414,7 +414,7 @@ function AttributeAnnotationSidebar(props: StateToProps & DispatchToProps & With
             </span>
             <div className='cvat-sidebar-collapse-button-spacer' />
             <div className='attribute-annotations-sidebar-not-found-wrapper'>
-                <Text strong>{t('No objects found')}</Text>
+                <Text strong>{t('noObjectsFound')}</Text>
             </div>
         </Layout.Sider>
     );

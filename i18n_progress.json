@@ -218,13 +218,13 @@
   "CamelCaseKeys": {
     "status": "in_progress",
     "notes": "Fixing keys with spaces to camelCase.",
-    "todo_keys": [
+    "todo_keys": [],
+    "pending_keys": [],
+    "completed_keys": [
       [
-        "Switch organization",
+        "Switch Organization",
         "switchOrganization"
-      ]
-    ],
-    "pending_keys": [
+      ],
       [
         "Personal workspace",
         "personalWorkspace"
@@ -1534,12 +1534,6 @@
         "exportDatasetCurrentTask"
       ]
     ],
-    "completed_keys": [
-
-    ],
-    "failed_keys": [],
-    "long_keys_to_review": [
-
-    ]
+    "failed_keys": []
   }
 }

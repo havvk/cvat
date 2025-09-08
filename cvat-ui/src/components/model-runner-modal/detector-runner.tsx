@@ -114,7 +114,7 @@ function DetectorRunner(props: Props): JSX.Element {
         if (model) {
             setModelLabels(model.labels);
             if (!model.labels.length && model.kind !== ModelKind.REID) {
-                notification.warning({ message: t('This model does not have specified labels') });
+                notification.warning({ message: t('modelHasNoLabels') });
             }
         } else {
             setModelLabels([]);
@@ -127,7 +127,7 @@ function DetectorRunner(props: Props): JSX.Element {
                 <Col span={4}>{t('Model:')}</Col>
                 <Col span={20}>
                     <Select
-                        placeholder={dimension === DimensionType.DIMENSION_2D ? t('Select a model') : t('No models available')}
+                        placeholder={dimension === DimensionType.DIMENSION_2D ? t('selectAModel') : t('noModelsAvailable')}
                         disabled={dimension !== DimensionType.DIMENSION_2D}
                         style={{ width: '100%' }}
                         onChange={(_modelID: string): void => {
@@ -148,12 +148,12 @@ function DetectorRunner(props: Props): JSX.Element {
                 <div>
                     <div className='cvat-detector-runner-mapping-header'>
                         <div>
-                            <Text strong>{t('Setup mapping between labels and attributes')}</Text>
+                            <Text strong>{t('setupLabelAttributeMapping')}</Text>
                         </div>
                         <div>
-                            <Tag>{t('Model Spec')}</Tag>
+                            <Tag>{t('modelSpec')}</Tag>
                             <ArrowRightOutlined />
-                            <Tag>{t('CVAT Spec')}</Tag>
+                            <Tag>{t('cvatSpec')}</Tag>
                         </div>
                     </div>
                     <LabelsMapperComponent
@@ -181,7 +181,7 @@ function DetectorRunner(props: Props): JSX.Element {
                         checked={cleanup}
                         onChange={(checked: boolean): void => setCleanup(checked)}
                     />
-                    <Text>{t('Clean previous annotations')}</Text>
+                    <Text>{t('cleanPreviousAnnotations')}</Text>
                 </div>
             )}
             {isDetector && (
@@ -200,7 +200,7 @@ function DetectorRunner(props: Props): JSX.Element {
                         </Col>
                         <Col>
                             <Text>{t('threshold')}</Text>
-                            <CVATTooltip title={t('Minimum confidence threshold for detections. Leave empty to use the default value specified in the model settings')}>
+                            <CVATTooltip title={t('minConfidenceThresholdTooltip')}>
                                 <QuestionCircleOutlined className='cvat-info-circle-icon' />
                             </CVATTooltip>
                         </Col>
@@ -231,7 +231,7 @@ function DetectorRunner(props: Props): JSX.Element {
                     </Row>
                     <Row align='middle' justify='start'>
                         <Col>
-                            <Text>{t('Maximum distance')}</Text>
+                            <Text>{t('maximumDistance')}</Text>
                         </Col>
                         <Col offset={1}>
                             <CVATTooltip title={t('maximumDistanceBetweenShapesThatCanBeMerged')}>

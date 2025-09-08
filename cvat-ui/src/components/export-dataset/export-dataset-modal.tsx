@@ -331,7 +331,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                                     />
                                 )}
                             >
-                                {t('When forming the dataset name, a template is used.')}
+                                {t('templateUsedForDatasetName')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>

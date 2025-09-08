@@ -188,7 +188,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
                     <Form.Item
                         hasFeedback
                         name='targetURL'
-                        label={t('Target URL')}
+                        label={t('targetUrl')}
                         rules={[
                             {
                                 required: true,

@@ -46,7 +46,7 @@ export default function ImageSetupsContent(): JSX.Element {
 
     return (
         <div className='cvat-canvas-image-setups-content'>
-            <Text>{t('Image grid')}</Text>
+            <Text>{t('imageGrid')}</Text>
             <hr />
             <Row justify='space-between' align='middle' gutter={8}>
                 <Col span={1} />
@@ -124,7 +124,7 @@ export default function ImageSetupsContent(): JSX.Element {
                     />
                 </Col>
             </Row>
-            <Text>{t('Color settings')}</Text>
+            <Text>{t('colorSettings')}</Text>
             <hr />
             <Row justify='space-around'>
                 <Col span={24}>

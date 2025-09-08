@@ -101,7 +101,7 @@ function ContextImage(props: Props): JSX.Element {
                 </div>
             </div>
             { (hasError ||
-                (!fetching && contextImageOffset >= Object.keys(contextImageData).length)) && <Text> {t('No data')} </Text>}
+                (!fetching && contextImageOffset >= Object.keys(contextImageData).length)) && <Text> {t('noData')} </Text>}
             { fetching && <Spin size='small' /> }
             {
                 contextImageOffset < Object.keys(contextImageData).length &&

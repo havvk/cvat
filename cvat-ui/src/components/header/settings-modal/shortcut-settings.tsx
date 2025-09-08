@@ -45,7 +45,7 @@ function ShortcutsSettingsComponent(props: Props): JSX.Element {
 
     const onRestoreDefaults = useCallback(() => {
         Modal.confirm({
-            title: t('Are you sure you want to restore defaults?'),
+            title: t('confirmRestoreDefaults'),
             okText: t('Yes'),
             className: 'cvat-shortcuts-settings-restore-modal',
             cancelText: t('No'),
@@ -138,18 +138,18 @@ function ShortcutsSettingsComponent(props: Props): JSX.Element {
                     <Flex gap={4}>
                         <Search
                             size='large'
-                            placeholder={t('Search for a shortcut here...')}
+                            placeholder={t('searchForAShortcutHere')}
                             allowClear
                             onChange={onSearchChange}
                             className='cvat-shortcuts-settings-search'
                         />
-                        <Button size='large' onClick={onRestoreDefaults} className='cvat-shortcuts-settings-restore'>{t('Restore Defaults')}</Button>
+                        <Button size='large' onClick={onRestoreDefaults} className='cvat-shortcuts-settings-restore'>{t('restoreDefaults')}</Button>
                     </Flex>
                 </Col>
             </Row>
             <Row className='cvat-shortcuts-setting'>
                 <Col span={24}>
-                    <Alert message={t('Shortcut may consist of any combination of modifiers (alt, ctrl, or shift) and one non-modifier at the end. Some key combinations may be reserved by the browser and cannot be overridden in CVAT.')} type='warning' showIcon />
+                    <Alert message={t('shortcutCompositionWarning')} type='warning' showIcon />
                     {items ? (
                         <Collapse
                             items={items}
