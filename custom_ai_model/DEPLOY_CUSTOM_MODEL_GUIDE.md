@@ -59,135 +59,17 @@ nuctl deploy --project-name cvat --path . --platform local
 
 ### 方案二：部署实例分割模型 (Instance Segmentation)
 
-此方案提供了一个专为**实例分割**任务预先配置好的模板。为了确保环境的稳定和所有依赖的完整性，此方案采用了与方案一相同的两步构建策略：首先构建一个包含所有依赖的“基础镜像”，然后Nuclio会使用这个基础镜像来打包最终的函数。
+此方案提供了一个专为**实例分割**任务预先配置好的模板。为了确保环境的稳定和所有依赖的完整性，此方案采用了与方案一相同的两步构建策略。
 
-#### 第 1 步: 准备所有文件
+#### 第 1 步: 准备文件
 
-1.  在 CVAT 项目根目录创建一个新文件夹, 例如 `yolov8n-seg-model`。
-2.  将您的分割模型文件 (例如 `yolov8n-seg.pt`) 复制到这个新文件夹中, 并**重命名为 `best.pt`**。
-3.  在 `yolov8n-seg-model` 文件夹中, 确保您有以下三个最终版本的文件。
+此方案所需的所有配置文件 (`main.py`, `Dockerfile`, `function.yaml`) 均已在 `yolov8n-seg-model` 目录中提供，并已配置好。
 
-**`main.py` 文件:**
-```python
-import json
-import base64
-from PIL import Image
-import io
-import torch
-from ultralytics import YOLO
-import supervision as sv
-from skimage.measure import approximate_polygon, find_contours
-
-def init_context(context):
-    context.logger.info("Initializing context for YOLOv8 segmentation...")
-    model_path = "/opt/nuclio/best.pt"
-    model = YOLO(model_path, task="segment")
-    context.user_data.model = model
-    context.logger.info("Context initialized successfully.")
-
-def handler(context, event):
-    context.logger.info("Running YOLOv8 segmentation model")
-    data = event.body
-    buf = io.BytesIO(base64.b64decode(data["image"]))
-    threshold = float(data.get("threshold", 0.5))
-
-    image = Image.open(buf)
-
-    yolo_results = context.user_data.model(image, conf=threshold)[0]
-    labels = yolo_results.names
-
-    detections = sv.Detections.from_yolov8(yolo_results)
-    detections = detections[detections.confidence > threshold]
-
-    results = []
-    if len(detections) > 0 and detections.mask is not None:
-        for i in range(len(detections.xyxy)):
-            mask = detections.mask[i]
-            class_id = detections.class_id[i]
-
-            contours = find_contours(mask, 0.5)
-            for contour in contours:
-                contour = approximate_polygon(contour, tolerance=2.5)
-                if len(contour) < 3:
-                    continue
-
-                results.append({
-                    "confidence": str(detections.confidence[i]),
-                    "label": labels[class_id],
-                    "points": contour.ravel().tolist(),
-                    "type": "polygon",
-                })
-
-    return context.Response(body=json.dumps(results),
-                            headers={},
-                            content_type='application/json',
-                            status_code=200)
-```
-
-**`Dockerfile` 文件 (用于构建基础镜像):**
-```dockerfile
-# 1. 使用一个轻量的 Python 官方镜像作为基础
-FROM python:3.9-slim
-
-# 2. 安装系统级依赖 (特别是 OpenCV 需要的)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libgl1 \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
-    libxrender-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# 3. 设置工作目录
-WORKDIR /opt/nuclio
-
-# 4. 安装核心 Python 依赖
-RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless supervision scikit-image Pillow
-
-# 5. 将我们的模型和处理脚本复制到镜像中
-COPY best.pt .
-COPY main.py .
-```
-
-**`function.yaml` 文件 (最终版):**
-```yaml
-metadata:
-  name: yolov8-seg
-  namespace: nuclio
-  annotations:
-    name: YOLOv8 Segmentation
-    type: detector
-    framework: ultralytics
-
-spec:
-  description: YOLOv8 official segmentation model
-  runtime: 'python:3.9'
-  handler: main:handler
-  eventTimeout: 30s
-
-  build:
-    image: nuclio/yolov8-seg-processor
-    baseImage: yolov8-seg-base
-
-  triggers:
-    myHttpTrigger:
-      maxWorkers: 1
-      kind: 'http'
-      workerAvailabilityTimeoutMilliseconds: 10000
-      attributes:
-        maxRequestBodySize: 33554432 # 32MB
-
-  platform:
-    attributes:
-      restartPolicy:
-        name: always
-        maximumRetryCount: 3
-      mountMode: volume
-```
+您唯一需要做的就是，将您自己训练好的 YOLOv8 分割模型权重文件命名为 `best.pt`，然后放入 `yolov8n-seg-model` 目录中，替换掉占位文件即可。
 
 #### 第 2 步: 构建并部署
 
-现在, 执行以下两步命令。
+现在，执行以下两步命令。
 
 ```bash
 # 进入模型目录
@@ -211,45 +93,40 @@ nuctl deploy yolov8-seg --project-name cvat \
 
 ## 关键排错指南
 
-在部署过程中, Nuclio 的状态有时会因为网络中断、构建失败等原因被锁死. 以下是解决这个问题的**最终标准流程**。
+在部署过程中, Nuclio 的状态有时会因为网络中断、构建失败等原因被锁死。当 `nuctl deploy` 失败后, 再次尝试部署时, 可能会出现 `Function cannot be updated when existing function is being provisioned` 的错误。
 
-### 问题现象
+以下是解决这个问题的两种方案，推荐优先使用方案一。
 
-当 `nuctl deploy` 失败后, 再次尝试部署时, 出现以下错误:
+### 方案一：精准强制删除单个函数 (推荐)
 
-```
-Error - Function cannot be updated when existing function is being provisioned
-```
-或者在尝试删除项目时, 出现以下错误:
-```
-Error - Project contains functions
-```
+这个方法可以在不影响项目中其他正常函数的情况下，强制删除那个卡住的特定函数。
 
-### 黄金重置流程 (The Golden Reset Procedure)
+1.  **列出所有函数**，找到卡住的函数的确切名称:
+    ```bash
+    nuctl get function --platform local
+    ```
 
-这套命令序列可以彻底重置 Nuclio 中某个项目的所有状态, 是解决状态锁死问题的最有效、最直接的方法.
+2.  **使用 `--force` 标志强制删除它**:
+    ```bash
+    # 将 <函数名> 替换为上一步中找到的名称
+    nuctl delete function <函数名> --platform local --force
+    ```
+执行成功后，即可重新部署。
+
+### 方案二：彻底重置整个项目
+
+如果方案一无效，或者您希望清理掉项目中的所有函数，可以使用此“黄金重置”流程。
+
+**警告：此操作会删除该项目下的所有函数，包括那些正常运行的。**
 
 1.  **强制删除整个项目**:
-    使用 `--force` 标志可以强制删除项目及其内部所有状态卡死的函数. 这是最关键的一步。
-
     ```bash
     nuctl delete project cvat --platform local --force
     ```
 
 2.  **重新创建项目**:
-    在一个干净的环境中重新创建项目.
-
     ```bash
     nuctl create project cvat --platform local
-    ```
-
-3.  **重新部署**:
-    现在, 您可以安全地重新执行部署命令.
-
-    ```bash
-    nuctl deploy --project-name cvat \
-    --path .
-    --platform local
     ```
 
 ### 问题现象 2: 部署命令长时间卡在 `Building docker image`
