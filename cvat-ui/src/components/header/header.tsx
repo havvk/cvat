@@ -308,7 +308,7 @@ function HeaderComponent(props: Props): JSX.Element {
     menuItems.push([{
         key: 'organization',
         icon: organizationFetching || organizationsListFetching ? <LoadingOutlined /> : <TeamOutlined />,
-        label: t('Organization'),
+                                label: t('organization'),
         disabled: organizationFetching || organizationsListFetching,
         children: [
             ...(currentOrganization ? [{

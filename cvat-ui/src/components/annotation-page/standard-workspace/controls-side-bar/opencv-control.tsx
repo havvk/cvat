@@ -411,7 +411,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                 <Row justify='center' align='middle' className='cvat-opencv-tracker-content'>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            {t('No available trackers found')}
+                            {t('noAvailableTrackersFound')}
                         </Text>
                     </Col>
                 </Row>
@@ -426,7 +426,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                 </Row>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>{t('Tracker')}</Text>
+                        <Text className='cvat-text-color'>{t('tracker')}</Text>
                     </Col>
                 </Row>
                 <Row align='middle' justify='center'>
@@ -459,7 +459,7 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                                 }
                             }}
                         >
-                            {t('Track')}
+                            {t('track')}
                         </Button>
                     </Col>
                 </Row>

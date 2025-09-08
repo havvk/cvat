@@ -203,7 +203,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col className='cvat-job-item-select'>
                                     <Row>
-                                        <Text>{t('Assignee')}:</Text>
+                                        <Text>{t('assignee')}:</Text>
                                     </Row>
                                     <UserSelector
                                         className='cvat-job-assignee-selector'

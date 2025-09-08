@@ -172,7 +172,7 @@ function DetectorRunner(props: Props): JSX.Element {
                             setConvertMasksToPolygons(checked);
                         }}
                     />
-                    <Text>{t('Convert masks to polygons')}</Text>
+                    <Text>{t('convertMasksToPolygons')}</Text>
                 </div>
             )}
             {isDetector && withCleanup && (
@@ -199,7 +199,7 @@ function DetectorRunner(props: Props): JSX.Element {
                             />
                         </Col>
                         <Col>
-                            <Text>{t('Threshold')}</Text>
+                            <Text>{t('threshold')}</Text>
                             <CVATTooltip title={t('Minimum confidence threshold for detections. Leave empty to use the default value specified in the model settings')}>
                                 <QuestionCircleOutlined className='cvat-info-circle-icon' />
                             </CVATTooltip>
@@ -211,7 +211,7 @@ function DetectorRunner(props: Props): JSX.Element {
                 <div>
                     <Row align='middle' justify='start'>
                         <Col>
-                            <Text>{t('Threshold')}</Text>
+                            <Text>{t('threshold')}</Text>
                         </Col>
                         <Col offset={1}>
                             <CVATTooltip title={t('minimumSimilarityValueForShapesThatCanBeMerged')}>
@@ -236,7 +236,7 @@ function DetectorRunner(props: Props): JSX.Element {
                         <Col offset={1}>
                             <CVATTooltip title={t('maximumDistanceBetweenShapesThatCanBeMerged')}>
                                 <InputNumber
-                                    placeholder={t('Threshold')}
+                                    placeholder={t('threshold')}
                                     min={1}
                                     value={distance}
                                     onChange={(value: number | undefined | string | null) => {

@@ -146,7 +146,7 @@ function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
                 <Row justify='end' className='cvat-quality-settings-save-btn'>
                     <Col>
                         <Button onClick={onSave} type='primary'>
-                            {t('Save')}
+                            {t('save')}
                         </Button>
                     </Col>
                 </Row>

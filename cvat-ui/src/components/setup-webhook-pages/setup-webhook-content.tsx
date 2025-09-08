@@ -256,7 +256,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
                         valuePropName='checked'
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>{t('Active')}</Text>
+                            <Text className='cvat-text-color'>{t('active')}</Text>
                         </Checkbox>
                     </Form.Item>
                     <Form.Item
@@ -268,7 +268,7 @@ function SetupWebhookContent(props: Props): JSX.Element {
                     >
                         <Radio.Group onChange={onEventsMethodChange}>
                             <Radio value={EventsMethod.SEND_EVERYTHING} key={EventsMethod.SEND_EVERYTHING}>
-                                <Text>{t('Send')} </Text>
+                                                                <Text>{t('send')} </Text>
                                 <Text strong>{t('everything')}</Text>
                             </Radio>
                             <Radio value={EventsMethod.SELECT_INDIVIDUAL} key={EventsMethod.SELECT_INDIVIDUAL}>

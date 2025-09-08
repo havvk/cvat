@@ -73,22 +73,22 @@ function LabelItemComponent(props: Props): JSX.Element {
             </Col>
             <Col span={2} offset={1}>
                 {statesLocked ? (
-                    <CVATTooltip title={t('Unlock all states')}>
+                    <CVATTooltip title={t('unlockAllStates')}>
                         <LockFilled {...classes.lock.enabled} onClick={unlockStates} />
                     </CVATTooltip>
                 ) : (
-                    <CVATTooltip title={t('Lock all states')}>
+                    <CVATTooltip title={t('lockAllStates')}>
                         <UnlockOutlined {...classes.lock.disabled} onClick={lockStates} />
                     </CVATTooltip>
                 )}
             </Col>
             <Col span={3}>
                 {statesHidden ? (
-                    <CVATTooltip title={t('Show all states')}>
+                    <CVATTooltip title={t('showAllStates')}>
                         <EyeInvisibleFilled {...classes.hidden.enabled} onClick={showStates} />
                     </CVATTooltip>
                 ) : (
-                    <CVATTooltip title={t('Hide all states')}>
+                    <CVATTooltip title={t('hideAllStates')}>
                         <EyeOutlined {...classes.hidden.disabled} onClick={hideStates} />
                     </CVATTooltip>
                 )}

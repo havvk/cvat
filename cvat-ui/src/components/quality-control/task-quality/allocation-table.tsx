@@ -96,7 +96,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
 
     const columns = [
         {
-            title: t('Frames'),
+            title: t('frames'),
             dataIndex: 'frame',
             key: 'frame',
             align: 'center' as const,
@@ -173,7 +173,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
 
     return (
         <CVATTable
-            tableTitle={t('Frames')}
+            tableTitle={t('frames')}
             searchDataIndex={['name']}
             csvExport={{ filename: `allocation-table-task_${task.id}.csv` }}
             className='cvat-frame-allocation-table'

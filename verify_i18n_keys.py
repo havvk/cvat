@@ -3,6 +3,19 @@ import os
 import re
 import sys
 
+def is_valid_key(key):
+    """Applies a set of heuristics to determine if a string is a valid i18n key."""
+    # Rule 1: Length must be greater than 2
+    if len(key) <= 2:
+        return False
+    # Rule 2: Must not contain invalid characters often found in bad regex matches
+    if any(c in key for c in '{(./:;,'):
+        return False
+    # Rule 3: Must contain at least one letter
+    if not any(c.isalpha() for c in key):
+        return False
+    return True
+
 def run_verification():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     progress_file_path = os.path.join(base_dir, 'i18n_progress.json')
@@ -56,12 +69,11 @@ def run_verification():
                 with open(file_abs_path, 'r', encoding='utf-8') as f:
                     content = f.read()
 
-                # Find all keys used in t('key') or t("key")
-                keys_in_file = re.findall(r"t\(['"](.*?)['"]\)", content)
+                keys_in_file = re.findall(r"[^\w]t\(['\"](.*?)['\"]\)", content)
 
                 for key in keys_in_file:
                     key = key.strip()
-                    if not key:
+                    if not is_valid_key(key):
                         continue
 
                     # Check against the keys from translation files

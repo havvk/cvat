@@ -123,7 +123,7 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
                                     <Text type='secondary'>{moment(createdDate).format('MMMM Do YYYY')}</Text>
                                 </Paragraph>
                                 <Paragraph>
-                                    <Text type='secondary'>{t('Last updated')} </Text>
+                                    <Text type='secondary'>{t('lastUpdated')} </Text>
                                     <Text type='secondary'>{moment(updatedDate).fromNow()}</Text>
                                 </Paragraph>
                                 <Status cloudStorage={cloudStorage} />

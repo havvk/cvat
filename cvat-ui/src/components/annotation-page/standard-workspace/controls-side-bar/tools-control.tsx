@@ -966,7 +966,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
             <>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>{t('Label')}</Text>
+                        <Text className='cvat-text-color'>{t('label')}</Text>
                     </Col>
                 </Row>
                 <Row justify='center'>
@@ -997,7 +997,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            {t('No available trackers found')}
+                            {t('noAvailableTrackersFound')}
                         </Text>
                     </Col>
                 </Row>
@@ -1008,7 +1008,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
             <>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>{t('Tracker')}</Text>
+                                                <Text className='cvat-text-color'>{t('tracker')}</Text>
                     </Col>
                 </Row>
                 <Row align='middle' justify='center'>
@@ -1051,7 +1051,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 }
                             }}
                         >
-                            {t('Track')}
+                            {t('track')}
                         </Button>
                     </Col>
                 </Row>
@@ -1073,7 +1073,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            {t('No available interactors found')}
+                            {t('noAvailableInteractorsFound')}
                         </Text>
                     </Col>
                 </Row>
@@ -1087,7 +1087,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
             <>
                 <Row justify='start'>
                     <Col>
-                        <Text className='cvat-text-color'>{t('Interactor')}</Text>
+                        <Text className='cvat-text-color'>{t('interactor')}</Text>
                     </Col>
                 </Row>
                 <Row align='middle' justify='space-between'>
@@ -1133,7 +1133,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 this.setState({ convertMasksToPolygons: checked });
                             }}
                         />
-                        <Text>{t('Convert masks to polygons')}</Text>
+                        <Text>{t('convertMasksToPolygons')}</Text>
                     </div>
 
                     {renderStartWithBox && (
@@ -1142,7 +1142,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 checked={startInteractingWithBox}
                                 onChange={(value: boolean) => this.setState({ startInteractingWithBox: value })}
                             />
-                            <Text>{t('Start with a bounding box')}</Text>
+                            <Text>{t('startWithABoundingBox')}</Text>
                         </div>
                     )}
                 </div>
@@ -1174,7 +1174,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                                 }
                             }}
                         >
-                            {t('Interact')}
+                            {t('interact')}
                         </Button>
                     </Col>
                 </Row>
@@ -1193,7 +1193,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='center' align='middle' style={{ marginTop: '5px' }}>
                     <Col>
                         <Text type='warning' className='cvat-text-color'>
-                            {t('No available detectors found')}
+                            {t('noAvailableDetectorsFound')}
                         </Text>
                     </Col>
                 </Row>
@@ -1292,7 +1292,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 <Row justify='start'>
                     <Col>
                         <Text className='cvat-text-color' strong>
-                            {t('AI Tools')}
+                            {t('aiTools')}
                         </Text>
                     </Col>
                 </Row>
@@ -1301,7 +1301,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                     tabBarGutter={8}
                     items={[{
                         key: 'interactors',
-                        label: t('Interactors'),
+                        label: t('interactors'),
                         children: (
                             <>
                                 {this.renderLabelBlock()}
@@ -1310,11 +1310,11 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                         ),
                     }, {
                         key: 'detectors',
-                        label: t('Detectors'),
+                                                label: t('detectors'),
                         children: this.renderDetectorBlock(),
                     }, {
                         key: 'trackers',
-                        label: t('Trackers'),
+                        label: t('trackers'),
                         children: (
                             <>
                                 {this.renderLabelBlock()}
@@ -1372,7 +1372,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
 
         const detectionContent: JSX.Element | null = showDetectionContent ? (
             <Modal
-                title={t('Making a server request')}
+                title={t('makingAServerRequest')}
                 zIndex={Number.MAX_SAFE_INTEGER}
                 open
                 destroyOnClose

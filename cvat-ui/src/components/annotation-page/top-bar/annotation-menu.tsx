@@ -110,7 +110,7 @@ function AnnotationMenuComponent(): JSX.Element {
 
     menuItems.push({
         key: Actions.REMOVE_ANNOTATIONS,
-        label: t('Remove annotations'),
+                    label: t('removeAnnotations'),
         onClick: () => {
             let removeFrom: number | undefined;
             let removeUpTo: number | undefined;
@@ -185,7 +185,7 @@ function AnnotationMenuComponent(): JSX.Element {
 
     menuItems.push({
         key: Actions.OPEN_TASK,
-        label: t('Open the task'),
+                    label: t('openTheTask'),
         onClick: openTask,
     });
 

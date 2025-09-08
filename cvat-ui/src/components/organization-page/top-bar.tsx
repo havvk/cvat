@@ -134,7 +134,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                 disabled: true,
                 danger: true,
             },
-            okText: t('Remove'),
+            okText: t('remove'),
         });
     };
 
