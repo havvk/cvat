@@ -20,7 +20,7 @@ function InteractorTooltips(props: Props): JSX.Element {
     const {
         name, gif, message, withNegativePoints,
     } = props;
-    const UNKNOWN_MESSAGE = t('Selected interactor does not have a help message');
+    const UNKNOWN_MESSAGE = t('interactorHasNoHelp');
     const desc = message || UNKNOWN_MESSAGE;
     return (
         <div className='cvat-interactor-tip-container'>
@@ -35,15 +35,15 @@ function InteractorTooltips(props: Props): JSX.Element {
                         </Trans>
                     </Paragraph>
                     <Paragraph>
-                        <Text>{t('Positive points can be added by left-clicking the image. ')}</Text>
+                        <Text>{t('addPositivePointsOnClick')}</Text>
                         {withNegativePoints ? (
-                            <Text>{t('Negative points can be added by right-clicking the image. ')}</Text>
+                            <Text>{t('addNegativePointsOnRightClick')}</Text>
                         ) : null}
                     </Paragraph>
                     {gif ? <Image className='cvat-interactor-tip-image' alt='Example gif' src={gif} /> : null}
                 </>
             ) : (
-                <Text>{t('Select an interactor to see help message')}</Text>
+                <Text>{t('selectInteractorForHelp')}</Text>
             )}
         </div>
     );

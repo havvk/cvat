@@ -22,22 +22,22 @@ function EmptyListComponent(props: Props): JSX.Element {
     return (
         <div className='cvat-empty-tasks-list'>
             <Empty description={notFound ?
-                (<Text strong>{t('No results matched your search...')}</Text>) : (
+                (<Text strong>{t('noResultsMatchedYourSearch')}</Text>) : (
                     <>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text strong>{t('No tasks created yet...')}</Text>
+                                <Text strong>{t('noTasksCreatedYet')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text type='secondary'>{t('To get started with your annotation project')}</Text>
+                                <Text type='secondary'>{t('getStartedWithAnnotation')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Link to='/tasks/create'>{t('create a new task')}</Link>
-                                <Text type='secondary'> {t('or try to')} </Text>
+                                <Link to='/tasks/create'>{t('createANewTask')}</Link>
+                                <Text type='secondary'> {t('orTryTo')} </Text>
                                 <Link to='/projects/create'>{t('create a new project')}</Link>
                             </Col>
                         </Row>

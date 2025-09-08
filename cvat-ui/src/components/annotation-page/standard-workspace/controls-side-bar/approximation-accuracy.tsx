@@ -56,7 +56,7 @@ function ApproximationAccuracy(props: Props): React.ReactPortal | null {
         ReactDOM.createPortal(
             <Row align='middle' className='cvat-approx-poly-threshold-wrapper'>
                 <Col span={5}>
-                    <Text>{t('Points: ')}</Text>
+                    <Text>{t('points')}</Text>
                 </Col>
                 <Col offset={1} span={18}>
                     <Slider

@@ -69,7 +69,7 @@ function PropagateConfirmComponent(): JSX.Element {
                     .then(() => dispatch(switchPropagateVisibility(false)));
             }}
             onCancel={() => dispatch(switchPropagateVisibility(false))}
-            title={t('Confirm propagation')}
+            title={t('confirmPropagation')}
             open={visible}
             destroyOnClose
             okButtonProps={{ disabled: !propagateFrames }}
@@ -77,7 +77,7 @@ function PropagateConfirmComponent(): JSX.Element {
             <div className='cvat-propagate-confirm'>
                 <Row>
                     <Col>
-                        <Text>{t('Please, specify a direction')}</Text>
+                        <Text>{t('pleaseSpecifyADirection')}</Text>
                     </Col>
                     <Col offset={1}>
                         <Radio.Group
@@ -95,7 +95,7 @@ function PropagateConfirmComponent(): JSX.Element {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>{t('How many copies do you want to create?')}</Col>
+                    <Col>{t('howManyCopiesDoYouWantToCreate')}</Col>
                     <Col offset={1}>
                         <InputNumber
                             className='cvat-propagate-confirm-object-on-frames'
@@ -113,7 +113,7 @@ function PropagateConfirmComponent(): JSX.Element {
                 <hr />
                 <Row className='cvat-propagate-up-to-wrapper'>
                     <Col span={24}>
-                        <Text>{t('Or specify a range where copies will be created')} </Text>
+                        <Text>{t('specifyCopyRange')} </Text>
                     </Col>
                     <Col className='cvat-propagate-slider-wrapper' span={12} offset={1}>
                         <Slider

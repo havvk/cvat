@@ -24,22 +24,22 @@ export default function EmptyListComponent(props: Props): JSX.Element {
         <div className='cvat-empty-cloud-storages-list'>
             <Empty
                 description={notFound ? (
-                    <Text strong>{t('No results matched your search...')}</Text>
+                    <Text strong>{t('noResultsMatchedYourSearch')}</Text>
                 ) : (
                     <>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text strong>{t('No cloud storages attached yet...')}</Text>
+                                <Text strong>{t('noCloudStoragesAttachedYet')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text type='secondary'>{t('To get started with your cloud storage')}</Text>
+                                <Text type='secondary'>{t('getStartedWithCloudStorage')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Link to='/cloudstorages/create'>{t('attach a new one')}</Link>
+                                <Link to='/cloudstorages/create'>{t('attachANewOne')}</Link>
                             </Col>
                         </Row>
                     </>

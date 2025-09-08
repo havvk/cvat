@@ -101,11 +101,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchAutoSave(event.target.checked);
                         }}
                     >
-                        {t('Enable auto save')}
+                        {t('enableAutoSave')}
                     </Checkbox>
                 </Col>
                 <Col className='cvat-workspace-settings-auto-save-interval'>
-                    <Text type='secondary'> {t('Auto save every')} </Text>
+                    <Text type='secondary'> {t('autoSaveEvery')} </Text>
                     <InputNumber
                         size='small'
                         min={minAutoSaveInterval}
@@ -133,11 +133,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                                 onSwitchShowingInterpolatedTracks(event.target.checked);
                             }}
                         >
-                            {t('Show all interpolation tracks')}
+                            {t('showAllInterpolationTracks')}
                         </Checkbox>
                     </Row>
                     <Row>
-                        <Text type='secondary'> {t('Show hidden interpolated objects in the side panel')}</Text>
+                        <Text type='secondary'> {t('showHiddenInterpolated')}</Text>
                     </Row>
                 </Col>
             </Row>
@@ -150,18 +150,18 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchShowingObjectsTextAlways(event.target.checked);
                         }}
                     >
-                        {t('Always show object details')}
+                        {t('alwaysShowObjectDetails')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
                     <Text type='secondary'>
-                        {t('Show text for an object on the canvas not only when the object is activated')}
+                        {t('alwaysShowObjectText')}
                     </Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-text-settings cvat-player-setting'>
                 <Col span={24}>
-                    <Text>{t('Content of a text')}</Text>
+                    <Text>{t('contentOfAText')}</Text>
                 </Col>
                 <Col span={16}>
                     <Select
@@ -181,10 +181,10 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
             </Row>
             <Row className='cvat-workspace-settings-text-settings cvat-player-setting'>
                 <Col span={12}>
-                    <Text>{t('Position of a text')}</Text>
+                    <Text>{t('positionOfAText')}</Text>
                 </Col>
                 <Col span={12}>
-                    <Text>{t('Font size of a text')}</Text>
+                    <Text>{t('fontSizeOfAText')}</Text>
                 </Col>
                 <Col span={12}>
                     <Select
@@ -215,12 +215,12 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchAutomaticBordering(event.target.checked);
                         }}
                     >
-                        {t('Automatic bordering')}
+                        {t('automaticBordering')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
                     <Text type='secondary'>
-                        {t('Enable automatic bordering for polygons and polylines during drawing/editing')}
+                        {t('enableAutoBordering')}
                     </Text>
                 </Col>
             </Row>
@@ -233,12 +233,12 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchAdaptiveZoom(event.target.checked);
                         }}
                     >
-                        {t('Adaptive zoom algorithm')}
+                        {t('adaptiveZoomAlgorithm')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
                     <Text type='secondary'>
-                        {t('Enable smoother version of zooming, compatible with a trackpad and pinch gestures')}
+                        {t('enableSmoothZooming')}
                     </Text>
                 </Col>
             </Row>
@@ -251,11 +251,11 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchIntelligentPolygonCrop(event.target.checked);
                         }}
                     >
-                        {t('Intelligent polygon cropping')}
+                        {t('intelligentPolygonCropping')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
-                    <Text type='secondary'>{t('Try to crop polygons automatically when editing')}</Text>
+                    <Text type='secondary'>{t('autoCropPolygonsOnEdit')}</Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-show-frame-tags cvat-player-setting'>
@@ -267,16 +267,16 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                             onSwitchShowingTagsOnFrame(event.target.checked);
                         }}
                     >
-                        {t('Show tags on frame')}
+                        {t('showTagsOnFrame')}
                     </Checkbox>
                 </Col>
                 <Col span={24}>
-                    <Text type='secondary'>{t('Show frame tags in the corner of the workspace')}</Text>
+                    <Text type='secondary'>{t('showFrameTagsInCorner')}</Text>
                 </Col>
             </Row>
             <Row className='cvat-workspace-settings-aam-zoom-margin cvat-player-setting'>
                 <Col>
-                    <Text className='cvat-text-color'> {t('Attribute annotation mode (AAM) zoom margin')} </Text>
+                    <Text className='cvat-text-color'> {t('aamZoomMargin')} </Text>
                     <InputNumber
                         min={minAAMMargin}
                         max={maxAAMMargin}
@@ -291,7 +291,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
             </Row>
             <Row className='cvat-workspace-settings-control-points-size cvat-player-setting'>
                 <Col>
-                    <Text className='cvat-text-color'> {t('Control points size')} </Text>
+                    <Text className='cvat-text-color'> {t('controlPointsSize')} </Text>
                     <InputNumber
                         min={minControlPointsSize}
                         max={maxControlPointsSize}
@@ -308,7 +308,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
             </Row>
             <Row className='cvat-workspace-settings-approx-poly-threshold cvat-player-setting'>
                 <Col>
-                    <Text className='cvat-text-color'>{t('Default number of points in polygon approximation')}</Text>
+                    <Text className='cvat-text-color'>{t('defaultPolygonPoints')}</Text>
                 </Col>
                 <Col span={7} offset={1}>
                     <Slider
@@ -322,7 +322,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                     />
                 </Col>
                 <Col>
-                    <Text type='secondary'>{t('Works for serverless interactors and OpenCV scissors')}</Text>
+                    <Text type='secondary'>{t('supportsServerlessAndOpenCV')}</Text>
                 </Col>
             </Row>
         </div>

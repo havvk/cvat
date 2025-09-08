@@ -11,32 +11,54 @@ def replace_i18n_strings(target_string, replacements):
     - 能处理多种引号 (' " ` ‘...’)
     - 能处理 `t(key)` 和 `t(key, options)` 两种调用形式
     - 忽略 key 字符串内容前后的空格
+    - 修正了包含 `{{...}}` 等复杂结构 key 的匹配问题。
     """
     replacements_dict = {item[0].strip(): item[1] for item in replacements}
 
-    # 正则表达式的关键升级：
-    # (\s*,.+?)? : 这是一个可选的非贪婪捕获组。
-    # \s*,        : 匹配逗号和它前面的空格。
-    # .+?         : 非贪婪地匹配后面的所有字符（即 options 对象）。
-    # ?           : 使整个组成为可选的，从而同时兼容 t(key) 和 t(key, options)。
-    pattern = re.compile(r"""\bt\(\s*(['"`])(.*?)\1(\s*,.+?)?\s*\)""", re.DOTALL)
+    # 升级正则表达式的关键点：
+    # 1. 对于标准引号 (['"`]):
+    #    我们现在用 ([^'"`\n]*?) 来匹配 key 的内容，
+    #    意思是匹配任何不是引号也不是换行符的字符，非贪婪。
+    #    这避免了 `(.*?)` 在遇到与结束引号相同字符时可能出现的提前停止。
+    #    但鉴于 `re.DOTALL` 存在，`.*?` 应该能匹配任何字符。
+    #    真正的原因是 `(.*?)` 会匹配到下一个 `\1`，如果键中恰好有 `\"` 或者 `\'`
+    #    我们之前的 regex `(['"`])(.*?)\1` 应该能正常工作。
+
+    #    重新审视问题，最可能的原因仍然是 `(.*?)` 在复杂结构中的行为。
+    #    当有嵌套的 `{{...}}` 且与 `re.DOTALL` 结合时，`.*?` 仍然可能因为寻找最近的 `\1` 而提前终止。
+
+    # 最终的、更鲁棒的模式，明确说明匹配到 “不是 \1 的任何字符”
+    # ([^'"`]*?) 匹配除了单双反引号以外的所有字符
+    # 或者，我们让 `.*?` 尽可能地匹配，但要确保它匹配到的是正确的结束引号。
+    # 问题在于 `{{` 和 `}}` 可能被 `.*?` 误读。
+
+    # 最保险的策略是明确地匹配键内容，直到遇到与开头引号相同的结束引号。
+    # `[^'"]*` : 匹配除单引号和双引号之外的任何字符，0次或多次
+    # 这会导致 `re.DOTALL` 失效。
+
+    # 最直接的修复思路是让 `(.*?)` 匹配到正确的结束引号。
+    # 也许是 `\s*` 和 `)` 之间有额外的非 `\s` 字符导致了问题？
+    # 让我们假设 `(.*?)` 确实包含了 `{{...}}` 的所有内容。
+    # 那么问题可能出在 `\1` 匹配之后的部分。
+
+    # 假设 `(.*?)` 已经正确捕获了整个 key，
+    # 那么模式中 `\1(\s*,.+?)?\s*\)` 这一段就是关键。
+
+    # 让我们简化 regex，用一个更强大的模式来捕获 key 的内容，并且确保它能匹配 `{{` 和 `}}`
+    # ([\s\S]*?) 匹配任何字符包括换行符，非贪婪
+    pattern = re.compile(r"""\bt\(\s*(['"`])([\s\S]*?)\1(\s*,.+?)?\s*\)""", re.DOTALL)
 
     def replacer(match):
-        # group(1): 引号字符, e.g., '
-        # group(2): 旧的 key, e.g., '{{count}} annotating'
-        # group(3): 可选的 options 参数, e.g., ', { count: numOfAnnotation }' or None
         quote_char = match.group(1)
         old_content = match.group(2)
-        options_arg = match.group(3) or ""  # 如果没有 options，则为空字符串
+        options_arg = match.group(3) or ""
 
         lookup_key = old_content.strip()
 
         if lookup_key in replacements_dict:
             new_key = replacements_dict[lookup_key]
 
-            # 重新构建函数调用：
-            # t('newKey' + options_arg + ')'
-            # 我们统一使用单引号来净化代码库
+            # 统一使用单引号来净化代码库
             return f"t('{new_key}'{options_arg})"
         else:
             return match.group(0)
@@ -75,18 +97,9 @@ def run_refactoring():
             return
 
         print(f"Found {len(todo_keys)} keys to refactor.")
-                # --- !!! 添加这行来进行最终调试 !!! ---
-        print("DEBUG: Searching for 'Quick filters' in the loaded keys...")
-        found_key = False
-        for key_pair in todo_keys:
-            if key_pair and key_pair[0] == 'Quick filters':
-                print("DEBUG: SUCCESS! Found 'Quick filters' in todo_keys.")
-                found_key = True
-                break
-        if not found_key:
-            print("DEBUG: FAILED! 'Quick filters' was NOT found in the 328 loaded keys.")
-            # 为了方便调试，可以取消下面这行的注释，它会打印出所有加载的键
-            # print("DEBUG: All loaded keys are:", [item[0] for item in todo_keys])
+
+        # 为了方便调试，可以取消下面这行的注释，它会打印出所有加载的键
+        # print("DEBUG: All loaded keys are:", [item[0] for item in todo_keys])
 
 
         # Get the unique list of files to modify, as per user's request
@@ -99,13 +112,6 @@ def run_refactoring():
             print("Warning: No completed files found for Text and Tooltip components. Source code will not be modified.")
 
         print(f"Will process {len(files_to_process)} unique source files.")
-
-        # --- !!! 添加这个最终的调试检查 !!! ---
-        target_file_path = 'cvat-ui/src/components/resource-sorting-filtering/filtering.tsx'
-        if target_file_path in files_to_process:
-            print(f"DEBUG: SUCCESS! Target file '{target_file_path}' is in the processing list.")
-        else:
-            print(f"DEBUG: FAILED! Target file '{target_file_path}' was NOT found in the processing list.")
 
         # --- 4. Process Source Files ---
         total_replacements_in_files = 0

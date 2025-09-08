@@ -163,8 +163,8 @@ class LabelsEditor extends React.PureComponent<LabelsEditorProps, LabelsEditorSt
             modal.confirm({
                 className: 'cvat-modal-delete-label',
                 icon: <ExclamationCircleOutlined />,
-                title: t('Do you want to delete "{{labelName}}" label?', { labelName: label.name }),
-                content: t('This action cannot be undone. All annotations associated to the label will be deleted.'),
+                title: t('confirmDeleteLabel', { labelName: label.name }),
+                content: t('deleteLabelWarning'),
                 type: 'warning',
                 okButtonProps: { type: 'primary', danger: true },
                 onOk() {

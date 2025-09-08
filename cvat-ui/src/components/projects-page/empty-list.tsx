@@ -21,22 +21,22 @@ export default function EmptyListComponent(props: Props): JSX.Element {
     return (
         <div className='cvat-empty-projects-list'>
             <Empty description={notFound ? (
-                <Text strong>{t('No results matched your search...')}</Text>
+                <Text strong>{t('noResultsMatchedYourSearch')}</Text>
             ) : (
                 <>
                     <Row justify='center' align='middle'>
                         <Col>
-                            <Text strong>{t('No projects created yet...')}</Text>
+                            <Text strong>{t('noProjectsCreatedYet')}</Text>
                         </Col>
                     </Row>
                     <Row justify='center' align='middle'>
                         <Col>
-                            <Text type='secondary'>{t('To get started with your annotation project')}</Text>
+                            <Text type='secondary'>{t('getStartedWithAnnotation')}</Text>
                         </Col>
                     </Row>
                     <Row justify='center' align='middle'>
                         <Col>
-                            <Link to='/projects/create'>{t('create a new one')}</Link>
+                            <Link to='/projects/create'>{t('createANewOne')}</Link>
                         </Col>
                     </Row>
                 </>

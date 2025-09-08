@@ -51,12 +51,12 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                 <Col>
                     <Text type='secondary'>
                         {project.owner ?
-                            t('Project #{{id}} created by {{owner}} on {{date}}', {
+                            t('projectIdCreatedByOwnerOnDate', {
                                 id: project.id,
                                 owner: project.owner.username,
                                 date: moment(project.createdDate).format('L'),
                             }) :
-                            t('Project #{{id}} created on {{date}}', {
+                            t('projectIdCreatedOnDate', {
                                 id: project.id,
                                 date: moment(project.createdDate).format('L'),
                             })
@@ -72,7 +72,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     />
                 </Col>
                 <Col>
-                    <Text type='secondary'>{t('Assigned to')}</Text>
+                    <Text type='secondary'>{t('assignedTo')}</Text>
                     <UserSelector
                         value={project.assignee}
                         onSelect={(user) => {
