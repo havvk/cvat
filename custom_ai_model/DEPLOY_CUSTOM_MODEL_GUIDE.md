@@ -1,80 +1,187 @@
 # 指南: 为 CVAT 部署自定义 YOLOv8 自动标注模型
 
-本文档详细说明了如何在基于 Docker Compose 的 CVAT 环境中, 部署一个自定义的 YOLOv8 模型作为 Serverless 功能 (Nuclio Function), 以实现自动标注.
+本文档详细说明了如何在基于 Docker Compose 的 CVAT 环境中, 部署一个自定义的 YOLOv8 模型作为 Serverless 功能 (Nuclio Function), 以实现自动标注。
 
 ## 目标
 
-将一个预训练的 YOLOv8 模型 (例如 `yolov8n.pt`) 集成到 CVAT 中, 使用户可以在 "Models" 页面找到并使用它进行自动目标检测.
+将一个预训练的 YOLOv8 模型 (例如 `yolov8n.pt` 或 `yolov8n-seg.pt`) 集成到 CVAT 中, 使用户可以在 "Models" 页面找到并使用它进行自动目标检测或实例分割。
 
 ## 先决条件
 
-1.  **CVAT 已运行**: 一个通过 `docker-compose.yml` 和 `components/serverless/docker-compose.serverless.yml` 成功启动的 CVAT 实例.
-2.  **主机访问**: 可以通过 SSH 访问部署 CVAT 的主机.
-3.  **`nuctl` CLI**: 在开发主机上已经安装了 `nuctl` 命令行工具.
+1.  **CVAT 已运行**: 一个通过 `docker-compose.yml` 和 `components/serverless/docker-compose.serverless.yml` 成功启动的 CVAT 实例。
+2.  **主机访问**: 可以通过 SSH 访问部署 CVAT 的主机。
+3.  **`nuctl` CLI**: 在开发主机上已经安装了 `nuctl` 命令行工具。
 4.  **网络代理 (如果需要)**:
-    *   Docker 守护进程本身已配置为使用 HTTP/HTTPS 代理, 以便能从 Docker Hub 拉取镜像.
-    *   终端环境已准备好代理 (如果需要 `wget` 等命令).
+    *   Docker 守护进程本身已配置为使用 HTTP/HTTPS 代理, 以便能从 Docker Hub 拉取镜像。
+    *   终端环境已准备好代理 (如果需要 `wget` 等命令)。
 
 ---
 
-## 部署流程
+## 部署方案
 
-### 第 1 步: 准备模型功能文件
+以下方案展示了如何根据您的模型类型（目标检测或实例分割）来部署 YOLOv8 模型。
 
-所有必需的文件都已存放在 `custom_ai_model` 目录中.
+### 方案一：部署目标检测模型 (Object Detection)
 
-*   `function.yaml`: Nuclio 配置文件.
-*   `main.py`: 模型推理脚本.
-*   `Dockerfile`: 用于构建基础镜像的环境定义.
-*   `yolov8n.pt`: 模型权重文件 (用户需自行准备).
+此方案提供了一个适用于**目标检测**任务的通用模板。其 `main.py` 脚本中的后处理逻辑默认会将模型输出转换为**边界框 (Bounding Boxes)**。这是 `custom_ai_model` 目录中提供的默认实现。
 
-> **文件来源说明**: `function.yaml` 和 `main.py` 的模板最初来源于社区项目 [kurkurzz/custom-yolov8-auto-annotation-cvat-blueprint](https://github.com/kurkurzz/custom-yolov8-auto-annotation-cvat-blueprint).
+#### 第 1 步: 准备模型功能文件
 
-### 第 2 步: 构建基础 Docker 镜像
+所有必需的文件都已存放在 `custom_ai_model` 目录中。
 
-使用当前目录下的 `Dockerfile` 在本地构建一个 Docker 镜像. 这个镜像的名字 (`yolov8-auto-annotation`) 必须与 `function.yaml` 中引用的基础镜像名一致.
+*   `function.yaml`: Nuclio 配置文件。
+*   `main.py`: 模型推理脚本 (为边界框设计)。
+*   `Dockerfile`: 用于构建基础镜像的环境定义。
+*   `yolov8n.pt`: 您的目标检测模型权重文件。
+
+#### 第 2 步: 构建基础 Docker 镜像
 
 ```bash
 # 确保您在 custom_ai_model 目录下
 docker build -t yolov8-auto-annotation .
 ```
-*此过程可能需要几分钟, 因为它需要下载和安装 PyTorch 等库.*
 
-### 第 3 步: 配置并部署
+#### 第 3 步: 配置并部署
 
-现在, 所有准备工作都已完成, 我们可以使用 `nuctl` 进行部署.
+```bash
+# 设置 Nuclio Dashboard 地址
+export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
 
-1.  **配置 `nuctl` Dashboard 地址**:
-    告诉 `nuctl` 客户端去哪里找到正在运行的 Nuclio 服务.
+# 确保项目存在
+nuctl create project cvat --platform local
 
-    ```bash
-    # 这个环境变量只在当前终端会话中有效
-    export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
-    ```
-    *提示: 您可以将这行命令添加到 `~/.bashrc` 或 `~/.zshrc` 中使其永久生效.*
+# 执行部署
+nuctl deploy --project-name cvat --path . --platform local
+```
 
-2.  **部署模型**:
-    执行部署命令. `nuctl` 会读取当前目录下的 `function.yaml`, 使用我们在第 2 步中构建的本地基础镜像, 并开始部署.
+---
 
-    ```bash
-    # 确保项目存在 (如果不存在则创建)
-    nuctl create project cvat --platform local
 
-    # 执行部署
-    nuctl deploy --project-name cvat \
-    --path .
-    --platform local
-    ```
+### 方案二：部署实例分割模型 (Instance Segmentation)
 
-### 第 4 步: 验证
+此方案提供了一个专为**实例分割**任务预先配置好的模板。其 `main.py` 脚本包含了将模型输出的**分割掩码 (masks)** 转换为**多边形 (polygons)** 所需的完整代码，实现了开箱即用。
 
-部署过程可能需要几分钟. 成功后, 打开您的 CVAT 网页, 导航到 "Models" 页面. 您应该能看到一个名为 `custom-model-yolov8` 的模型, 并且其状态为 **ready**.
+#### 第 1 步: 创建并准备文件
+
+1.  在 CVAT 项目根目录创建一个新文件夹, 例如 `yolov8n-seg-model`。
+2.  将您的分割模型文件 (例如 `yolov8n-seg.pt`) 复制到这个新文件夹中, 并**重命名为 `best.pt`**。
+3.  在 `yolov8n-seg-model` 文件夹中, 创建以下两个文件。
+
+**`main.py` 文件:**
+```python
+import json
+import base64
+from PIL import Image
+import io
+import torch
+from ultralytics import YOLO
+import supervision as sv
+from skimage.measure import approximate_polygon, find_contours
+
+def init_context(context):
+    context.logger.info("Initializing context for YOLOv8 segmentation...")
+    model_path = "/opt/nuclio/best.pt"
+    model = YOLO(model_path, task="segment")
+    context.user_data.model = model
+    context.logger.info("Context initialized successfully.")
+
+def handler(context, event):
+    context.logger.info("Running YOLOv8 segmentation model")
+    data = event.body
+    buf = io.BytesIO(base64.b64decode(data["image"]))
+    threshold = float(data.get("threshold", 0.5))
+    
+    image = Image.open(buf)
+    
+    yolo_results = context.user_data.model(image, conf=threshold)[0]
+    labels = yolo_results.names
+    
+    detections = sv.Detections.from_yolov8(yolo_results)
+    detections = detections[detections.confidence > threshold]
+    
+    results = []
+    if len(detections) > 0 and detections.mask is not None:
+        for i in range(len(detections.xyxy)):
+            mask = detections.mask[i]
+            class_id = detections.class_id[i]
+            
+            contours = find_contours(mask, 0.5)
+            for contour in contours:
+                contour = approximate_polygon(contour, tolerance=2.5)
+                if len(contour) < 3:
+                    continue
+                
+                results.append({
+                    "confidence": str(detections.confidence[i]),
+                    "label": labels[class_id],
+                    "points": contour.ravel().tolist(),
+                    "type": "polygon",
+                })
+
+    return context.Response(body=json.dumps(results),
+                            headers={},
+                            content_type='application/json',
+                            status_code=200)
+```
+
+**`function.yaml` 文件:**
+```yaml
+apiVersion: "nuclio.io/v1"
+kind: "Function"
+metadata:
+  name: yolov8-seg
+  annotations:
+    description: "YOLOv8 Segmentation"
+    nuclio.io/project-name: "cvat"
+spec:
+  runtime: "python:3.9"
+  handler: "main:handler"
+  build:
+    baseImage: "ultralytics/ultralytics:latest"
+  env:
+    - name: LD_LIBRARY_PATH
+      value: /usr/local/lib/python3.9/dist-packages/torch/lib
+  triggers:
+    myHttpTrigger:
+      kind: "http"
+      maxWorkers: 2
+  volumes:
+    - volume:
+        name: model
+        hostPath:
+          path: "./best.pt"
+      volumeMount:
+        name: model
+        mountPath: "/opt/nuclio/best.pt"
+  resources:
+    limits:
+      # nvidia.com/gpu: 1
+```
+
+#### 第 2 步: 部署模型
+
+进入您刚刚创建的 `yolov8n-seg-model` 目录, 然后执行部署命令。
+
+```bash
+# 进入新目录
+cd yolov8n-seg-model
+
+# 设置 Nuclio Dashboard 地址
+export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
+
+# 部署
+nuctl deploy --project-name cvat --path . --platform local
+```
+
+#### 第 3 步: 验证
+
+成功后, 在 CVAT 的 "Models" 页面, 您应该能看到一个名为 `yolov8-seg` 的新模型。
 
 ---
 
 ## 关键排错指南
 
-在部署过程中, Nuclio 的状态有时会因为网络中断、构建失败等原因被锁死. 以下是解决这个问题的**最终标准流程**.
+在部署过程中, Nuclio 的状态有时会因为网络中断、构建失败等原因被锁死. 以下是解决这个问题的**最终标准流程**。
 
 ### 问题现象
 
@@ -93,7 +200,7 @@ Error - Project contains functions
 这套命令序列可以彻底重置 Nuclio 中某个项目的所有状态, 是解决状态锁死问题的最有效、最直接的方法.
 
 1.  **强制删除整个项目**:
-    使用 `--force` 标志可以强制删除项目及其内部所有状态卡死的函数. 这是最关键的一步.
+    使用 `--force` 标志可以强制删除项目及其内部所有状态卡死的函数. 这是最关键的一步。
 
     ```bash
     nuctl delete project cvat --platform local --force
