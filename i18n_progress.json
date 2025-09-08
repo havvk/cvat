@@ -219,7 +219,13 @@
     "status": "in_progress",
     "notes": "Fixing keys with spaces to camelCase.",
     "todo_keys": [
-            [
+      [
+        "Switch organization",
+        "switchOrganization"
+      ]
+    ],
+    "pending_keys": [
+      [
         "Personal workspace",
         "personalWorkspace"
       ],
@@ -1528,12 +1534,8 @@
         "exportDatasetCurrentTask"
       ]
     ],
-    "pending_keys": [],
     "completed_keys": [
-      [
-        "Switch organization",
-        "switchOrganization"
-      ]
+
     ],
     "failed_keys": [],
     "long_keys_to_review": [

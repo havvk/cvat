@@ -4,6 +4,21 @@ import re
 import sys
 from pathlib import Path
 
+def replace_i18n_strings(target_string, replacements):
+    replacements_dict = {item[0]: item[1] for item in replacements}
+    pattern = re.compile(r"""t\(\s*(['"])(.*?)\1\s*\)""" )
+
+    def replacer(match):
+        quote_char = match.group(1)
+        old_content = match.group(2)
+        if old_content in replacements_dict:
+            new_content = replacements_dict[old_content]
+            return f"t({quote_char}{new_content}{quote_char})"
+        else:
+            return match.group(0)
+
+    return pattern.sub(replacer, target_string)
+
 def run_refactoring():
     """
     Refactors i18n keys from a progress file, applying changes to specified source files
@@ -35,9 +50,7 @@ def run_refactoring():
             print("No keys found in 'todo_keys'. Nothing to process.")
             return
 
-        # Create a replacement map from the todo list
-        key_map = {old: new for old, new in todo_keys if old and new}
-        print(f"Found {len(key_map)} keys to refactor.")
+        print(f"Found {len(todo_keys)} keys to refactor.")
 
         # Get the unique list of files to modify, as per user's request
         files_to_process = set()
@@ -47,41 +60,31 @@ def run_refactoring():
 
         if not files_to_process:
             print("Warning: No completed files found for Text and Tooltip components. Source code will not be modified.")
-            # We can still proceed to update language and progress files
-            
+
         print(f"Will process {len(files_to_process)} unique source files.")
 
         # --- 4. Process Source Files ---
-        total_replacements = 0
+        total_replacements_in_files = 0
         for file_rel_path in sorted(list(files_to_process)):
             file_abs_path = base_dir / file_rel_path
             if not file_abs_path.exists():
                 print(f"  - WARNING: File not found, skipping: {file_rel_path}")
                 continue
 
-            content = file_abs_path.read_text(encoding='utf-8')
-            original_content = content
-            file_replacements = 0
+            original_content = file_abs_path.read_text(encoding='utf-8')
+            new_content = replace_i18n_strings(original_content, todo_keys)
 
-            for old_key, new_key in key_map.items():
-                # Use the corrected regex with raw f-string and escaped quotes
-                pattern = re.compile(rf"(?<!\w)t\((['\"]){re.escape(old_key)}\1")
-                
-                # The replacement function ensures we keep the original quote style.
-                content, count = pattern.subn(lambda m: f"t({m.group(1)}{new_key}{m.group(1)})", content)
-                if count > 0:
-                    file_replacements += count
-            
-            if file_replacements > 0:
-                print(f"  - Updating {file_rel_path} ({file_replacements} replacements)")
-                file_abs_path.write_text(content, encoding='utf-8')
-                total_replacements += file_replacements
+            if original_content != new_content:
+                print(f"  - Updating {file_rel_path}")
+                file_abs_path.write_text(new_content, encoding='utf-8')
+                total_replacements_in_files += 1
 
-        print(f"Total replacements made in source files: {total_replacements}")
+        print(f"Total files updated: {total_replacements_in_files}")
 
         # --- 5. Update Language Files ---
         print("Updating language files...")
         updated_lang_keys = 0
+        key_map = {old: new for old, new in todo_keys}
         for old_key, new_key in key_map.items():
             if old_key in en_data:
                 en_data[new_key] = en_data.pop(old_key)
@@ -99,11 +102,10 @@ def run_refactoring():
         # --- 6. Update Progress File ---
         print("Updating progress file...")
         completed_keys = camel_case_keys_section.get('completed_keys', [])
-        # Ensure we don't add duplicates if script is run multiple times on same todo list
-        processed_pairs = [pair for pair in todo_keys if pair[0] in key_map]
-        completed_keys.extend(processed_pairs)
+        completed_keys.extend(todo_keys)
         camel_case_keys_section['todo_keys'] = []
         camel_case_keys_section['completed_keys'] = completed_keys
+        camel_case_keys_section.pop('long_keys_to_review', None) # Clean up old list
 
         with open(progress_file_path, 'w', encoding='utf-8') as f:
             json.dump(progress_data, f, indent=2, ensure_ascii=False)
