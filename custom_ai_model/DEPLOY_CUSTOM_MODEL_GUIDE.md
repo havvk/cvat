@@ -126,11 +126,28 @@ def handler(context, event):
 
 **`Dockerfile` 文件:**
 ```dockerfile
-FROM ultralytics/ultralytics:latest
+# 1. 使用一个轻量的 Python 官方镜像作为基础
+FROM python:3.9-slim
 
-# 安装额外的 Python 依赖包
-# nuclio-sdk 是推荐安装的，supervision 是我们缺少的
-RUN pip install nuclio-sdk supervision
+# 2. 安装系统级依赖 (特别是 OpenCV 需要的)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 3. 设置工作目录
+WORKDIR /opt/nuclio
+
+# 4. 安装核心 Python 依赖
+# scikit-image 提供了 skimage 库
+RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless supervision scikit-image
+
+# 5. 将我们的模型和处理脚本复制到镜像中
+COPY best.pt .
+COPY main.py .
 ```
 
 **`function.yaml` 文件:**
@@ -165,28 +182,25 @@ spec:
       # nvidia.com/gpu: 1
 ```
 
-#### 第 2 步: 构建镜像并部署模型
+#### 第 2 步: 部署模型
 
-进入您刚刚创建的 `yolov8n-seg-model` 目录, 然后执行构建和部署命令。
+进入您刚刚创建的 `yolov8n-seg-model` 目录, 然后执行部署命令。`nuctl` 会自动使用目录下的 `Dockerfile` 进行构建。
 
 ```bash
 # 进入新目录
 cd yolov8n-seg-model
 
-# 1. 构建自定义 Docker 镜像
-docker build -t yolov8-seg-local .
-
-# 2. (推荐) 如果之前部署失败，先重置 Nuclio 项目
+# (推荐) 如果之前部署失败，先重置 Nuclio 项目
 export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
 nuctl delete project cvat --platform local --force
 nuctl create project cvat --platform local
 
-# 3. 使用新构建的镜像进行部署
+# 部署函数，nuctl 会自动寻找并使用 Dockerfile
 nuctl deploy yolov8-seg --project-name cvat \
     --path . \
-    --platform local \
-    --image yolov8-seg-local
+    --platform local
 ```
+
 
 #### 第 3 步: 验证
 
