@@ -120,7 +120,7 @@ function ExportBackupModal(): JSX.Element {
     useEffect(() => {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
-        setHelpMessage(t('Export backup to {{loc}} storage {{cloudId}}', { loc, cloudId }));
+        setHelpMessage(t('exportBackupToCloudStorage', { loc, cloudId }));
     }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {

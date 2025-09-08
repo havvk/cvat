@@ -56,7 +56,7 @@ export function ResourceSelectionInfo(
             {actionButton}
             {selectedCount > 1 && (
                 <span className='cvat-resource-selection-count'>
-                    {t('Selected: {{count}}', { count: selectedCount })}
+                    {t('selectedCount', { count: selectedCount })}
                 </span>
             )}
         </span>

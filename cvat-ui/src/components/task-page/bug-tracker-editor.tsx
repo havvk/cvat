@@ -32,7 +32,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
         if (value && !patterns.validateURL.pattern.test(value)) {
             if (!shown) {
                 Modal.error({
-                    title: t('Could not update the {{instanceType}} {{instanceId}}', { instanceType, instanceId: instance.id }),
+                    title: t('couldNotUpdateInstance', { instanceType, instanceId: instance.id }),
                     content: t('issueTrackerIsExpectedToBeUrl'),
                     onOk: () => {
                         shown = false;

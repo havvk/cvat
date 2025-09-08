@@ -433,7 +433,7 @@ class LabelForm extends React.Component<Props> {
                                 Modal.confirm({
                                     className: 'cvat-modal-delete-label-attribute',
                                     icon: <ExclamationCircleOutlined />,
-                                    title: t('Do you want to remove the "{{attrName}}" attribute?', { attrName: attr.name }),
+                                    title: t('confirmRemoveAttribute', { attrName: attr.name }),
                                     content: t('deleteAttributeWarning'),
                                     type: 'warning',
                                     okButtonProps: { type: 'primary', danger: true },

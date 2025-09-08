@@ -182,7 +182,7 @@ function MoveTaskModal({
             okButtonProps={{ disabled: isUpdating }}
             title={(
                 <span>
-                    {t('Move task {{taskId}} to project', { taskId: taskInstance?.id })}
+                    {t('moveTaskTaskidToProject', { taskId: taskInstance?.id })}
                     {/* TODO: replace placeholder */}
                     <CVATTooltip title={t('moveTaskModalDescription')}>
                         <QuestionCircleOutlined className='ant-typography-secondary' />

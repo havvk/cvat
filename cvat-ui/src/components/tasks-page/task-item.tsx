@@ -143,11 +143,11 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                 <br />
                 {owner && (
                     <>
-                        <Text type='secondary'>{t('Created by {{owner}} on {{date}}', { owner, date: created })}</Text>
+                        <Text type='secondary'>{t('createdByOwnerOnDate', { owner, date: created })}</Text>
                         <br />
                     </>
                 )}
-                <Text type='secondary'>{t('Last updated {{updated}}', { updated })}</Text>
+                <Text type='secondary'>{t('lastUpdatedOn', { updated })}</Text>
             </Col>
         );
     }
@@ -194,23 +194,23 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
                         <div>
                             { numOfCompleted > 0 && (
                                 <Text strong className='cvat-task-completed-progress'>
-                                    {t('{{count}} done', { count: numOfCompleted })}
+                                    {t('countDone', { count: numOfCompleted })}
                                 </Text>
                             )}
 
                             { numOfValidation > 0 && (
                                 <Text strong className='cvat-task-validation-progress'>
-                                    {t('{{count}} on review', { count: numOfValidation })}
+                                    {t('countOnReview', { count: numOfValidation })}
                                 </Text>
                             )}
 
                             { numOfAnnotation > 0 && (
                                 <Text strong className='cvat-task-annotation-progress'>
-                                    {t('{{count}} annotating', { count: numOfAnnotation })}
+                                    {t('countAnnotating', { count: numOfAnnotation })}
                                 </Text>
                             )}
                             <Text strong type='secondary'>
-                                {t('{{count}} total', { count: numOfJobs })}
+                                {t('countTotal', { count: numOfJobs })}
                             </Text>
                         </div>
                         <Progress

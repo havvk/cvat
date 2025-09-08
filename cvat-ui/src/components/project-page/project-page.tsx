@@ -114,7 +114,7 @@ export default function ProjectPageComponent(): JSX.Element {
         } else {
             notification.error({
                 message: t('couldNotFetchProject'),
-                description: t('Requested project id "{{id}}" is not valid', { id }),
+                description: t('invalidProjectId', { id }),
             });
             setFetchingProject(false);
         }

@@ -57,7 +57,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
 
     const created = moment(model.createdDate).fromNow();
     const modelDescription = !systemModel ?
-        <Text type='secondary'>{t('Added {{created}}', { created })}</Text> :
+        <Text type='secondary'>{t('addedCreated', { created })}</Text> :
         <Text type='secondary'>{t('systemModel')}</Text>;
 
     const topBarItems: [JSX.Element, number][] = [];
@@ -185,7 +185,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                                     <Row onClick={onOpenModel} className='cvat-models-item-text-description'>
                                         {model.owner && (
                                             <>
-                                                <Text type='secondary'>{t('Created by {{owner}}', { owner: model.owner })}</Text>
+                                                <Text type='secondary'>{t('createdByOwner', { owner: model.owner })}</Text>
                                                 <br />
                                             </>
                                         )}

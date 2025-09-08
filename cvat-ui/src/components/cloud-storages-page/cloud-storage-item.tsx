@@ -61,7 +61,7 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
     const onDelete = useCallback(() => {
         Modal.confirm({
             title: t('pleaseConfirmYourAction'),
-            content: t('You are going to remove the cloudstorage "{{displayName}}". Continue?', { displayName }),
+            content: t('confirmRemoveCloudStorage', { displayName }),
             className: 'cvat-delete-cloud-storage-modal',
             onOk: () => {
                 dispatch(deleteCloudStorageAsync(cloudStorage));

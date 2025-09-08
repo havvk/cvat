@@ -5,37 +5,40 @@ import sys
 from pathlib import Path
 
 def replace_i18n_strings(target_string, replacements):
-    replacements_dict = {item[0]: item[1] for item in replacements}
-    # Add this line to see what the dictionary keys look like
-    # print("DEBUG: Dictionary keys available:", list(replacements_dict.keys()))
+    """
+    一个最终的、极其健壮的函数，用于替换国际化字符串 t(...)。
+    - 能处理单行/多行 (`re.DOTALL`)
+    - 能处理多种引号 (' " ` ‘...’)
+    - 能处理 `t(key)` 和 `t(key, options)` 两种调用形式
+    - 忽略 key 字符串内容前后的空格
+    """
+    replacements_dict = {item[0].strip(): item[1] for item in replacements}
 
-    # Use the \b for robustness
-    pattern = re.compile(r"""\bt\(\s*(['"`])(.*?)\1\s*\)""")
+    # 正则表达式的关键升级：
+    # (\s*,.+?)? : 这是一个可选的非贪婪捕获组。
+    # \s*,        : 匹配逗号和它前面的空格。
+    # .+?         : 非贪婪地匹配后面的所有字符（即 options 对象）。
+    # ?           : 使整个组成为可选的，从而同时兼容 t(key) 和 t(key, options)。
+    pattern = re.compile(r"""\bt\(\s*(['"`])(.*?)\1(\s*,.+?)?\s*\)""", re.DOTALL)
 
     def replacer(match):
-        # This will print every time the regex finds a t(...) pattern
-        print("\n--- DEBUG: Match Found! ---")
-
+        # group(1): 引号字符, e.g., '
+        # group(2): 旧的 key, e.g., '{{count}} annotating'
+        # group(3): 可选的 options 参数, e.g., ', { count: numOfAnnotation }' or None
         quote_char = match.group(1)
         old_content = match.group(2)
+        options_arg = match.group(3) or ""  # 如果没有 options，则为空字符串
 
-        # repr() is a special function that makes invisible characters visible
-        print(f"DEBUG: Content from file: {repr(old_content)}")
+        lookup_key = old_content.strip()
 
-        # Check if the exact content is in the dict
-        is_present_exact = old_content in replacements_dict
-        print(f"DEBUG: Is content in dict (exact match)? {is_present_exact}")
+        if lookup_key in replacements_dict:
+            new_key = replacements_dict[lookup_key]
 
-        # Let's try stripping whitespace and checking again
-        is_present_stripped = old_content.strip() in replacements_dict
-        print(f"DEBUG: Is content in dict (after strip)? {is_present_stripped}")
-
-        if old_content in replacements_dict:
-            new_content = replacements_dict[old_content]
-            return f"t({quote_char}{new_content}{quote_char})"
+            # 重新构建函数调用：
+            # t('newKey' + options_arg + ')'
+            # 我们统一使用单引号来净化代码库
+            return f"t('{new_key}'{options_arg})"
         else:
-            # This is the crucial part: if we're here, the match failed.
-            print("DEBUG: No replacement made for this match.")
             return match.group(0)
 
     return pattern.sub(replacer, target_string)

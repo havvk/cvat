@@ -85,7 +85,7 @@ const validateAgreement: ((userAgreements: UserAgreement[], t: (key: string, opt
         const [agreement] = userAgreements
             .filter((userAgreement: UserAgreement): boolean => userAgreement.name === name);
         if (agreement.required && !value) {
-            return Promise.reject(new Error(t('You must accept {{agreement}} to continue!', { agreement: agreement.urlDisplayText })));
+            return Promise.reject(new Error(t('mustAcceptAgreement', { agreement: agreement.urlDisplayText })));
         }
 
         return Promise.resolve();
