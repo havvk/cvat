@@ -27,7 +27,7 @@ def handler(context, event):
     yolo_results = context.user_data.model(image, conf=threshold)[0]
     labels = yolo_results.names
     
-    detections = sv.Detections.from_yolov8(yolo_results)
+    detections = sv.Detections.from_ultralytics(yolo_results)
     detections = detections[detections.confidence > threshold]
     
     results = []
