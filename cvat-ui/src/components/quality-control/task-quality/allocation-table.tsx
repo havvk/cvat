@@ -117,7 +117,7 @@ function AllocationTable(props: Readonly<Props>): JSX.Element | null {
             ),
         },
         {
-            title: t('Name'),
+            title: t('name'),
             dataIndex: 'name',
             key: 'name',
             align: 'center' as const,

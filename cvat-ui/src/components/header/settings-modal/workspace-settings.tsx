@@ -171,7 +171,7 @@ function WorkspaceSettingsComponent(props: Props): JSX.Element {
                         onChange={onChangeTextContent}
                     >
                         <Select.Option value='id'>{t('ID')}</Select.Option>
-                        <Select.Option value='label'>{t('Label')}</Select.Option>
+                        <Select.Option value='label'>{t('label')}</Select.Option>
                         <Select.Option value='attributes'>{t('Attributes')}</Select.Option>
                         <Select.Option value='source'>{t('Source')}</Select.Option>
                         <Select.Option value='descriptions'>{t('Descriptions')}</Select.Option>

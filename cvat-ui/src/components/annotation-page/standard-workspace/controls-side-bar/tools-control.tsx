@@ -1379,7 +1379,7 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
                 closable={false}
                 footer={[]}
             >
-                <Text>{t('Waiting for a server response..')}</Text>
+                <Text>{t('waitingForAServerResponse')}</Text>
                 <LoadingOutlined style={{ marginLeft: '10px' }} />
             </Modal>
         ) : null;

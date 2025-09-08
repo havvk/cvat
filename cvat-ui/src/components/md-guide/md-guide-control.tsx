@@ -31,7 +31,7 @@ function MdGuideControl(props: Props): JSX.Element {
                         history.push(`/${instanceType}s/${id}/guide`);
                     }}
                 >
-                    {t('Edit')}
+                    {t('edit')}
                 </Button>
             </Col>
         </Row>

@@ -316,1316 +316,2188 @@
     "pending_keys": [],
     "completed_keys": [
       [
-        "Switch Organization",
-        "switchOrganization"
+        "Projects",
+        "Projects"
       ],
       [
-        "Personal workspace",
-        "personalWorkspace"
+        "Tasks",
+        "Tasks"
       ],
       [
-        "Change password",
-        "changePassword"
+        "Jobs",
+        "Jobs"
       ],
       [
-        "What's new?",
-        "whatsNew"
+        "Cloud Storages",
+        "cloudStorages"
       ],
       [
-        "Two passwords that you enter is inconsistent!",
-        "passwordsInconsistent"
+        "Requests",
+        "Requests"
       ],
       [
-        "You must accept {{agreement}} to continue!",
-        "mustAcceptAgreement"
+        "Models",
+        "Models"
       ],
       [
-        "Please specify a first name",
-        "specifyFirstName"
+        "More information",
+        "moreInformation"
       ],
       [
-        "The input is not valid E-mail!",
-        "invalidEmail"
+        "Analytics",
+        "Analytics"
       ],
       [
-        "Password must have at least 8 characters",
-        "passwordTooShort"
+        "Admin page",
+        "adminPage"
       ],
       [
-        "All related data (images, annotations) for all selected projects will be lost. Continue?",
-        "confirmDeleteProjects"
+        "Organization",
+        "organization"
       ],
       [
-        "MIT License",
-        "mitLicense"
+        "Settings",
+        "Settings"
       ],
       [
-        "Find us on Discord",
-        "findUsOnDiscord"
+        "Invitations",
+        "Invitations"
       ],
       [
-        "Server version",
-        "serverVersion"
+        "Create",
+        "Create"
       ],
       [
-        "UI version",
-        "uiVersion"
+        "About",
+        "About"
       ],
       [
-        "Forgot password?",
-        "forgotPassword"
+        "Logout",
+        "Logout"
       ],
       [
-        "New user?",
-        "newUser"
+        "Password",
+        "Password"
       ],
       [
-        "Create an account",
-        "createAnAccount"
+        "Next",
+        "Next"
       ],
       [
-        "Sign in",
-        "signIn"
+        "Example:",
+        "Example:"
       ],
       [
-        "Email or username",
-        "emailOrUsername"
+        "First name",
+        "First name"
       ],
       [
-        "Please specify a password",
-        "pleaseSpecifyAPassword"
+        "Email",
+        "Email"
       ],
       [
-        "You can use in the template:",
-        "youCanUseInTheTemplate"
+        "Username",
+        "Username"
       ],
       [
-        "some_text - any text",
-        "someTextAnyText"
+        "Submit",
+        "Submit"
       ],
       [
-        "{{index}} - index file in set",
-        "templateVarIndexDescription"
+        "Select",
+        "Select"
       ],
       [
-        "{{file_name}} - name of file",
-        "templateVarFileNameDescription"
+        "Radio",
+        "Radio"
       ],
       [
-        "Last name",
-        "lastName"
+        "Checkbox",
+        "Checkbox"
       ],
       [
-        "Please specify a last name",
-        "specifyLastName"
+        "Text",
+        "Text"
       ],
       [
-        "Please specify an email address",
-        "specifyEmailAddress"
+        "Number",
+        "Number"
       ],
       [
-        "Please specify a username",
-        "specifyUsername"
+        "ID",
+        "ID"
       ],
       [
-        "Please input your password!",
-        "inputYourPassword"
+        "Assignee",
+        "assignee"
       ],
       [
-        "You must accept to continue!",
-        "youMustAcceptToContinue"
+        "Owner",
+        "Owner"
       ],
       [
-        "Please input your current password!",
-        "pleaseInputYourCurrentPassword"
+        "Status",
+        "Status"
       ],
       [
-        "Current password",
-        "currentPassword"
+        "Name",
+        "Name"
       ],
       [
-        "Please input new password!",
-        "pleaseInputNewPassword"
+        "Deselect",
+        "Deselect"
       ],
       [
-        "New password",
-        "newPassword"
+        "actionsOnFilteredAnnotations",
+        "actionsOnFilteredAnnotations"
       ],
       [
-        "Please confirm your new password!",
-        "pleaseConfirmYourNewPassword"
+        "Created",
+        "Created"
       ],
       [
-        "Confirm new password",
-        "confirmNewPassword"
+        "Last updated",
+        "lastUpdated"
       ],
       [
-        "No results matched your search...",
-        "noResultsMatchedYourSearch"
+        "Delete",
+        "Delete"
       ],
       [
-        "No projects created yet...",
-        "noProjectsCreatedYet"
+        "Subset",
+        "Subset"
       ],
       [
-        "create a new one",
-        "createANewOne"
+        "Mode",
+        "Mode"
       ],
       [
-        "Search ...",
-        "search"
+        "Dimension",
+        "Dimension"
       ],
       [
-        "Updated date",
-        "updatedDate"
+        "Open",
+        "Open"
       ],
       [
-        "Create a new project",
-        "createANewProject"
+        "Actions",
+        "Actions"
       ],
       [
-        "Create from backup",
-        "createFromBackup"
+        "Merge",
+        "Merge"
       ],
       [
-        "Select all",
-        "selectAll"
+        "Deleting task #{{taskId}} ({{current}}/{{total}})",
+        "Deleting task #{{taskId}} ({{current}}/{{total}})"
       ],
       [
-        "Selected: {{count}}",
-        "selectedCount"
+        "Open the task",
+        "openTheTask"
       ],
       [
-        "Select action",
-        "selectAction"
+        "Project:",
+        "Project:"
       ],
       [
-        "Specify frames to apply the action",
-        "specifyFramesToApplyTheAction"
+        "Show",
+        "Show"
       ],
       [
-        "Starting from frame",
-        "startingFromFrame"
+        "Hide",
+        "Hide"
       ],
       [
-        "up to frame",
-        "upToFrame"
+        "Checkbox:",
+        "Checkbox:"
       ],
       [
-        "Or choose one of predefined options",
-        "orChooseOneOfPredefinedOptions"
+        "Values:",
+        "Values:"
       ],
       [
-        "Setup action parameters",
-        "setupActionParameters"
+        "Number:",
+        "Number:"
       ],
       [
-        "Last updated {{updated}}",
-        "lastUpdatedOn"
+        "Text:",
+        "Text:"
       ],
       [
-        "Delete {{count}} selected projects",
-        "deleteSelectedProjectsCount"
+        "From:",
+        "From:"
       ],
       [
-        "Delete selected",
-        "deleteSelected"
+        "To:",
+        "To:"
       ],
       [
-        "Export dataset",
-        "exportDataset"
+        "Step:",
+        "Step:"
       ],
       [
-        "Export to {{loc}} storage {{cloudId}}",
-        "exportToCloudStorageLocation"
+        "Convert masks to polygons",
+        "convertMasksToPolygons"
       ],
       [
-        "Import dataset",
-        "importDataset"
+        "Annotate",
+        "Annotate"
       ],
       [
-        "Backup Project",
-        "backupProject"
+        "Stage",
+        "Stage"
       ],
       [
-        "View analytics",
-        "viewAnalytics"
+        "State",
+        "State"
       ],
       [
-        "Quality control",
-        "qualityControl"
+        "Gamma",
+        "Gamma"
       ],
       [
-        "Setup webhooks",
-        "setupWebhooks"
+        "Size",
+        "Size"
       ],
       [
-        "No tasks created yet...",
-        "noTasksCreatedYet"
+        "Resize",
+        "resize"
       ],
       [
-        "create a new task",
-        "createANewTask"
+        "Color",
+        "Color"
       ],
       [
-        "or try to",
-        "orTryTo"
+        "Opacity",
+        "Opacity"
       ],
       [
-        "Project ID",
-        "projectId"
+        "Brightness",
+        "Brightness"
       ],
       [
-        "Project name",
-        "projectName"
+        "Contrast",
+        "Contrast"
       ],
       [
-        "Create multi tasks",
-        "createMultiTasks"
+        "Saturation",
+        "Saturation"
       ],
       [
-        "Request current progress",
-        "requestCurrentProgress"
+        "Consensus",
+        "Consensus"
       ],
       [
-        "Created by {{owner}} on {{date}}",
-        "createdByOwnerOnDate"
+        "Frames",
+        "frames"
       ],
       [
-        "{{count}} done",
-        "countDone"
+        "Deleting job #{{jobId}} ({{current}}/{{total}})",
+        "Deleting job #{{jobId}} ({{current}}/{{total}})"
       ],
       [
-        "{{count}} on review",
-        "countOnReview"
+        "Updating job #{{jobId}} ({{current}}/{{total}})",
+        "Updating job #{{jobId}} ({{current}}/{{total}})"
       ],
       [
-        "{{count}} annotating",
-        "countAnnotating"
+        "Resource",
+        "Resource"
       ],
       [
-        "{{count}} total",
-        "countTotal"
+        "Region",
+        "region"
       ],
       [
-        "The consensus jobs will be merged",
-        "theConsensusJobsWillBeMerged"
+        "Description",
+        "Description"
       ],
       [
-        "Delete {{count}} selected tasks",
-        "deleteCountSelectedTasks"
+        "Provider:",
+        "Provider:"
       ],
       [
-        "The task {{taskId}} will be deleted",
-        "taskWillBeDeletedConfirmation"
+        "Update",
+        "Update"
       ],
       [
-        "Deleting task #{{taskId}} ({{current}}/{{total}} ಅ",
-        "deletingTaskProgress"
+        "Raw",
+        "Raw"
       ],
       [
-        "Upload annotations",
-        "uploadAnnotations"
+        "Constructor",
+        "Constructor"
       ],
       [
-        "Export task dataset",
-        "exportTaskDataset"
+        "Done",
+        "Done"
       ],
       [
-        "Open bug tracker",
-        "openBugTracker"
+        "No deployed models found",
+        "noDeployedModelsFound"
       ],
       [
-        "Automatic annotation",
-        "automaticAnnotation"
+        "Cancel",
+        "Cancel"
       ],
       [
-        "Backup Task",
-        "backupTask"
+        "Labels not found in the specified model",
+        "labelsNotFoundInTheSpecifiedModel"
       ],
       [
-        "Consensus management",
-        "consensusManagement"
+        "False",
+        "False"
       ],
       [
-        "Merge consensus jobs",
-        "mergeConsensusJobs"
+        "True",
+        "True"
       ],
       [
-        "Move to project",
-        "moveToProject"
+        "min;max;step",
+        "min;max;step"
       ],
       [
-        "Requested project id \"{{id}}\" is not valid",
-        "invalidProjectId"
+        "Mutable",
+        "Mutable"
       ],
       [
-        "No tasks found",
-        "noTasksFound"
+        "Skeleton",
+        "Skeleton"
       ],
       [
-        "Project #{{id}} created by {{owner}} on {{date}}",
-        "projectIdCreatedByOwnerOnDate"
+        "Continue",
+        "Continue"
       ],
       [
-        "Project #{{id}} created on {{date}}",
-        "projectIdCreatedOnDate"
+        "Descending sort",
+        "descendingSort"
       ],
       [
-        "Assigned to",
-        "assignedTo"
+        "Ascending sort",
+        "ascendingSort"
       ],
       [
-        "Back to projects",
-        "backToProjects"
+        "Recent",
+        "Recent"
       ],
       [
-        "Task to move is not specified",
-        "taskToMoveIsNotSpecified"
+        "Reset",
+        "Reset"
       ],
       [
-        "Please, select a project",
-        "pleaseSelectAProject"
+        "Apply",
+        "Apply"
       ],
       [
-        "Could not update the task",
-        "couldNotUpdateTheTask"
+        "Filter",
+        "Filter"
       ],
       [
-        "Could not fetch task from the server",
-        "couldNotFetchTaskFromTheServer"
+        "Type",
+        "Type"
       ],
       [
-        "Move task {{taskId}} to project",
-        "moveTaskTaskidToProject"
+        "Model",
+        "Model"
       ],
       [
-        "Label mapping",
-        "labelMapping"
+        "Labels:",
+        "Labels:"
       ],
       [
-        "Could not get task details",
-        "couldNotGetTaskDetails"
+        "Provider",
+        "Provider"
       ],
       [
-        "Select a model",
-        "selectAModel"
+        "Edit",
+        "Edit"
       ],
       [
-        "No models available",
-        "noModelsAvailable"
+        "Player",
+        "Player"
       ],
       [
-        "No attributes found",
-        "noAttributesFound"
+        "Workspace",
+        "Workspace"
       ],
       [
-        "No objects found",
-        "noObjectsFound"
+        "Shortcuts",
+        "Shortcuts"
       ],
       [
-        "Model Spec",
-        "modelSpec"
+        "or",
+        "or"
       ],
       [
-        "CVAT Spec",
-        "cvatSpec"
+        "Fastest",
+        "Fastest"
       ],
       [
-        "Clean previous annotations",
-        "cleanPreviousAnnotations"
+        "Fast",
+        "Fast"
       ],
       [
-        "Maximum distance",
-        "maximumDistance"
+        "Usual",
+        "Usual"
       ],
       [
-        "Sorry, but this job was not found",
-        "jobNotFound"
+        "Slow",
+        "Slow"
       ],
       [
-        "No jobs created yet...",
-        "noJobsCreatedYet"
+        "Slower",
+        "Slower"
       ],
       [
-        "Task ID",
-        "taskId"
+        "Slowest",
+        "Slowest"
       ],
       [
-        "Task name",
-        "taskName"
+        "minutes",
+        "minutes"
       ],
       [
-        "Ground truth",
-        "groundTruth"
+        "Label",
+        "label"
       ],
       [
-        "Image grid",
-        "imageGrid"
+        "Attributes",
+        "Attributes"
       ],
       [
-        "Color settings",
-        "colorSettings"
+        "Source",
+        "Source"
       ],
       [
-        "Stage and state",
-        "stageAndState"
+        "Descriptions",
+        "Descriptions"
       ],
       [
-        "The consensus job will be merged",
-        "theConsensusJobWillBeMerged"
+        "Dimensions",
+        "Dimensions"
       ],
       [
-        "Delete {{count}} selected jobs",
-        "deleteCountSelectedJobs"
+        "Auto",
+        "Auto"
       ],
       [
-        "The job {{jobId}} will be deleted",
-        "jobWillBeDeletedConfirmation"
+        "Center",
+        "Center"
       ],
       [
-        "Deleting job #{{jobId}} ({{current}}/{{total}} ಅ",
-        "deletingJobProgress"
+        "Yes",
+        "Yes"
       ],
       [
-        "Updating job #{{jobId}} ({{current}}/{{total}} ಅ",
-        "updatingJobProgress"
+        "Using cache to store data.",
+        "usingCacheTooltip"
       ],
       [
-        "Go to the task",
-        "goToTheTask"
+        "Specify source storage for import resources like annotation, backups",
+        "sourceStorageDescription"
       ],
       [
-        "Go to the project",
-        "goToTheProject"
+        "Specify target storage for export resources like annotation, backups",
+        "targetStorageDescription"
       ],
       [
-        "Go to the bug tracker",
-        "goToTheBugTracker"
+        "No",
+        "No"
       ],
       [
-        "Import annotations",
-        "importAnnotations"
+        "Skip",
+        "Skip"
       ],
       [
-        "Export annotations",
-        "exportAnnotations"
+        "clickSkipHelpText",
+        "clickSkipHelpText"
       ],
       [
-        "Merge consensus job",
-        "mergeConsensusJob"
+        "clickSubmitHelpText",
+        "clickSubmitHelpText"
       ],
       [
-        "No cloud storages attached yet...",
-        "noCloudStoragesAttachedYet"
+        "holdAltToAvoidDragHelpText",
+        "holdAltToAvoidDragHelpText"
       ],
       [
-        "attach a new one",
-        "attachANewOne"
+        "pressToUndoHelpText",
+        "pressToUndoHelpText"
       ],
       [
-        "Provider type",
-        "providerType"
+        "pressToResetDrawHelpText",
+        "pressToResetDrawHelpText"
       ],
       [
-        "Display name",
-        "displayName"
+        "pressToFinishDrawHelpText",
+        "pressToFinishDrawHelpText"
       ],
       [
-        "Credentials type",
-        "credentialsType"
+        "pressToDeleteHelpText",
+        "pressToDeleteHelpText"
       ],
       [
-        "Please, confirm your action",
-        "pleaseConfirmYourAction"
+        "Run",
+        "Run"
       ],
       [
-        "Created by {{owner}}",
-        "createdByOwner"
+        "preventSsrHelpText",
+        "preventSsrHelpText"
       ],
       [
-        "Issue tracker is expected to be URL",
-        "issueTrackerIsExpectedToBeUrl"
+        "No available trackers found",
+        "noAvailableTrackersFound"
       ],
       [
-        "Issue Tracker",
-        "issueTracker"
+        "Tracker",
+        "tracker"
       ],
       [
-        "Open the issue",
-        "openTheIssue"
+        "Track",
+        "track"
       ],
       [
-        "Add label",
-        "addLabel"
+        "OpenCV",
+        "OpenCV"
       ],
       [
-        "Setup skeleton",
-        "setupSkeleton"
+        "Drawing",
+        "Drawing"
       ],
       [
-        "From model",
-        "fromModel"
+        "Image",
+        "Image"
       ],
       [
-        "Select a model to pick labels:",
-        "selectAModelToPickLabels"
+        "Tracking",
+        "Tracking"
       ],
       [
-        "Please specify a name",
-        "pleaseSpecifyAName"
+        "Start with a bounding box",
+        "startWithABoundingBox"
       ],
       [
-        "You can only append new values",
-        "youCanOnlyAppendNewValues"
+        "Waiting for a server response..",
+        "waitingForAServerResponse"
       ],
       [
-        "Invalid attribute value: \"{{value}}\".",
-        "invalidAttributeValue"
+        "Interactor",
+        "interactor"
       ],
       [
-        "Press enter to add a new value",
-        "pressEnterToAddANewValue"
+        "Interact",
+        "interact"
       ],
       [
-        "Please specify values",
-        "pleaseSpecifyValues"
+        "No available interactors found",
+        "noAvailableInteractorsFound"
       ],
       [
-        "Attribute values",
-        "attributeValues"
+        "No available detectors found",
+        "noAvailableDetectorsFound"
       ],
       [
-        "This value is default",
-        "thisValueIsDefault"
+        "AI Tools",
+        "aiTools"
       ],
       [
-        "Click to set default value",
-        "clickToSetDefaultValue"
+        "Interactors",
+        "interactors"
       ],
       [
-        "Specify a default value",
-        "specifyADefaultValue"
+        "Detectors",
+        "detectors"
       ],
       [
-        "Please, specify a default value",
-        "pleaseSpecifyADefaultValue"
+        "Trackers",
+        "trackers"
       ],
       [
-        "Three numbers are expected",
-        "threeNumbersAreExpected"
+        "Making a server request",
+        "makingAServerRequest"
       ],
       [
-        "{{number}} is not a number",
-        "isNotANumber"
+        "Items: {{count}}",
+        "Items: {{count}}"
       ],
       [
-        "Minimum must be less than maximum",
-        "minimumMustBeLessThanMaximum"
+        "FROM",
+        "FROM"
       ],
       [
-        "Step must be a positive number",
-        "stepMustBeAPositiveNumber"
+        "TO",
+        "TO"
       ],
       [
-        "Please set a range",
-        "pleaseSetARange"
+        "Undo",
+        "Undo"
       ],
       [
-        "Default value",
-        "defaultValue"
+        "Redo",
+        "Redo"
       ],
       [
-        "Delete the attribute",
-        "deleteTheAttribute"
+        "Block",
+        "Block"
       ],
       [
-        "Label name must be unique",
-        "labelNameMustBeUnique"
+        "Menu",
+        "Menu"
       ],
       [
-        "Label name",
-        "labelName"
-      ],
-      [
-        "Add an attribute",
-        "addAnAttribute"
-      ],
-      [
-        "Save the label and return",
-        "saveTheLabelAndReturn"
-      ],
-      [
-        "Save the label and create one more",
-        "saveTheLabelAndCreateOneMore"
-      ],
-      [
-        "Do not save the label and return",
-        "doNotSaveTheLabelAndReturn"
-      ],
-      [
-        "Change color of the label",
-        "changeColorOfTheLabel"
-      ],
-      [
-        "Sort by",
-        "sortBy"
-      ],
-      [
-        "Wrong filters value stored",
-        "wrongFiltersValueStored"
-      ],
-      [
-        "Clear filters",
-        "clearFilters"
-      ],
-      [
-        "Click to open guide",
-        "clickToOpenGuide"
-      ],
-      [
-        "Color by",
-        "colorBy"
-      ],
-      [
-        "Selected opacity",
-        "selectedOpacity"
-      ],
-      [
-        "No models deployed yet...",
-        "noModelsDeployedYet"
-      ],
-      [
-        "deploy a model with",
-        "deployAModelWith"
-      ],
-      [
-        "Target URL",
-        "targetUrl"
-      ],
-      [
-        "Added {{created}}",
-        "addedCreated"
-      ],
-      [
-        "System model",
-        "systemModel"
-      ],
-      [
-        "Project description",
-        "projectDescription"
-      ],
-      [
-        "Task description",
-        "taskDescription"
-      ],
-      [
-        "Select a user",
-        "selectAUser"
-      ],
-      [
-        "Reset assignee",
-        "resetAssignee"
-      ],
-      [
-        "Player step",
-        "playerStep"
-      ],
-      [
-        "Player speed",
-        "playerSpeed"
-      ],
-      [
-        "Select canvas background color",
-        "selectCanvasBackgroundColor"
-      ],
-      [
-        "Reset zoom",
-        "resetZoom"
-      ],
-      [
-        "Fit image after changing frame",
-        "fitImageAfterChangingFrame"
-      ],
-      [
-        "Rotate all images",
-        "rotateAllImages"
-      ],
-      [
-        "Rotate all images simultaneously",
-        "rotateAllImagesSimultaneously"
-      ],
-      [
-        "Smooth image",
-        "smoothImage"
-      ],
-      [
-        "Smooth image when zoom-in it",
-        "smoothImageWhenZoominIt"
-      ],
-      [
-        "Show deleted frames",
-        "showDeletedFrames"
-      ],
-      [
-        "Enable auto save",
-        "enableAutoSave"
-      ],
-      [
-        "Auto save every",
-        "autoSaveEvery"
-      ],
-      [
-        "Show all interpolation tracks",
-        "showAllInterpolationTracks"
-      ],
-      [
-        "Always show object details",
-        "alwaysShowObjectDetails"
-      ],
-      [
-        "Content of a text",
-        "contentOfAText"
-      ],
-      [
-        "Position of a text",
-        "positionOfAText"
-      ],
-      [
-        "Font size of a text",
-        "fontSizeOfAText"
-      ],
-      [
-        "Automatic bordering",
-        "automaticBordering"
-      ],
-      [
-        "Adaptive zoom algorithm",
-        "adaptiveZoomAlgorithm"
-      ],
-      [
-        "Intelligent polygon cropping",
-        "intelligentPolygonCropping"
-      ],
-      [
-        "Show tags on frame",
-        "showTagsOnFrame"
-      ],
-      [
-        "Control points size",
-        "controlPointsSize"
-      ],
-      [
-        "Search for a shortcut here...",
-        "searchForAShortcutHere"
-      ],
-      [
-        "Restore Defaults",
-        "restoreDefaults"
-      ],
-      [
-        "on the image, using",
-        "onTheImageUsing"
-      ],
-      [
-        "No available labels found",
-        "noAvailableLabelsFound"
-      ],
-      [
-        "Label selector",
-        "labelSelector"
-      ],
-      [
-        "Label type selector",
-        "labelTypeSelector"
-      ],
-      [
-        "Number of points",
-        "numberOfPoints"
-      ],
-      [
-        "Automatically go to the next frame",
-        "automaticallyGoToTheNextFrame"
-      ],
-      [
-        "Automatically save when finish",
-        "automaticallySaveWhenFinish"
-      ],
-      [
-        "Navigate only empty frames",
-        "navigateOnlyEmptyFrames"
-      ],
-      [
-        "Predefined number of points",
-        "predefinedNumberOfPoints"
-      ],
-      [
-        "Submit Results",
-        "submitResults"
-      ],
-      [
-        "Current frame",
-        "currentFrame"
-      ],
-      [
-        "All frames",
-        "allFrames"
-      ],
-      [
-        "From current",
-        "fromCurrent"
-      ],
-      [
-        "Up to current",
-        "upToCurrent"
-      ],
-      [
-        "Points: ",
-        "points"
-      ],
-      [
-        "Intelligent scissors",
-        "intelligentScissors"
-      ],
-      [
-        "Histogram equalization",
-        "histogramEqualization"
-      ],
-      [
-        "OpenCV is loading",
-        "opencvIsLoading"
-      ],
-      [
-        "Reload OpenCV",
-        "reloadOpenCV"
-      ],
-      [
-        "Find the previous frame with issues",
-        "findThePreviousFrameWithIssues"
-      ],
-      [
-        "Find the next frame with issues",
-        "findTheNextFrameWithIssues"
-      ],
-      [
-        "Show/hide all issues",
-        "showHideAllIssues"
-      ],
-      [
-        "Show/hide resolved issues",
-        "showhideResolvedIssues"
-      ],
-      [
-        "#{{id}} • Issue",
-        "idIssue"
-      ],
-      [
-        "created {{time}}",
-        "createdTime"
-      ],
-      [
-        "#{{id}} • Warning",
-        "idWarning"
-      ],
-      [
-        "#{{id}} • Conflict",
-        "idConflict"
-      ],
-      [
-        "Expand/collapse all",
-        "expandCollapseAll"
-      ],
-      [
-        "Confirm propagation",
-        "confirmPropagation"
-      ],
-      [
-        "Please, specify a direction",
-        "pleaseSpecifyADirection"
-      ],
-      [
-        "How many copies do you want to create?",
-        "howManyCopiesDoYouWantToCreate"
-      ],
-      [
-        "Job state will be switched to \"{{state}}\"",
-        "jobStateWillBeSwitchedToState"
-      ],
-      [
-        "Remove Annotations",
-        "removeAnnotations"
-      ],
-      [
-        "From: ",
-        "from"
-      ],
-      [
-        "  To: ",
-        "to"
-      ],
-      [
-        "Delete only keyframes for tracks",
-        "deleteOnlyKeyframesForTracks"
-      ],
-      [
-        "Would you like to finish the job?",
-        "wouldYouLikeToFinishTheJob"
-      ],
-      [
-        "Undo: {{undoAction}} {{undoShortcut}}",
-        "undoActionWithShortcut"
-      ],
-      [
-        "Redo: {{redoAction}} {{redoShortcut}}",
-        "redoActionWithShortcut"
-      ],
-      [
-        "Press \"{{drawShortcut}}\" to finish",
-        "pressDrawshortcutToFinish"
-      ],
-      [
-        "No data",
-        "noData"
-      ],
-      [
-        "Select color",
-        "selectColor"
-      ],
-      [
-        "When forming the name, a template is used.",
-        "templateIsUsedForName"
-      ],
-      [
-        "Password must have at least 1 numeric characters",
-        "passwordRequiresNumeric"
-      ],
-      [
-        "Password must have at least 1 uppercase alphabetical character",
-        "passwordRequiresUppercase"
-      ],
-      [
-        "Password must have at least 1 lowercase alphabetical character",
-        "passwordRequiresLowercase"
-      ],
-      [
-        "Username must have at least 5 characters",
-        "usernameTooShort"
-      ],
-      [
-        "Only characters (a-z), (A-Z), (0-9), -, _, . are available",
-        "usernameInvalidChars"
-      ],
-      [
-        "To get started with your annotation project",
-        "getStartedWithAnnotation"
-      ],
-      [
-        "Selected action will be applied to the current object",
-        "actionAppliedToCurrentObject"
-      ],
-      [
-        "Updating assignee for project #{{projectId}} ({{current}}/{{total}})",
-        "updatingProjectAssignee"
-      ],
-      [
-        "Updating organization for project #{{projectId}} ({{current}}/{{total}})",
-        "updatingProjectOrgProgress"
-      ],
-      [
-        "The project {{projectId}} will be deleted",
-        "projectWillBeDeletedConfirm"
-      ],
-      [
-        "All related data (images, annotations) will be lost. Continue?",
-        "confirmDeleteAllProjectData"
-      ],
-      [
-        "Deleting project #{{projectId}} ({{current}}/{{total}})",
-        "deletingProjectProgress"
-      ],
-      [
-        "Export backup to {{loc}} storage {{cloudId}}",
-        "exportBackupToCloudStorage"
-      ],
-      [
-        "Existing annotations in parent jobs will be updated. Continue?",
-        "updateParentJobAnnosConfirm"
-      ],
-      [
-        "Updating assignee for task #{{taskId}} ({{current}}/{{total}})",
-        "updatingTaskAssigneeProgress"
-      ],
-      [
-        "All related data (images, annotations) for all selected tasks will be lost. Continue?",
-        "confirmDeleteAllTaskData"
-      ],
-      [
-        "Updating organization for task #{{taskId}} ({{current}}/{{total}})",
-        "updatingTaskOrgProgress"
-      ],
-      [
-        "Could not receive the requested project from the server",
-        "couldNotFetchProject"
-      ],
-      [
-        "Please, specify mapping for all the labels",
-        "specifyMappingForAllLabels"
-      ],
-      [
-        "Some moving process description here",
-        "movingProcessDescription"
-      ],
-      [
-        "This model does not have specified labels",
-        "modelHasNoLabels"
-      ],
-      [
-        "Setup mapping between labels and attributes",
-        "setupLabelAttributeMapping"
-      ],
-      [
-        "Minimum confidence threshold for detections. Leave empty to use the default value specified in the model settings",
-        "minConfidenceThresholdTooltip"
-      ],
-      [
-        "Minimum similarity value for shapes that can be merged",
-        "minSimilarityForMerge"
-      ],
-      [
-        "Maximum distance between shapes that can be merged",
-        "maxDistanceForMerge"
-      ],
-      [
-        "There was something wrong during getting the project",
-        "errorGettingProject"
-      ],
-      [
-        "Please, be sure, that information you tried to get exist and you are eligible to access it",
-        "checkInfoExistsAndAccessible"
-      ],
-      [
-        "Please, be sure information you tried to get exist and you have access",
-        "checkInfoExistsAndAccess"
-      ],
-      [
-        "There was something wrong during getting the task",
-        "errorGettingTask"
-      ],
-      [
-        "Sorry, but the requested cloud storage was not found",
-        "cloudStorageNotFound"
-      ],
-      [
-        "Please, be sure id you requested exists and you have appropriate permissions",
-        "checkIdExistsAndPermissions"
-      ],
-      [
-        "Existing annotations in the parent job will be updated. Continue?",
-        "confirmUpdateParentAnnos"
-      ],
-      [
-        "All related data (annotations) for all selected jobs will be lost. Continue?",
-        "confirmDeleteAllJobAnnos"
-      ],
-      [
-        "All related data (annotations) will be lost. Continue?",
-        "confirmDeleteAllAnnos"
-      ],
-      [
-        "To get started with your cloud storage",
-        "getStartedWithCloudStorage"
-      ],
-      [
-        "You are going to remove the cloudstorage \"{{displayName}}\". Continue?",
-        "confirmRemoveCloudStorage"
-      ],
-      [
-        "Could not update the {{instanceType}} {{instanceId}}",
-        "couldNotUpdateInstance"
-      ],
-      [
-        "If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.",
-        "lightweightBackupTooltip"
-      ],
-      [
-        "When forming the backup name, a template is used.",
-        "templateUsedForBackupName"
-      ],
-      [
-        "When forming the dataset name, a template is used.",
-        "templateUsedForDatasetName"
-      ],
-      [
-        "Do you want to delete \"{{labelName}}\" label?",
-        "confirmDeleteLabel"
-      ],
-      [
-        "This action cannot be undone. All annotations associated to the label will be deleted.",
-        "deleteLabelWarning"
-      ],
-      [
-        "Attribute name must be unique for the label",
-        "attributeNameUnique"
-      ],
-      [
-        "An HTML element representing the attribute",
-        "attributeHtmlElement"
-      ],
-      [
-        "Step must be less than minmax difference",
-        "stepLessThanMinMax"
-      ],
-      [
-        "Can this attribute be changed frame to frame?",
-        "attributeMutable"
-      ],
-      [
-        "Do you want to remove the \"{{attrName}}\" attribute?",
-        "confirmRemoveAttribute"
-      ],
-      [
-        "This action cannot be undone. All annotations associated to the attribute will be removed",
-        "deleteAttributeWarning"
-      ],
-      [
-        "To annotate your tasks automatically",
-        "getStartedWithAutoAnnotation"
-      ],
-      [
-        "Failed to load settings from local storage",
-        "failedLoadSettings"
-      ],
-      [
-        "Number of frames skipped when selecting",
-        "framesSkippedOnSelect"
-      ],
-      [
-        "You will be able to navigate and restore deleted frames",
-        "canNavigateRestoreDeleted"
-      ],
-      [
-        "Show hidden interpolated objects in the side panel",
-        "showHiddenInterpolated"
-      ],
-      [
-        "Show text for an object on the canvas not only when the object is activated",
-        "alwaysShowObjectText"
-      ],
-      [
-        "Enable automatic bordering for polygons and polylines during drawing/editing",
-        "enableAutoBordering"
-      ],
-      [
-        "Enable smoother version of zooming, compatible with a trackpad and pinch gestures",
-        "enableSmoothZooming"
-      ],
-      [
-        "Try to crop polygons automatically when editing",
-        "autoCropPolygonsOnEdit"
-      ],
-      [
-        "Show frame tags in the corner of the workspace",
-        "showFrameTagsInCorner"
-      ],
-      [
-        "Attribute annotation mode (AAM) zoom margin",
-        "aamZoomMargin"
-      ],
-      [
-        "Default number of points in polygon approximation",
-        "defaultPolygonPoints"
-      ],
-      [
-        "Works for serverless interactors and OpenCV scissors",
-        "supportsServerlessAndOpenCV"
-      ],
-      [
-        "Are you sure you want to restore defaults?",
-        "confirmRestoreDefaults"
+        "Backup",
+        "Backup"
       ],
       [
         "ZIP chunks have better quality, but they require more disk space and time to download. Relevant for video only",
-        "zipChunksQualityTooltip"
+        "zipChunksTooltip"
       ],
       [
-        "Shortcut may consist of any combination of modifiers (alt, ctrl, or shift) and one non-modifier at the end. Some key combinations may be reserved by the browser and cannot be overridden in CVAT.",
-        "shortcutCompositionWarning"
+        "Defines images compression level",
+        "imageQualityTooltip"
       ],
       [
-        "Selected interactor does not have a help message",
-        "interactorHasNoHelp"
+        "Defines a number of intersected frames between different segments",
+        "overlapSizeTooltip"
       ],
       [
-        "Positive points can be added by left-clicking the image. ",
-        "addPositivePointsOnClick"
+        "Defines a number of frames grouped together as a segment (e.g., a segment is a batch of frames processed together; for example, if set to 50, each segment contains 50 frames).",
+        "segmentSizeTooltip"
       ],
       [
-        "Negative points can be added by right-clicking the image. ",
-        "addNegativePointsOnRightClick"
+        "Attach issue tracker where the task is described",
+        "issueTrackerExtra"
       ],
       [
-        "Select an interactor to see help message",
-        "selectInteractorForHelp"
+        "Defines a number of frames to be packed in a chunk when send from client to server. Server defines automatically if empty.<br/>Recommended values:<br/>1080p or less: 36<br/>2k or less: 8 - 16<br/>4k or less: 4 - 8<br/>More: 1 - 4",
+        "chunkSizeTooltip"
       ],
       [
-        "The tracker will be applied to drawn rectangles",
-        "trackerAppliedToRects"
+        "If you have a low data transfer rate over the network you can copy data into CVAT to speed up work",
+        "copyDataHelpText"
+      ],
+      [
+        "Specify how to sort images. It is not relevant for videos.",
+        "sortingMethodHelpText"
+      ],
+      [
+        "Previous attribute {{shortcut}}",
+        "previousAttributeTooltip"
+      ],
+      [
+        "Next attribute {{shortcut}}",
+        "nextAttributeTooltip"
+      ],
+      [
+        "Previous object {{shortcut}}",
+        "previousObjectTooltip"
+      ],
+      [
+        "Next object {{shortcut}}",
+        "nextObjectTooltip"
+      ],
+      [
+        "Fit views",
+        "fitViewsTooltip"
+      ],
+      [
+        "Add context image",
+        "addContextImageTooltip"
+      ],
+      [
+        "Reload layout",
+        "reloadLayoutTooltip"
+      ],
+      [
+        "Finish {{shortcut}}",
+        "finishBrushTooltip"
+      ],
+      [
+        "Continue {{shortcut}}",
+        "continueBrushTooltip"
+      ],
+      [
+        "Brush tool {{shortcut}}",
+        "brushToolTooltip"
+      ],
+      [
+        "Eraser tool {{shortcut}}",
+        "eraserToolTooltip"
+      ],
+      [
+        "Polygon tool {{shortcut}}",
+        "polygonToolTooltip"
+      ],
+      [
+        "Polygon remove tool {{shortcut}}",
+        "polygonRemoveToolTooltip"
+      ],
+      [
+        "Brush size [Hold Alt + Right Mouse Click + Drag Left/Right]",
+        "brushSizeTooltip"
+      ],
+      [
+        "Hide mask {{shortcut}}",
+        "hideMaskTooltip"
+      ],
+      [
+        "Delete point [Alt + dblclick]",
+        "deletePointTooltip"
+      ],
+      [
+        "Add new layer {{layer}} and switch to it",
+        "addNewLayerTooltip"
+      ],
+      [
+        "Camera Roll Angle Up {{shortcut}}",
+        "tiltUpTooltip"
+      ],
+      [
+        "Camera Roll Angle Down {{shortcut}}",
+        "tiltDownTooltip"
+      ],
+      [
+        "Camera Pitch Angle Left {{shortcut}}",
+        "rotateLeftTooltip"
+      ],
+      [
+        "Camera Pitch Angle Right {{shortcut}}",
+        "rotateRightTooltip"
+      ],
+      [
+        "Camera Move Up {{shortcut}}",
+        "moveUpTooltip"
+      ],
+      [
+        "Camera Move Down {{shortcut}}",
+        "moveDownTooltip"
+      ],
+      [
+        "Camera Move Left {{shortcut}}",
+        "moveLeftTooltip"
+      ],
+      [
+        "Camera Move Right {{shortcut}}",
+        "moveRightTooltip"
+      ],
+      [
+        "Camera Zoom In {{shortcut}}",
+        "zoomInTooltip"
+      ],
+      [
+        "Camera Zoom Out {{shortcut}}",
+        "zoomOutTooltip"
+      ],
+      [
+        "Open an issue",
+        "openAnIssueTooltip"
+      ],
+      [
+        "No comments found",
+        "noCommentsFoundTooltip"
+      ],
+      [
+        "Collapse the chat",
+        "collapseTheChatTooltip"
+      ],
+      [
+        "Cursor {{shortcut}}",
+        "cursorTooltip"
+      ],
+      [
+        "Press {{shortcut}} to draw again",
+        "pressToDrawAgainTooltip"
+      ],
+      [
+        "Fit the image [Double Click]",
+        "fitTheImageTooltip"
+      ],
+      [
+        "Group shapes {{shortcut}}",
+        "groupShapesTooltip"
+      ],
+      [
+        "Select and press {{shortcut}} to reset a group.",
+        "resetGroupTooltip"
+      ],
+      [
+        "Group shapes/tracks {{shortcut}}",
+        "groupShapesTracksTooltip"
+      ],
+      [
+        "Join masks {{shortcut}}",
+        "joinMasksTooltip"
+      ],
+      [
+        "Merge shapes/tracks {{shortcut}}",
+        "mergeShapesTracksTooltip"
+      ],
+      [
+        "Move the image",
+        "moveTheImageTooltip"
+      ],
+      [
+        "Select a region of interest",
+        "selectARegionOfInterestTooltip"
+      ],
+      [
+        "Rotate the image anticlockwise {{shortcut}}",
+        "rotateAnticlockwiseTooltip"
+      ],
+      [
+        "Rotate the image clockwise {{shortcut}}",
+        "rotateClockwiseTooltip"
+      ],
+      [
+        "Press {{shortcut}} to add a tag again",
+        "pressToAddTagAgainTooltip"
+      ],
+      [
+        "Slice a mask/polygon shape {{shortcut}}",
+        "sliceTooltip"
+      ],
+      [
+        "Split a track {{shortcut}}",
+        "splitATrackTooltip"
+      ],
+      [
+        "Disable tracking",
+        "disableTracking"
+      ],
+      [
+        "Enable tracking using {{trackerName}}",
+        "enableTrackingUsing"
+      ],
+      [
+        "OpenCV client initialization..",
+        "openCVClientInitialization"
+      ],
+      [
+        "Could not initialize OpenCV",
+        "couldNotInitializeOpenCV"
+      ],
+      [
+        "{{trackerName}}: states are being initialized for {{count}} object(s) ..",
+        "statesAreBeingInitializedForObjects"
+      ],
+      [
+        "Tracker initialization error",
+        "trackerInitializationError"
+      ],
+      [
+        "{{trackerName}}: {{count}} object(s) is/are being tracked..",
+        "objectsAreBeingTracked"
+      ],
+      [
+        "Tracking error",
+        "trackingError"
+      ],
+      [
+        "Tracking error occurred",
+        "trackingErrorOccurred"
+      ],
+      [
+        "Waiting for a response from {{interactorName}}",
+        "waitingForAResponseFrom"
+      ],
+      [
+        "Interaction error occurred",
+        "interactionErrorOccurred"
+      ],
+      [
+        "Interactor API is outdated",
+        "interactorAPIIsOutdated"
+      ],
+      [
+        "Probably, you should consider updating the serverless function",
+        "probablyYouShouldConsiderUpdatingTheServerlessFunction"
+      ],
+      [
+        "Detection error occurred",
+        "detectionErrorOccurred"
+      ],
+      [
+        "Close",
+        "Close"
+      ],
+      [
+        "Ok",
+        "Ok"
+      ],
+      [
+        "Change current label",
+        "changeCurrentLabel"
+      ],
+      [
+        "Lock all states",
+        "lockAllStates"
+      ],
+      [
+        "Unlock all states",
+        "unlockAllStates"
+      ],
+      [
+        "Hide all states",
+        "hideAllStates"
+      ],
+      [
+        "Show all states",
+        "showAllStates"
+      ],
+      [
+        "Items: {{count}}",
+        "itemsCount"
+      ],
+      [
+        "Find the previous frame with issues",
+        "findPreviousFrameWithIssues"
+      ],
+      [
+        "Find the next frame with issues",
+        "findNextFrameWithIssues"
+      ],
+      [
+        "Show/hide resolved issues",
+        "showHideResolvedIssues"
       ],
       [
         "Show Ground truth annotations and conflicts",
-        "showGtAnnosAndConflicts"
+        "showGroundTruthAndConflicts"
+      ],
+      [
+        "#{{id}} • Issue",
+        "issueIdTag"
+      ],
+      [
+        "created {{time}}",
+        "createdTimeAgo"
+      ],
+      [
+        "#{{id}} • Warning",
+        "warningIdTag"
+      ],
+      [
+        "#{{id}} • Conflict",
+        "conflictIdTag"
+      ],
+      [
+        "Go to previous keyframe {{shortcut}}",
+        "goToPreviousKeyframe"
+      ],
+      [
+        "Go to next keyframe {{shortcut}}",
+        "goToNextKeyframe"
+      ],
+      [
+        "Switch lock property {{shortcut}}",
+        "switchLockProperty"
+      ],
+      [
+        "Switch occluded property {{shortcut}}",
+        "switchOccludedProperty"
+      ],
+      [
+        "Switch pinned property {{shortcut}}",
+        "switchPinnedProperty"
+      ],
+      [
+        "Switch hidden property {{shortcut}}",
+        "switchHiddenProperty"
+      ],
+      [
+        "Switch outside property {{shortcut}}",
+        "switchOutsideProperty"
+      ],
+      [
+        "Switch keyframe property {{shortcut}}",
+        "switchKeyframeProperty"
+      ],
+      [
+        "Go to the first keyframe",
+        "goToFirstKeyframe"
+      ],
+      [
+        "Go to the last keyframe",
+        "goToLastKeyframe"
+      ],
+      [
+        "Create object URL",
+        "createObjectUrl"
+      ],
+      [
+        "{{copyShortcut}} and {{pasteShortcut}}",
+        "copyPasteShortcut"
+      ],
+      [
+        "Make a copy",
+        "makeACopy"
+      ],
+      [
+        "Shift + Double click",
+        "editMaskShortcut"
+      ],
+      [
+        "Edit",
+        "edit"
+      ],
+      [
+        "Cut the shape into two parts {{sliceShortcut}}",
+        "sliceShapeHelpText"
+      ],
+      [
+        "Slice",
+        "slice"
+      ],
+      [
+        "Propagate",
+        "propagate"
+      ],
+      [
+        "Switch orientation",
+        "switchOrientation"
+      ],
+      [
+        "Reset perspective",
+        "resetPerspective"
+      ],
+      [
+        "To background",
+        "toBackground"
+      ],
+      [
+        "To foreground",
+        "toForeground"
+      ],
+      [
+        "Change {{colorBy}} color",
+        "changeColorBy"
+      ],
+      [
+        "Remove",
+        "remove"
+      ],
+      [
+        "Run annotation action",
+        "runAnnotationAction"
       ],
       [
         "Switch lock property for all {{shortcut}}",
-        "toggleLockAllShortcut"
+        "switchLockAll"
       ],
       [
         "Switch hidden property for all {{shortcut}}",
-        "toggleHiddenAllShortcut"
+        "switchHiddenAll"
       ],
       [
-        "Or specify a range where copies will be created",
-        "specifyCopyRange"
+        "You tagged the job as completed",
+        "jobFinishedSuccess"
+      ],
+      [
+        "Job state updated",
+        "jobStateUpdated"
       ],
       [
         "Would you like to update current job state?",
-        "confirmUpdateJobState"
+        "updateJobStateTitle"
       ],
       [
-        "You are going to remove the annotations from the client. ",
-        "confirmRemoveLocalAnnos"
+        "Job state will be switched to \"{{state}}\"",
+        "updateJobStateContent"
       ],
       [
-        "It will stay on the server till you save the job. Continue?",
-        "localRemoveWarning"
+        "Remove Annotations",
+        "removeAnnotationsTitle"
       ],
       [
-        "Applicable only for annotations in range",
-        "applicableOnlyForAnnotationsInRange"
+        "You are going to remove the annotations from the client. It will stay on the server till you save the job. Continue?",
+        "removeAnnotationsContent"
+      ],
+      [
+        "Select Range",
+        "selectRange"
+      ],
+      [
+        "Delete only keyframes for tracks",
+        "deleteOnlyKeyframes"
+      ],
+      [
+        "Would you like to finish the job?",
+        "finishJobTitle"
       ],
       [
         "It will save annotations and set the job state to \"completed\"",
-        "finishJobConfirm"
+        "finishJobContent"
+      ],
+      [
+        "Export job dataset",
+        "exportJobDataset"
+      ],
+      [
+        "Run actions",
+        "runActions"
+      ],
+      [
+        "Change job state",
+        "changeJobState"
+      ],
+      [
+        "Finish the job",
+        "finishTheJob"
       ],
       [
         "CVAT is saving your annotations, please wait",
-        "savingAnnosInProgress"
+        "savingAnnotations"
       ],
       [
-        "Press \"{{switchToolsBlockerShortcut}}\" to postpone running the algorithm ",
-        "postponeAlgoShortcutHint"
+        "Undo: {{undoAction}} {{undoShortcut}}",
+        "undoActionTooltip"
       ],
       [
-        "The dataset will be exported for all {{count}} tasks of the project",
-        "exportDatasetAllTasks"
+        "Redo: {{redoAction}} {{redoShortcut}}",
+        "redoActionTooltip"
       ],
       [
-        "The dataset will be exported for the current task",
-        "exportDatasetCurrentTask"
+        "Press \"{{drawShortcut}}\" to finish",
+        "finishDrawingTooltip"
       ],
       [
-        "Quick filters",
-        "quickFilters"
+        "Press \"{{switchToolsBlockerShortcut}}\" to postpone running the algorithm",
+        "switchToolsBlockerTooltip"
+      ],
+      [
+        "Go to the first frame",
+        "goToFirstFrame"
+      ],
+      [
+        "Go to the last frame",
+        "goToLastFrame"
+      ],
+      [
+        "Go back with a step {{shortcut}}",
+        "goBackWithStep"
+      ],
+      [
+        "Go next with a step {{shortcut}}",
+        "goNextWithStep"
+      ],
+      [
+        "Go back",
+        "goBack"
+      ],
+      [
+        "Go back with a filter",
+        "goBackWithFilter"
+      ],
+      [
+        "Go back to an empty frame",
+        "goBackToEmptyFrame"
+      ],
+      [
+        "Go next",
+        "goNext"
+      ],
+      [
+        "Go next with a filter",
+        "goNextWithFilter"
+      ],
+      [
+        "Go next to an empty frame",
+        "goNextToEmptyFrame"
+      ],
+      [
+        "Play {{shortcut}}",
+        "play"
+      ],
+      [
+        "Pause {{shortcut}}",
+        "pause"
+      ],
+      [
+        "Do you want to delete frame #{{frameNumber}}?",
+        "deleteFrameTitle"
+      ],
+      [
+        "The frame will not be visible in navigation and exported datasets, but it still can be restored with all the annotations.",
+        "deleteFrameContent"
+      ],
+      [
+        "Delete the frame {{shortcut}}",
+        "deleteFrame"
+      ],
+      [
+        "Restore the frame",
+        "restoreFrame"
+      ],
+      [
+        "Copy frame filename",
+        "copyFrameFilename"
+      ],
+      [
+        "Create frame URL",
+        "createFrameUrl"
+      ],
+      [
+        "Press {{shortcut}} to focus here",
+        "focusFrameInput"
+      ],
+      [
+        "Search frame by name {{shortcut}}",
+        "searchFrameByName"
+      ],
+      [
+        "Save current changes {{shortcut}}",
+        "saveChangesTooltip"
+      ],
+      [
+        "Saving...",
+        "saving"
+      ],
+      [
+        "Save",
+        "save"
+      ],
+      [
+        "Type to search",
+        "typeToSearch"
+      ],
+      [
+        "No frames found",
+        "noFramesFound"
+      ],
+      [
+        "Shapes / Tracks",
+        "shapesTracks"
+      ],
+      [
+        "Rectangle",
+        "rectangle"
+      ],
+      [
+        "Polygon",
+        "polygon"
+      ],
+      [
+        "Polyline",
+        "polyline"
+      ],
+      [
+        "Ellipse",
+        "ellipse"
+      ],
+      [
+        "Cuboid",
+        "cuboid"
+      ],
+      [
+        "Cuboids",
+        "cuboids"
+      ],
+      [
+        "Skeleton",
+        "skeleton"
+      ],
+      [
+        "Mask",
+        "mask"
+      ],
+      [
+        "Tag",
+        "tag"
+      ],
+      [
+        "Manually",
+        "manually"
+      ],
+      [
+        "Interpolated",
+        "interpolated"
+      ],
+      [
+        "Total",
+        "total"
+      ],
+      [
+        "Overview",
+        "overview"
+      ],
+      [
+        "Start frame",
+        "startFrame"
+      ],
+      [
+        "Stop frame",
+        "stopFrame"
+      ],
+      [
+        "Bug tracker",
+        "bugTracker"
+      ],
+      [
+        "Annotations statistics",
+        "annotationsStatistics"
+      ],
+      [
+        "Search across fields: {{fields}}",
+        "searchAcrossFields"
+      ],
+      [
+        "Quorum",
+        "quorum"
+      ],
+      [
+        "Min overlap threshold (IoU)",
+        "minOverlapThresholdIoU"
+      ],
+      [
+        "Quorum (%)",
+        "quorumPercentage"
+      ],
+      [
+        "Min Overlap (%)",
+        "minOverlapPercentage"
+      ],
+      [
+        "General",
+        "general"
+      ],
+      [
+        "Shape comparison",
+        "shapeComparison"
+      ],
+      [
+        "This field is required",
+        "thisFieldIsRequired"
+      ],
+      [
+        "You can upload a key file. If you leave this field blank, the environment variable GOOGLE_APPLICATION_CREDENTIALS will be used.",
+        "keyFileUploadHelpText"
+      ],
+      [
+        "Prefix is used to filter bucket content",
+        "prefixHelpText"
+      ],
+      [
+        "Key",
+        "keyPlaceholder"
+      ],
+      [
+        "Name",
+        "namePlaceholder"
+      ],
+      [
+        "Add region",
+        "addRegion"
+      ],
+      [
+        "Incorrect region",
+        "incorrectRegion"
+      ],
+      [
+        "This region already exists",
+        "regionAlreadyExists"
+      ],
+      [
+        "Manifests",
+        "manifests"
+      ],
+      [
+        "Please specify a manifest name",
+        "pleaseSpecifyManifestName"
+      ],
+      [
+        "Manifest file must have .jsonl extension",
+        "manifestFileExtensionError"
+      ],
+      [
+        "manifest.jsonl",
+        "manifestPlaceholder"
+      ],
+      [
+        "Add manifest",
+        "addManifest"
+      ],
+      [
+        "We highly recommend attaching a manifest file to reduce the number of requests to the bucket",
+        "attachManifestRecommendation"
+      ],
+      [
+        "A representative set, 5-15% of randomly chosen frames is recommended",
+        "jobCreationTooltip"
+      ],
+      [
+        "Quantity",
+        "quantity"
+      ],
+      [
+        "Quantity per job",
+        "quantityPerJob"
+      ],
+      [
+        "Frame count",
+        "frameCount"
+      ],
+      [
+        "Seed",
+        "seed"
+      ],
+      [
+        "{{index}} - index file in set",
+        "indexFileInSet"
+      ],
+      [
+        "{{file_name}} - name of file",
+        "nameOfFile"
+      ],
+      [
+        "Example:",
+        "example"
+      ],
+      [
+        "When forming the name, a template is used.",
+        "whenFormingTheName"
+      ],
+      [
+        "Use lightweight backup whenever possible",
+        "useLightweightBackup"
+      ],
+      [
+        "Custom name for a backup file",
+        "customNameForBackup"
+      ],
+      [
+        "Name template",
+        "nameTemplate"
+      ],
+      [
+        "Export {{count}} {{instanceType}}s",
+        "exportInstances"
+      ],
+      [
+        "Export {{instanceType}} #{{instanceId}}",
+        "exportInstance"
+      ],
+      [
+        "Export {{count}} {{instanceType}}s as datasets",
+        "exportInstancesAsDatasets"
+      ],
+      [
+        "Export {{instanceType}} as a dataset",
+        "exportInstanceAsDataset"
+      ],
+      [
+        "Custom name for a dataset",
+        "customNameForDataset"
+      ],
+      [
+        "Specify target storage for export dataset",
+        "specifyTargetStorageForExport"
+      ],
+      [
+        "Default prefix \"{{prefix}}\" is used",
+        "defaultPrefixUsed"
+      ],
+      [
+        "Refresh",
+        "refresh"
+      ],
+      [
+        "Search by prefix",
+        "searchByPrefix"
+      ],
+      [
+        "There is no intersection between the specified prefix and the default one",
+        "noIntersectionWithDefaultPrefix"
+      ],
+      [
+        "Name",
+        "name"
+      ],
+      [
+        "Storage content fetching failed",
+        "storageContentFetchingFailed"
+      ],
+      [
+        " on ",
+        "onDate"
+      ],
+      [
+        "Click to open repository",
+        "clickToOpenRepository"
+      ],
+      [
+        "Press {{switchSettingsShortcut}} to switch",
+        "pressToSwitch"
+      ],
+      [
+        "Labels will be imported from dataset",
+        "labelsImportedFromDataset"
+      ],
+      [
+        "Labels from project will be used",
+        "labelsFromProjectUsed"
+      ],
+      [
+        "The option is relevant for formats that work with masks only",
+        "optionRelevantForMasksOnly"
+      ],
+      [
+        "Import from {{storageType}} storage{{storageId}}",
+        "importFromStorage"
+      ],
+      [
+        "You do not have permissions",
+        "noPermissions"
+      ],
+      [
+        "Could not fetch, check console output",
+        "couldNotFetchCheckConsole"
+      ],
+      [
+        "Loading..",
+        "loading"
+      ],
+      [
+        "Unsolved issues",
+        "unsolvedIssues"
+      ],
+      [
+        "Resolved issues",
+        "resolvedIssues"
+      ],
+      [
+        "Update attributes",
+        "updateAttributes"
+      ],
+      [
+        "Delete label",
+        "deleteLabel"
+      ],
+      [
+        "An HTML element representing the attribute",
+        "anHTMLElementRepresentingTheAttribute"
+      ],
+      [
+        "Press enter to add a new value",
+        "pressEnterToAddAValue"
+      ],
+      [
+        "This value is default",
+        "thisIsDefaultValue"
+      ],
+      [
+        "Can this attribute be changed frame to frame?",
+        "canThisAttributeBeChangedFrameToFrame"
+      ],
+      [
+        "Save the label and return",
+        "saveLabelAndReturn"
+      ],
+      [
+        "Save the label and create one more",
+        "saveLabelAndCreateMore"
+      ],
+      [
+        "Do not save the label and return",
+        "doNotSaveAndReturn"
+      ],
+      [
+        "Change color of the label",
+        "changeLabelColor"
+      ],
+      [
+        "Save labels",
+        "saveLabels"
+      ],
+      [
+        "Reset all changes",
+        "resetAllChanges"
+      ],
+      [
+        "You are going to remove existing labels/attributes",
+        "youAreGoingToRemoveExistingLabelsAttributes"
+      ],
+      [
+        "Following labels are going to be removed:",
+        "followingLabelsAreGoingToBeRemoved"
+      ],
+      [
+        "Following attributes are going to be removed:",
+        "followingAttributesAreGoingToBeRemoved"
+      ],
+      [
+        "All related annotations will be destroyed. Continue?",
+        "allRelatedAnnotationsWillBeDestroyedContinue"
+      ],
+      [
+        "Delete existing data",
+        "deleteExistingData"
+      ],
+      [
+        "Upload a background image",
+        "uploadBackgroundImage"
+      ],
+      [
+        "Click the canvas to add a point",
+        "clickCanvasToAddPoint"
+      ],
+      [
+        "Click and drag points",
+        "clickAndDragPoints"
+      ],
+      [
+        "Click two points to setup an edge",
+        "clickTwoPointsToSetupEdge"
+      ],
+      [
+        "Click an element to remove it",
+        "clickElementToRemove"
+      ],
+      [
+        "Download skeleton as SVG",
+        "downloadSkeletonAsSVG"
+      ],
+      [
+        "Upload a skeleton from SVG",
+        "uploadSkeletonFromSVG"
+      ],
+      [
+        "File must be a JPEG or PNG image. Detected mime type is \"{{fileType}}\"",
+        "fileMustBeJpegOrPng"
+      ],
+      [
+        "Wrong skeleton structure",
+        "wrongSkeletonStructure"
+      ],
+      [
+        "Specify a model threshold",
+        "specifyAModelThreshold"
+      ],
+      [
+        "Minimum confidence threshold for detections. Leave empty to use the default value specified in the model settings",
+        "minimumConfidenceThresholdForDetections"
+      ],
+      [
+        "Minimum similarity value for shapes that can be merged",
+        "minimumSimilarityValueForShapesThatCanBeMerged"
+      ],
+      [
+        "Maximum distance between shapes that can be merged",
+        "maximumDistanceBetweenShapesThatCanBeMerged"
+      ],
+      [
+        "Threshold",
+        "threshold"
+      ],
+      [
+        "Remove mapped label",
+        "removeMappedLabel"
+      ],
+      [
+        "Specify mapping between labels",
+        "specifyMappingBetweenLabels"
+      ],
+      [
+        "Remove mapped attribute",
+        "removeMappedAttribute"
+      ],
+      [
+        "Specify mapping between label attributes",
+        "specifyMappingBetweenLabelAttributes"
+      ],
+      [
+        "Specify mapping between skeleton sublabels",
+        "specifyMappingBetweenSkeletonSublabels"
+      ],
+      [
+        "Specify mapping between sublabel attributes",
+        "specifyMappingBetweenSublabelAttributes"
+      ],
+      [
+        "When moving a task, you need to map the labels from the task to the labels in the target project. Existing annotations will be updated according to the new mapping.",
+        "moveTaskModalDescription"
+      ],
+      [
+        "Active",
+        "active"
+      ],
+      [
+        "Excluded",
+        "excluded"
+      ],
+      [
+        "Target metric",
+        "targetMetric"
+      ],
+      [
+        "Target metric threshold",
+        "targetMetricThreshold"
+      ],
+      [
+        "Compare attributes",
+        "compareAttributes"
+      ],
+      [
+        "Empty frames are annotated",
+        "emptyFramesAreAnnotated"
+      ],
+      [
+        "Job selection filter",
+        "jobSelectionFilter"
+      ],
+      [
+        "Max validations per job",
+        "maxValidationsPerJob"
+      ],
+      [
+        "Low overlap threshold",
+        "lowOverlapThreshold"
+      ],
+      [
+        "Object Keypoint Similarity (OKS)",
+        "objectKeypointSimilarityOKS"
+      ],
+      [
+        "Point size base",
+        "pointSizeBase"
+      ],
+      [
+        "Line thickness",
+        "lineThickness"
+      ],
+      [
+        "Check orientation",
+        "checkOrientation"
+      ],
+      [
+        "Min similarity gain",
+        "minSimilarityGain"
+      ],
+      [
+        "Compare groups",
+        "compareGroups"
+      ],
+      [
+        "Min group match threshold",
+        "minGroupMatchThreshold"
+      ],
+      [
+        "Check object visibility",
+        "checkObjectVisibility"
+      ],
+      [
+        "Min visibility threshold",
+        "minVisibilityThreshold"
+      ],
+      [
+        "Match only visible parts",
+        "matchOnlyVisibleParts"
+      ],
+      [
+        "Min overlap threshold (%)",
+        "minOverlapThresholdPercentage"
+      ],
+      [
+        "Low overlap threshold (%)",
+        "lowOverlapThresholdPercentage"
+      ],
+      [
+        "OKS sigma (bbox side %)",
+        "oksSigmaBboxSidePercentage"
+      ],
+      [
+        "Relative thickness (frame side %)",
+        "relativeThicknessFrameSidePercentage"
+      ],
+      [
+        "Min similarity gain (%)",
+        "minSimilarityGainPercentage"
+      ],
+      [
+        "Min group match threshold (%)",
+        "minGroupMatchThresholdPercentage"
+      ],
+      [
+        "Min visibility threshold (area %)",
+        "minVisibilityThresholdAreaPercentage"
+      ],
+      [
+        "Image size",
+        "imageSize"
+      ],
+      [
+        "Group bbox size",
+        "groupBboxSize"
+      ],
+      [
+        "Job validation",
+        "jobValidation"
+      ],
+      [
+        "Keypoint Comparison",
+        "keypointComparison"
+      ],
+      [
+        "Point Comparison",
+        "pointComparison"
+      ],
+      [
+        "Line Comparison",
+        "lineComparison"
+      ],
+      [
+        "Group Comparison",
+        "groupComparison"
+      ],
+      [
+        "Segmentation Comparison",
+        "segmentationComparison"
+      ],
+      [
+        "Accuracy",
+        "accuracy"
+      ],
+      [
+        "Precision",
+        "precision"
+      ],
+      [
+        "Recall",
+        "recall"
+      ],
+      [
+        "Cancel automatic annotation",
+        "cancelAutomaticAnnotation"
+      ],
+      [
+        "You are going to cancel automatic annotation?",
+        "cancelAutomaticAnnotationConfirmTitle"
+      ],
+      [
+        "Reached progress will be lost. Continue?",
+        "cancelAutomaticAnnotationConfirmContent"
+      ],
+      [
+        "Automatic annotation request queued",
+        "automaticAnnotationRequestQueued"
+      ],
+      [
+        "Automatic annotation is in progress",
+        "automaticAnnotationInProgress"
+      ],
+      [
+        "Automatic annotation failed",
+        "automaticAnnotationFailed"
+      ],
+      [
+        "Unknown status received",
+        "unknownStatusReceived"
+      ],
+      [
+        "Automatic annotation accomplished",
+        "automaticAnnotationAccomplished"
+      ],
+      [
+        "<strong>Move & Detach</strong>: Transfer and unlink from a cloud storage.",
+        "moveAndDetachHelpText"
+      ],
+      [
+        "<strong>Move & Auto Match</strong>: Transfer and attempt to auto-link with a similar cloud storage in the target workspace. A similar cloud storage is defined by comparing the whole cloud storage configuration except credentials and owner.",
+        "moveAndAutoMatchHelpText"
+      ],
+      [
+        "Data-linked storage will only be reset during the transfer and must be updated manually afterward",
+        "dataLinkedStorageManualUpdateWarning"
+      ],
+      [
+        "Some resources are linked to a cloud storage",
+        "someResourcesLinkedToCloudStorage"
+      ],
+      [
+        "{{instanceType}} #{{instanceId}} is linked to a cloud storage",
+        "instanceLinkedToCloudStorage"
+      ],
+      [
+        "Move & detach",
+        "moveAndDetach"
+      ],
+      [
+        "Move & Auto match",
+        "moveAndAutoMatch"
+      ],
+      [
+        "Please choose how you would like the transfer to be done.",
+        "chooseTransferType"
+      ],
+      [
+        "Last delivery was successful. Response: {{status}}",
+        "lastDeliverySuccessful"
+      ],
+      [
+        "Last delivery was not successful. Response: {{status}}",
+        "lastDeliveryFailed"
+      ],
+      [
+        "Response: {{status}}",
+        "responseStatusCode"
+      ],
+      [
+        "Created by {{username}} on {{created}}",
+        "createdByOn"
+      ],
+      [
+        "URL:",
+        "url"
+      ],
+      [
+        "Events:",
+        "events"
+      ],
+      [
+        "Ping",
+        "ping"
+      ],
+      [
+        "No consensus settings found",
+        "noConsensusSettingsFound"
+      ],
+      [
+        "Could not save consensus settings",
+        "couldNotSaveConsensusSettings"
+      ],
+      [
+        " has invited you to join the ",
+        "hasInvitedYouToJoinThe"
+      ],
+      [
+        "Expired",
+        "expired"
+      ],
+      [
+        "Accept",
+        "accept"
+      ],
+      [
+        "Would you like to decline the invitation to the ",
+        "declineInvitationToThe"
+      ],
+      [
+        "Decline",
+        "decline"
+      ],
+      [
+        "Created: ",
+        "created:"
+      ],
+      [
+        "Updated: ",
+        "updated:"
+      ],
+      [
+        "Duration: ",
+        "duration:"
+      ],
+      [
+        "Frame count: ",
+        "frameCount:"
+      ],
+      [
+        "Frame range: ",
+        "frameRange:"
+      ],
+      [
+        "{{count}} Replicas",
+        "replicas"
+      ],
+      [
+        "Invite CVAT users to collaborate",
+        "inviteCvatUsersToCollaborate"
+      ],
+      [
+        "If the email address is registered on CVAT, the user will be added to the organization",
+        "invitationNote"
+      ],
+      [
+        "The input is not a valid email",
+        "theInputIsNotAValidEmail"
+      ],
+      [
+        "Enter an email address",
+        "enterAnEmailAddress"
+      ],
+      [
+        "Worker",
+        "worker"
+      ],
+      [
+        "Supervisor",
+        "supervisor"
+      ],
+      [
+        "Maintainer",
+        "maintainer"
+      ],
+      [
+        "Invite more",
+        "inviteMore"
+      ],
+      [
+        "Organization: {{slug}}",
+        "organizationSlug"
+      ],
+      [
+        "Remove organization",
+        "removeOrganization"
+      ],
+      [
+        "Add description",
+        "addDescription"
+      ],
+      [
+        "Add phone number",
+        "addPhoneNumber"
+      ],
+      [
+        "Add email",
+        "addEmail"
+      ],
+      [
+        "Add location",
+        "addLocation"
+      ],
+      [
+        "Created {{date}}",
+        "createdOn"
+      ],
+      [
+        "Updated {{date}}",
+        "updatedOn"
+      ],
+      [
+        "Leave organization",
+        "leaveOrganization"
+      ],
+      [
+        "Please, confirm leaving the organization",
+        "confirmLeavingOrganization"
+      ],
+      [
+        ". You will not have access to the organization data anymore",
+        "noAccessToOrganizationData"
+      ],
+      [
+        "Leave",
+        "leave"
+      ],
+      [
+        "Invite members",
+        "inviteMembers"
+      ],
+      [
+        "User",
+        "user"
+      ],
+      [
+        "Role",
+        "role"
+      ],
+      [
+        "Use",
+        "use"
+      ],
+      [
+        "project settings",
+        "projectSettings"
+      ],
+      [
+        "Own settings are used in {{count}} tasks",
+        "ownSettingsAreUsedInTasks"
+      ],
+      [
+        "Force project settings",
+        "forceProjectSettings"
+      ],
+      [
+        "Are you sure you want to force project settings?",
+        "forceProjectSettingsConfirmationTitle"
+      ],
+      [
+        "This action will override own settings in all tasks.",
+        "forceProjectSettingsConfirmationContent"
+      ],
+      [
+        "Let's create a new one",
+        "letsCreateANewOne"
+      ],
+      [
+        "We will send link to your email",
+        "weWillSendLinkToYourEmail"
+      ],
+      [
+        "Send",
+        "send"
+      ],
+      [
+        "Webhook has been successfully updated",
+        "webhookUpdatedSuccessfully"
+      ],
+      [
+        "Webhook has been successfully added",
+        "webhookAddedSuccessfully"
+      ],
+      [
+        "Setup a webhook",
+        "setupAWebhook"
+      ],
+      [
+        "Target URL cannot be empty",
+        "targetUrlCannotBeEmpty"
+      ],
+      [
+        "https://example.com/postreceive",
+        "targetUrlPlaceholder"
+      ],
+      [
+        "Project",
+        "project"
+      ],
+      [
+        "Content type",
+        "contentType"
+      ],
+      [
+        "Select an option and change input text above",
+        "selectAnOptionAndChangeInput"
+      ],
+      [
+        "Secret",
+        "secret"
+      ],
+      [
+        "Verify SSL certificates when delivering payloads",
+        "verifySslHelpText"
+      ],
+      [
+        "Enable SSL",
+        "enableSsl"
+      ],
+      [
+        "CVAT will deliver events for active webhooks only",
+        "activeWebhookHelpText"
+      ],
+      [
+        "The field is required",
+        "theFieldIsRequired"
+      ],
+      [
+        "everything",
+        "everything"
+      ],
+      [
+        "Select individual events",
+        "selectIndividualEvents"
+      ],
+      [
+        "No webhooks created yet ...",
+        "noWebhooksCreatedYet"
       ]
     ],
     "todo_keys": [],

@@ -176,7 +176,7 @@ class LabelForm extends React.Component<Props> {
                     },
                 ]}
             >
-                <Input className='cvat-attribute-name-input' placeholder={t('Name')} />
+                <Input className='cvat-attribute-name-input' placeholder={t('name')} />
             </Form.Item>
         );
     }
@@ -554,7 +554,7 @@ class LabelForm extends React.Component<Props> {
                             className='cvat-label-type-option-skeleton'
                             value='skeleton'
                         >
-                            {t('Skeleton')}
+                            {t('skeleton')}
                         </Select.Option>
                     ) : types.map((type: string): JSX.Element => (
                         <Select.Option className={`cvat-label-type-option-${type}`} key={type} value={type}>
