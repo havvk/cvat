@@ -53,7 +53,7 @@ export default function ResourceFilterHOC(
         try {
             savedItems = JSON.parse(localStorage.getItem(localStorageRecentKeyword) || '[]');
             if (!Array.isArray(savedItems) || savedItems.some((item: any) => typeof item !== 'string')) {
-                throw new Error(t('Wrong filters value stored'));
+                throw new Error(t('wrongFiltersValueStored'));
             }
         } catch (_: any) {
             // nothing to do
@@ -68,7 +68,7 @@ export default function ResourceFilterHOC(
         try {
             recentFilters = JSON.parse(localStorage.getItem(localStorageRecentKeyword) || '[]');
             if (!Array.isArray(recentFilters) || recentFilters.some((item: any) => typeof item !== 'string')) {
-                throw new Error(t('Wrong filters value stored'));
+                throw new Error(t('wrongFiltersValueStored'));
             }
         } catch (_: any) {
             // nothing to do
@@ -247,7 +247,7 @@ export default function ResourceFilterHOC(
                                 type='default'
                                 onClick={() => onPredefinedVisibleChange(!predefinedVisible)}
                             >
-                                {t('Quick filters')}
+                                {t('quickFilters')}
                                 { appliedFilter.predefined ?
                                     <FilterFilled /> :
                                     <FilterOutlined />}
@@ -380,7 +380,7 @@ export default function ResourceFilterHOC(
                     type='link'
                     onClick={() => { setAppliedFilter({ ...defaultAppliedFilter }); }}
                 >
-                    {t('Clear filters')}
+                    {t('clearFilters')}
                 </Button>
             </div>
         );

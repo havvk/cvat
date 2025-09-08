@@ -34,7 +34,7 @@ export function ResourceSelectionInfo(
                 size='small'
                 type='link'
             >
-                {t('Select all')}
+                {t('selectAll')}
             </Button>
         );
     } else if (selectedCount > 0) {

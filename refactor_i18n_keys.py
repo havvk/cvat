@@ -6,15 +6,36 @@ from pathlib import Path
 
 def replace_i18n_strings(target_string, replacements):
     replacements_dict = {item[0]: item[1] for item in replacements}
-    pattern = re.compile(r"""t\(\s*(['"])(.*?)\1\s*\)""" )
+    # Add this line to see what the dictionary keys look like
+    # print("DEBUG: Dictionary keys available:", list(replacements_dict.keys()))
+
+    # Use the \b for robustness
+    pattern = re.compile(r"""\bt\(\s*(['"`])(.*?)\1\s*\)""")
 
     def replacer(match):
+        # This will print every time the regex finds a t(...) pattern
+        print("\n--- DEBUG: Match Found! ---")
+
         quote_char = match.group(1)
         old_content = match.group(2)
+
+        # repr() is a special function that makes invisible characters visible
+        print(f"DEBUG: Content from file: {repr(old_content)}")
+
+        # Check if the exact content is in the dict
+        is_present_exact = old_content in replacements_dict
+        print(f"DEBUG: Is content in dict (exact match)? {is_present_exact}")
+
+        # Let's try stripping whitespace and checking again
+        is_present_stripped = old_content.strip() in replacements_dict
+        print(f"DEBUG: Is content in dict (after strip)? {is_present_stripped}")
+
         if old_content in replacements_dict:
             new_content = replacements_dict[old_content]
             return f"t({quote_char}{new_content}{quote_char})"
         else:
+            # This is the crucial part: if we're here, the match failed.
+            print("DEBUG: No replacement made for this match.")
             return match.group(0)
 
     return pattern.sub(replacer, target_string)
@@ -51,10 +72,23 @@ def run_refactoring():
             return
 
         print(f"Found {len(todo_keys)} keys to refactor.")
+                # --- !!! 添加这行来进行最终调试 !!! ---
+        print("DEBUG: Searching for 'Quick filters' in the loaded keys...")
+        found_key = False
+        for key_pair in todo_keys:
+            if key_pair and key_pair[0] == 'Quick filters':
+                print("DEBUG: SUCCESS! Found 'Quick filters' in todo_keys.")
+                found_key = True
+                break
+        if not found_key:
+            print("DEBUG: FAILED! 'Quick filters' was NOT found in the 328 loaded keys.")
+            # 为了方便调试，可以取消下面这行的注释，它会打印出所有加载的键
+            # print("DEBUG: All loaded keys are:", [item[0] for item in todo_keys])
+
 
         # Get the unique list of files to modify, as per user's request
         files_to_process = set()
-        for component in ['Text', 'Tooltip']:
+        for component in ['Text', 'Tooltip','Button']:
             files = progress_data.get(component, {}).get('completed_files', [])
             files_to_process.update(files)
 
@@ -62,6 +96,13 @@ def run_refactoring():
             print("Warning: No completed files found for Text and Tooltip components. Source code will not be modified.")
 
         print(f"Will process {len(files_to_process)} unique source files.")
+
+        # --- !!! 添加这个最终的调试检查 !!! ---
+        target_file_path = 'cvat-ui/src/components/resource-sorting-filtering/filtering.tsx'
+        if target_file_path in files_to_process:
+            print(f"DEBUG: SUCCESS! Target file '{target_file_path}' is in the processing list.")
+        else:
+            print(f"DEBUG: FAILED! Target file '{target_file_path}' was NOT found in the processing list.")
 
         # --- 4. Process Source Files ---
         total_replacements_in_files = 0
@@ -91,7 +132,7 @@ def run_refactoring():
                 updated_lang_keys += 1
             if old_key in zh_data:
                 zh_data[new_key] = zh_data.pop(old_key)
-        
+
         print(f"Updated {updated_lang_keys} keys in language files.")
 
         with open(en_translation_path, 'w', encoding='utf-8') as f:

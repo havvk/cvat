@@ -69,7 +69,7 @@ export const validateConfirmation: ((firstFieldName: string, t: (key: string) =>
 ): RuleRender => ({ getFieldValue }): RuleObject => ({
     validator(_: RuleObject, value: string): Promise<void> {
         if (value && value !== getFieldValue(firstFieldName)) {
-            return Promise.reject(new Error(t('Two passwords that you enter is inconsistent!')));
+            return Promise.reject(new Error(t('passwordsInconsistent')));
         }
 
         return Promise.resolve();
@@ -161,7 +161,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                             rules={[
                                 {
                                     required: true,
-                                    message: t('Please specify a first name'),
+                                    message: t('specifyFirstName'),
                                     pattern: patterns.validateName.pattern,
                                 },
                             ]}
@@ -181,14 +181,14 @@ function RegisterFormComponent(props: Props): JSX.Element {
                             rules={[
                                 {
                                     required: true,
-                                    message: t('Please specify a last name'),
+                                    message: t('specifyLastName'),
                                     pattern: patterns.validateName.pattern,
                                 },
                             ]}
                         >
                             <CVATSigningInput
                                 id='lastName'
-                                placeholder={t('Last name')}
+                                placeholder={t('lastName')}
                                 autoComplete='family-name'
                                 onReset={() => form.setFieldsValue({ lastName: '' })}
                             />
@@ -201,11 +201,11 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     rules={[
                         {
                             type: 'email',
-                            message: t('The input is not valid E-mail!'),
+                            message: t('invalidEmail'),
                         },
                         {
                             required: true,
-                            message: t('Please specify an email address'),
+                            message: t('specifyEmailAddress'),
                         },
                     ]}
                 >
@@ -231,7 +231,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     rules={[
                         {
                             required: true,
-                            message: t('Please specify a username'),
+                            message: t('specifyUsername'),
                         },
                         {
                             validator: validateUsername,
@@ -252,7 +252,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                     rules={[
                         {
                             required: true,
-                            message: t('Please input your password!'),
+                            message: t('inputYourPassword'),
                         },
                         validatePassword(t),
                     ]}
@@ -274,7 +274,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         rules={[
                             {
                                 required: true,
-                                message: t('You must accept to continue!'),
+                                message: t('youMustAcceptToContinue'),
                             },
                             validateAgreement(userAgreements, t),
                         ]}

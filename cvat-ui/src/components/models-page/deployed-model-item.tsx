@@ -58,7 +58,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
     const created = moment(model.createdDate).fromNow();
     const modelDescription = !systemModel ?
         <Text type='secondary'>{t('Added {{created}}', { created })}</Text> :
-        <Text type='secondary'>{t('System model')}</Text>;
+        <Text type='secondary'>{t('systemModel')}</Text>;
 
     const topBarItems: [JSX.Element, number][] = [];
 

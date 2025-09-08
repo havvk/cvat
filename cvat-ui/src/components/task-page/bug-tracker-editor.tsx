@@ -33,7 +33,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
             if (!shown) {
                 Modal.error({
                     title: t('Could not update the {{instanceType}} {{instanceId}}', { instanceType, instanceId: instance.id }),
-                    content: t('Issue tracker is expected to be URL'),
+                    content: t('issueTrackerIsExpectedToBeUrl'),
                     onOk: () => {
                         shown = false;
                     },
@@ -53,7 +53,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
             <Row className='cvat-issue-tracker'>
                 <Col>
                     <Text strong className='cvat-text-color'>
-                        {t('Issue Tracker')}
+                        {t('issueTracker')}
                     </Text>
                     <Text editable={{ onChange: onChangeValue }} className='cvat-issue-tracker-value'>
                         {bugTracker}
@@ -65,7 +65,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
                         }}
                         className='cvat-open-bug-tracker-button'
                     >
-                        {t('Open the issue')}
+                        {t('openTheIssue')}
                     </Button>
                 </Col>
             </Row>
@@ -76,7 +76,7 @@ export default function BugTrackerEditorComponent(props: Props): JSX.Element {
         <Row className='cvat-issue-tracker'>
             <Col>
                 <Text strong className='cvat-text-color'>
-                    {t('Issue Tracker')}
+                    {t('issueTracker')}
                 </Text>
                 <Text
                     className='cvat-issue-tracker-value'

@@ -102,7 +102,7 @@ export default function ProjectPageComponent(): JSX.Element {
                 }).catch((error: Error) => {
                     if (mounted.current) {
                         notification.error({
-                            message: t('Could not receive the requested project from the server'),
+                            message: t('couldNotFetchProject'),
                             description: error.toString(),
                         });
                     }
@@ -113,7 +113,7 @@ export default function ProjectPageComponent(): JSX.Element {
                 });
         } else {
             notification.error({
-                message: t('Could not receive the requested project from the server'),
+                message: t('couldNotFetchProject'),
                 description: t('Requested project id "{{id}}" is not valid', { id }),
             });
             setFetchingProject(false);
@@ -237,7 +237,7 @@ export default function ProjectPageComponent(): JSX.Element {
             )}
         </BulkWrapper>
     ) : (
-        <Empty description={t('No tasks found')} />
+        <Empty description={t('noTasksFound')} />
     );
 
     return (
@@ -274,7 +274,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                     }}
                                     defaultValue={tasksQuery.search ?? ''}
                                     className='cvat-project-page-tasks-search-bar'
-                                    placeholder={t('Search ...')}
+                                    placeholder={t('search')}
                                 />
                                 <ResourceSelectionInfo
                                     selectedCount={selectedCount}
@@ -347,7 +347,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-multi-tasks-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}&many=true`)}
                                     >
-                                        {t('Create multi tasks')}
+                                        {t('createMultiTasks')}
                                     </Button>
                                 </CvatDropdownMenuPaper>
                             )}

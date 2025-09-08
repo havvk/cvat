@@ -122,8 +122,8 @@
   "Button": {
     "status": "todo",
     "notes": "",
-    "completed_files": [],
-    "todo_files": [
+    "todo_files": [],
+    "completed_files": [
       "cvat-ui/src/components/analytics-report/analytics-page-header.tsx",
       "cvat-ui/src/components/annotation-page/annotation-page.tsx",
       "cvat-ui/src/components/annotation-page/annotations-actions/annotations-actions-modal.tsx",
@@ -218,7 +218,6 @@
   "CamelCaseKeys": {
     "status": "in_progress",
     "notes": "Fixing keys with spaces to camelCase.",
-    "todo_keys": [],
     "pending_keys": [],
     "completed_keys": [
       [
@@ -882,10 +881,6 @@
         "wrongFiltersValueStored"
       ],
       [
-        "Quick filters",
-        "quickFilters"
-      ],
-      [
         "Clear filters",
         "clearFilters"
       ],
@@ -1532,8 +1527,13 @@
       [
         "The dataset will be exported for the current task",
         "exportDatasetCurrentTask"
+      ],
+      [
+        "Quick filters",
+        "quickFilters"
       ]
     ],
+    "todo_keys": [],
     "failed_keys": []
   }
 }

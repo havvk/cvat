@@ -45,14 +45,14 @@ function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.E
                 rules={[
                     {
                         required: true,
-                        message: t('Please input new password!'),
+                        message: t('pleaseInputNewPassword'),
                     }, validatePassword(t),
                 ]}
             >
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder={t('New password')}
+                    placeholder={t('newPassword')}
                 />
             </Form.Item>
 
@@ -63,14 +63,14 @@ function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.E
                 rules={[
                     {
                         required: true,
-                        message: t('Please confirm your new password!'),
+                        message: t('pleaseConfirmYourNewPassword'),
                     }, validateConfirmation('newPassword1', t),
                 ]}
             >
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder={t('Confirm new password')}
+                    placeholder={t('confirmNewPassword')}
                 />
             </Form.Item>
 
@@ -82,7 +82,7 @@ function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.E
                     loading={fetching}
                     disabled={fetching}
                 >
-                    {t('Change password')}
+                    {t('changePassword')}
                 </Button>
             </Form.Item>
         </Form>

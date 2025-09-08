@@ -25,15 +25,15 @@ function ConstructorViewer(props: ConstructorViewerProps): JSX.Element {
     const { t } = useTranslation();
     const list = [
         <Button key='create' onClick={() => onCreate('basic')} className='cvat-constructor-viewer-new-item'>
-            {t('Add label')}
+            {t('addLabel')}
             <PlusCircleOutlined />
         </Button>,
         <Button key='create_skeleton' onClick={() => onCreate('skeleton')} className='cvat-constructor-viewer-new-skeleton-item'>
-            {t('Setup skeleton')}
+            {t('setupSkeleton')}
             <PlusCircleOutlined />
         </Button>,
         <Button key='from_model' onClick={() => onCreate('model')} className='cvat-constructor-viewer-new-from-model-item'>
-            {t('From model')}
+            {t('fromModel')}
             <PlusCircleOutlined />
         </Button>,
     ];

@@ -34,7 +34,7 @@ export default function ProjectTopBar(props: DetailsComponentProps): JSX.Element
                     size='large'
                 >
                     <LeftOutlined />
-                    {t('Back to projects')}
+                    {t('backToProjects')}
                 </Button>
             </Col>
             <Col className='cvat-project-top-bar-actions'>

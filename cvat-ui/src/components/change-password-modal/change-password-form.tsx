@@ -32,14 +32,14 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: t('Please input your current password!'),
+                        message: t('pleaseInputYourCurrentPassword'),
                     },
                 ]}
             >
                 <Input.Password
                     autoComplete='current-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder={t('Current password')}
+                    placeholder={t('currentPassword')}
                 />
             </Form.Item>
 
@@ -49,7 +49,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: t('Please input new password!'),
+                        message: t('pleaseInputNewPassword'),
                     },
                     validatePassword(t),
                 ]}
@@ -57,7 +57,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder={t('New password')}
+                    placeholder={t('newPassword')}
                 />
             </Form.Item>
 
@@ -68,7 +68,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: t('Please confirm your new password!'),
+                        message: t('pleaseConfirmYourNewPassword'),
                     },
                     validateConfirmation('newPassword1', t),
                 ]}
@@ -76,7 +76,7 @@ function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder={t('Confirm new password')}
+                    placeholder={t('confirmNewPassword')}
                 />
             </Form.Item>
 

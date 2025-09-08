@@ -156,7 +156,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                 key: 'appearance',
                 children: (
                     <div className='cvat-objects-appearance-content'>
-                        <Text type='secondary'>{t('Color by')}</Text>
+                        <Text type='secondary'>{t('colorBy')}</Text>
                         <Radio.Group
                             className='cvat-appearance-color-by-radio-group'
                             value={colorBy}
@@ -174,7 +174,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                             min={0}
                             max={100}
                         />
-                        <Text type='secondary'>{t('Selected opacity')}</Text>
+                        <Text type='secondary'>{t('selectedOpacity')}</Text>
                         <Slider
                             className='cvat-appearance-selected-opacity-slider'
                             onChange={changeSelectedShapesOpacity}
