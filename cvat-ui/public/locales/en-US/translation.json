@@ -864,5 +864,7 @@
     "Backup": "Backup",
     "Close": "Close",
     "Ok": "Ok",
-    "everything": "everything"
+    "everything": "everything",
+    "tolerance": "Tolerance",
+    "polygonApproximationToleranceTooltip": "Polygon approximation tolerance. Smaller value means more points."
 }

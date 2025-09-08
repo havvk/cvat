@@ -864,5 +864,7 @@
     "Backup": "Backup",
     "Close": "关闭",
     "Ok": "确定",
-    "everything": "所有事件"
+    "everything": "所有事件",
+    "tolerance": "容忍度",
+    "polygonApproximationToleranceTooltip": "多边形近似容忍度。值越小，点越多。"
 }

@@ -44,6 +44,7 @@ export interface AnnotateTaskRequestBody {
     cleanup: boolean;
     conv_mask_to_poly: boolean;
     threshold?: number;
+    tolerance?: number;
 }
 
 function convertMappingToServer(mapping: FullMapping): ServerMapping {
@@ -77,6 +78,7 @@ function DetectorRunner(props: Props): JSX.Element {
     const [mapping, setMapping] = useState<FullMapping>([]);
     const [convertMasksToPolygons, setConvertMasksToPolygons] = useState<boolean>(false);
     const [detectorThreshold, setDetectorThreshold] = useState<number | null>(null);
+    const [tolerance, setTolerance] = useState<number | null>(null);
     const [modelLabels, setModelLabels] = useState<LabelInterface[]>([]);
     const [taskLabels, setTaskLabels] = useState<LabelInterface[]>([]);
 
@@ -207,6 +209,29 @@ function DetectorRunner(props: Props): JSX.Element {
                     </Row>
                 </div>
             )}
+            {isDetector && (
+                <div className='cvat-detector-runner-tolerance-wrapper' style={{ marginTop: '10px' }}>
+                    <Row align='middle' justify='start'>
+                        <Col>
+                            <InputNumber
+                                min={0.1}
+                                step={0.1}
+                                value={tolerance}
+                                onChange={(value: number | null) => {
+                                    setTolerance(value);
+                                }}
+                                placeholder='2.5'
+                            />
+                        </Col>
+                        <Col>
+                            <Text>{t('tolerance')}</Text>
+                            <CVATTooltip title={t('polygonApproximationToleranceTooltip')}>
+                                <QuestionCircleOutlined className='cvat-info-circle-icon' />
+                            </CVATTooltip>
+                        </Col>
+                    </Row>
+                </div>
+            )}
             {isReId ? (
                 <div>
                     <Row align='middle' justify='start'>
@@ -266,6 +291,7 @@ function DetectorRunner(props: Props): JSX.Element {
                                     cleanup,
                                     conv_mask_to_poly: convertMasksToPolygons,
                                     ...(detectorThreshold !== null ? { threshold: detectorThreshold } : {}),
+                                    ...(tolerance !== null ? { tolerance } : {}),
                                 };
 
                                 runInference(model, body);
