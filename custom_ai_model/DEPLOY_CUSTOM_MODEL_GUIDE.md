@@ -59,13 +59,13 @@ nuctl deploy --project-name cvat --path . --platform local
 
 ### 方案二：部署实例分割模型 (Instance Segmentation)
 
-此方案提供了一个专为**实例分割**任务预先配置好的模板。其 `main.py` 脚本包含了将模型输出的**分割掩码 (masks)** 转换为**多边形 (polygons)** 所需的完整代码，实现了开箱即用。
+此方案提供了一个专为**实例分割**任务预先配置好的模板。此方法需要通过 `Dockerfile` 构建一个自定义的运行环境，以确保包含所有必需的 Python 依赖（例如 `supervision`）。
 
 #### 第 1 步: 创建并准备文件
 
 1.  在 CVAT 项目根目录创建一个新文件夹, 例如 `yolov8n-seg-model`。
 2.  将您的分割模型文件 (例如 `yolov8n-seg.pt`) 复制到这个新文件夹中, 并**重命名为 `best.pt`**。
-3.  在 `yolov8n-seg-model` 文件夹中, 创建以下两个文件。
+3.  在 `yolov8n-seg-model` 文件夹中, 创建以下三个文件。
 
 **`main.py` 文件:**
 ```python
@@ -124,6 +124,15 @@ def handler(context, event):
                             status_code=200)
 ```
 
+**`Dockerfile` 文件:**
+```dockerfile
+FROM ultralytics/ultralytics:latest
+
+# 安装额外的 Python 依赖包
+# nuclio-sdk 是推荐安装的，supervision 是我们缺少的
+RUN pip install nuclio-sdk supervision
+```
+
 **`function.yaml` 文件:**
 ```yaml
 apiVersion: "nuclio.io/v1"
@@ -136,8 +145,6 @@ metadata:
 spec:
   runtime: "python:3.9"
   handler: "main:handler"
-  build:
-    baseImage: "ultralytics/ultralytics:latest"
   env:
     - name: LD_LIBRARY_PATH
       value: /usr/local/lib/python3.9/dist-packages/torch/lib
@@ -158,24 +165,33 @@ spec:
       # nvidia.com/gpu: 1
 ```
 
-#### 第 2 步: 部署模型
+#### 第 2 步: 构建镜像并部署模型
 
-进入您刚刚创建的 `yolov8n-seg-model` 目录, 然后执行部署命令。
+进入您刚刚创建的 `yolov8n-seg-model` 目录, 然后执行构建和部署命令。
 
 ```bash
 # 进入新目录
 cd yolov8n-seg-model
 
-# 设置 Nuclio Dashboard 地址
-export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
+# 1. 构建自定义 Docker 镜像
+docker build -t yolov8-seg-local .
 
-# 部署
-nuctl deploy --project-name cvat --path . --platform local
+# 2. (推荐) 如果之前部署失败，先重置 Nuclio 项目
+export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
+nuctl delete project cvat --platform local --force
+nuctl create project cvat --platform local
+
+# 3. 使用新构建的镜像进行部署
+nuctl deploy yolov8-seg --project-name cvat \
+    --path . \
+    --platform local \
+    --image yolov8-seg-local
 ```
 
 #### 第 3 步: 验证
 
 成功后, 在 CVAT 的 "Models" 页面, 您应该能看到一个名为 `yolov8-seg` 的新模型。
+
 
 ---
 
