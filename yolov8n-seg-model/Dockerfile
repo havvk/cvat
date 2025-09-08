@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /opt/nuclio
 
 # 4. 安装核心 Python 依赖
-RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless
+RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless supervision scikit-image Pillow
 
 # 5. 将我们的模型和处理脚本复制到镜像中
 COPY best.pt .

@@ -143,7 +143,7 @@ WORKDIR /opt/nuclio
 
 # 4. 安装核心 Python 依赖
 # scikit-image 提供了 skimage 库
-RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless supervision scikit-image
+RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless supervision scikit-image Pillow
 
 # 5. 将我们的模型和处理脚本复制到镜像中
 COPY best.pt .
