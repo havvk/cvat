@@ -1,31 +1,32 @@
-apiVersion: "nuclio.io/v1"
-kind: "Function"
 metadata:
   name: yolov8-seg
+  namespace: nuclio
   annotations:
-    description: "YOLOv8 Segmentation"
-    nuclio.io/project-name: "cvat"
+    name: YOLOv8 Segmentation
+    type: detector
+    framework: ultralytics
+
 spec:
-  runtime: "python:3.9"
-  handler: "main:handler"
-  
-  env:
-    - name: LD_LIBRARY_PATH
-      value: /usr/local/lib/python3.9/dist-packages/torch/lib
+  description: YOLOv8 official segmentation model
+  runtime: 'python:3.9'
+  handler: main:handler
+  eventTimeout: 30s
+
+  build:
+    image: nuclio/yolov8-seg-processor
+    baseImage: yolov8-seg-base
+
   triggers:
     myHttpTrigger:
-      kind: "http"
-      maxWorkers: 2
-  volumes:
-    - volume:
-        name: model
-        hostPath:
-          # 注意: 这里的路径是相对于你运行 nuctl 的目录
-          path: "./best.pt"
-      volumeMount:
-        name: model
-        mountPath: "/opt/nuclio/best.pt"
-  resources:
-    limits:
-      # 如果需要 GPU 支持, 取消下面这行的注释
-      # nvidia.com/gpu: 1
+      maxWorkers: 1
+      kind: 'http'
+      workerAvailabilityTimeoutMilliseconds: 10000
+      attributes:
+        maxRequestBodySize: 33554432 # 32MB
+
+  platform:
+    attributes:
+      restartPolicy:
+        name: always
+        maximumRetryCount: 3
+      mountMode: volume

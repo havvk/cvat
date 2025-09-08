@@ -59,13 +59,13 @@ nuctl deploy --project-name cvat --path . --platform local
 
 ### 方案二：部署实例分割模型 (Instance Segmentation)
 
-此方案提供了一个专为**实例分割**任务预先配置好的模板。此方法需要通过 `Dockerfile` 构建一个自定义的运行环境，以确保包含所有必需的 Python 依赖（例如 `supervision`）。
+此方案提供了一个专为**实例分割**任务预先配置好的模板。为了确保环境的稳定和所有依赖的完整性，此方案采用了与方案一相同的两步构建策略：首先构建一个包含所有依赖的“基础镜像”，然后Nuclio会使用这个基础镜像来打包最终的函数。
 
-#### 第 1 步: 创建并准备文件
+#### 第 1 步: 准备所有文件
 
 1.  在 CVAT 项目根目录创建一个新文件夹, 例如 `yolov8n-seg-model`。
 2.  将您的分割模型文件 (例如 `yolov8n-seg.pt`) 复制到这个新文件夹中, 并**重命名为 `best.pt`**。
-3.  在 `yolov8n-seg-model` 文件夹中, 创建以下三个文件。
+3.  在 `yolov8n-seg-model` 文件夹中, 确保您有以下三个最终版本的文件。
 
 **`main.py` 文件:**
 ```python
@@ -124,7 +124,7 @@ def handler(context, event):
                             status_code=200)
 ```
 
-**`Dockerfile` 文件:**
+**`Dockerfile` 文件 (用于构建基础镜像):**
 ```dockerfile
 # 1. 使用一个轻量的 Python 官方镜像作为基础
 FROM python:3.9-slim
@@ -142,7 +142,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /opt/nuclio
 
 # 4. 安装核心 Python 依赖
-# scikit-image 提供了 skimage 库
 RUN pip install --no-cache-dir ultralytics torch torchvision opencv-python-headless supervision scikit-image Pillow
 
 # 5. 将我们的模型和处理脚本复制到镜像中
@@ -150,57 +149,58 @@ COPY best.pt .
 COPY main.py .
 ```
 
-**`function.yaml` 文件:**
+**`function.yaml` 文件 (最终版):**
 ```yaml
-apiVersion: "nuclio.io/v1"
-kind: "Function"
 metadata:
   name: yolov8-seg
+  namespace: nuclio
   annotations:
-    description: "YOLOv8 Segmentation"
-    nuclio.io/project-name: "cvat"
+    name: YOLOv8 Segmentation
+    type: detector
+    framework: ultralytics
+
 spec:
-  runtime: "python:3.9"
-  handler: "main:handler"
-  env:
-    - name: LD_LIBRARY_PATH
-      value: /usr/local/lib/python3.9/dist-packages/torch/lib
+  description: YOLOv8 official segmentation model
+  runtime: 'python:3.9'
+  handler: main:handler
+  eventTimeout: 30s
+
+  build:
+    image: nuclio/yolov8-seg-processor
+    baseImage: yolov8-seg-base
+
   triggers:
     myHttpTrigger:
-      kind: "http"
-      maxWorkers: 2
-  volumes:
-    - volume:
-        name: model
-        hostPath:
-          path: "./best.pt"
-      volumeMount:
-        name: model
-        mountPath: "/opt/nuclio/best.pt"
-  resources:
-    limits:
-      # nvidia.com/gpu: 1
+      maxWorkers: 1
+      kind: 'http'
+      workerAvailabilityTimeoutMilliseconds: 10000
+      attributes:
+        maxRequestBodySize: 33554432 # 32MB
+
+  platform:
+    attributes:
+      restartPolicy:
+        name: always
+        maximumRetryCount: 3
+      mountMode: volume
 ```
 
-#### 第 2 步: 部署模型
+#### 第 2 步: 构建并部署
 
-进入您刚刚创建的 `yolov8n-seg-model` 目录, 然后执行部署命令。`nuctl` 会自动使用目录下的 `Dockerfile` 进行构建。
+现在, 执行以下两步命令。
 
 ```bash
-# 进入新目录
+# 进入模型目录
 cd yolov8n-seg-model
 
-# (推荐) 如果之前部署失败，先重置 Nuclio 项目
-export NUCTL_DASHBOARD_URL=http://127.0.0.1:8070
-nuctl delete project cvat --platform local --force
-nuctl create project cvat --platform local
+# 1. 构建包含所有依赖的基础镜像，并命名为 "yolov8-seg-base"
+docker build -t yolov8-seg-base .
 
-# 部署函数，nuctl 会自动寻找并使用 Dockerfile
+# 2. 部署函数。Nuclio 会自动读取 function.yaml 并使用我们刚构建的 yolov8-seg-base 镜像
 nuctl deploy yolov8-seg --project-name cvat \
-    --path . \
+    --path .
     --platform local
 ```
-
 
 #### 第 3 步: 验证
 
@@ -315,4 +315,4 @@ Error - Project contains functions
     部署过程会自动下载所需的模型和依赖, 并配置好 Nuclio 函数.
 
 3.  **验证**:
-    部署完成后, 打开任意一个标注任务. 在工具栏的 "Magic Wand" (魔法棒) 图标下, 您应该能看到 SAM 相关的 Interactor. 这表明模型已成功部署并可供使用. 您也可以在 Nuclio Dashboard (`http://<your_host>:8070`) 中看到新部署的函数.
+    部署完成后, 打开任意一个标注任务. 在工具栏的 "Magic Wand" (魔法棒) 图标下, 您应该能看到 SAM 相关的 Interactor. 这表明模型已成功部署并可供使用. 您也可以在 Nuclio Dashboard (`http://<your_host>:8070`) 中看到新部署的函数。
