@@ -10,7 +10,6 @@ i18n
     .use(LanguageDetector)
     .use(initReactI18next)
     .init({
-        supportedLngs: ['en-US', 'zh'],
         fallbackLng: 'en-US',
         debug: process.env.NODE_ENV === 'development',
         interpolation: {
