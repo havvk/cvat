@@ -117,7 +117,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
     };
 
     const validateOverlapSize: RuleRender = ({ getFieldValue }): RuleObject => ({
-        validator(_: RuleObject, value?: string | number): Promise<void> => {
+        validator(_: RuleObject, value?: string | number): Promise<void> {
             if (typeof value !== 'undefined' && value !== '') {
                 const segmentSize = getFieldValue('segmentSize');
                 if (typeof segmentSize !== 'undefined' && segmentSize !== '') {
@@ -131,7 +131,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
     });
 
     const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
-        validator(_: RuleObject, value?: string | number): Promise<void> => {
+        validator(_: RuleObject, value?: string | number): Promise<void> {
             if (typeof value !== 'undefined' && value !== '') {
                 const startFrame = getFieldValue('startFrame');
                 if (typeof startFrame !== 'undefined' && startFrame !== '') {
