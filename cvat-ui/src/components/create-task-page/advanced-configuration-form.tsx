@@ -90,44 +90,6 @@ interface Props {
     targetStorageLocation: StorageLocation;
 }
 
-function validateURL(_: RuleObject, value: string): Promise<void> {
-    if (value && !patterns.validateURL.pattern.test(value)) {
-        return Promise.reject(new Error('URL is not a valid URL'));
-    }
-
-    return Promise.resolve();
-}
-
-const validateOverlapSize: RuleRender = ({ getFieldValue }): RuleObject => ({
-    validator(_: RuleObject, value?: string | number): Promise<void> {
-        if (typeof value !== 'undefined' && value !== '') {
-            const segmentSize = getFieldValue('segmentSize');
-            if (typeof segmentSize !== 'undefined' && segmentSize !== '') {
-                if (+segmentSize <= +value) {
-                    return Promise.reject(new Error('Segment size must be more than overlap size'));
-                }
-            }
-        }
-
-        return Promise.resolve();
-    },
-});
-
-const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
-    validator(_: RuleObject, value?: string | number): Promise<void> {
-        if (typeof value !== 'undefined' && value !== '') {
-            const startFrame = getFieldValue('startFrame');
-            if (typeof startFrame !== 'undefined' && startFrame !== '') {
-                if (+startFrame > +value) {
-                    return Promise.reject(new Error('Start frame must not be more than stop frame'));
-                }
-            }
-        }
-
-        return Promise.resolve();
-    },
-});
-
 const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>) => {
     const { t } = useTranslation();
     const formRef = useRef<FormInstance>(null);
@@ -135,17 +97,52 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
     const {
         onSubmit,
         projectId,
-        useProjectSourceStorage,
-        useProjectTargetStorage,
-        sourceStorageLocation,
-        targetStorageLocation,
         activeFileManagerTab,
         onChangeSortingMethod,
         onChangeUseProjectSourceStorage,
         onChangeUseProjectTargetStorage,
         onChangeSourceStorageLocation,
         onChangeTargetStorageLocation,
+        useProjectSourceStorage,
+        useProjectTargetStorage,
+        sourceStorageLocation,
+        targetStorageLocation,
     } = props;
+
+    const validateURL = (_: RuleObject, value: string): Promise<void> => {
+        if (value && !patterns.validateURL.pattern.test(value)) {
+            return Promise.reject(new Error(t('urlIsNotValid')));
+        }
+        return Promise.resolve();
+    };
+
+    const validateOverlapSize: RuleRender = ({ getFieldValue }): RuleObject => ({
+        validator(_: RuleObject, value?: string | number): Promise<void> => {
+            if (typeof value !== 'undefined' && value !== '') {
+                const segmentSize = getFieldValue('segmentSize');
+                if (typeof segmentSize !== 'undefined' && segmentSize !== '') {
+                    if (+segmentSize <= +value) {
+                        return Promise.reject(new Error(t('segmentSizeGreaterThanOverlap')));
+                    }
+                }
+            }
+            return Promise.resolve();
+        },
+    });
+
+    const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
+        validator(_: RuleObject, value?: string | number): Promise<void> => {
+            if (typeof value !== 'undefined' && value !== '') {
+                const startFrame = getFieldValue('startFrame');
+                if (typeof startFrame !== 'undefined' && startFrame !== '') {
+                    if (+startFrame > +value) {
+                        return Promise.reject(new Error(t('startFrameGreaterThanStopFrame')));
+                    }
+                }
+            }
+            return Promise.resolve();
+        },
+    });
 
     useImperativeHandle(ref, () => ({
         submit(): Promise<void> {
@@ -192,7 +189,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
                     );
             }
 
-            return Promise.reject(new Error('Form ref is empty'));
+            return Promise.reject(new Error(t('formRefIsEmpty')));
         },
         resetFields(): void {
             if (formRef.current) {
@@ -208,32 +205,32 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
             valuePropName='checked'
         >
             <Checkbox>
-                <Text className='cvat-text-color'>{t('Copy data into CVAT')}</Text>
+                <Text className='cvat-text-color'>{t('copyDataIntoCVAT')}</Text>
             </Checkbox>
         </Form.Item>
     );
 
     const renderSortingMethodRadio = (): JSX.Element => (
         <Form.Item
-            label={t('Sorting method')}
+            label={t('sortingMethod')}
             name='sortingMethod'
             rules={[
                 {
                     required: true,
-                    message: t('The field is required.'),
+                    message: t('theFieldIsRequired'),
                 },
             ]}
             help={t('sortingMethodHelpText')}
         >
             <Radio.Group buttonStyle='solid' onChange={(e) => onChangeSortingMethod(e.target.value)}>
                 <Radio.Button value={SortingMethod.LEXICOGRAPHICAL} key={SortingMethod.LEXICOGRAPHICAL}>
-                    {t('Lexicographical')}
+                    {t('lexicographical')}
                 </Radio.Button>
-                <Radio.Button value={SortingMethod.NATURAL} key={SortingMethod.NATURAL}>{t('Natural')}</Radio.Button>
+                <Radio.Button value={SortingMethod.NATURAL} key={SortingMethod.NATURAL}>{t('natural')}</Radio.Button>
                 <Radio.Button value={SortingMethod.PREDEFINED} key={SortingMethod.PREDEFINED}>
-                    {t('Predefined')}
+                    {t('predefined')}
                 </Radio.Button>
-                <Radio.Button value={SortingMethod.RANDOM} key={SortingMethod.RANDOM}>{t('Random')}</Radio.Button>
+                <Radio.Button value={SortingMethod.RANDOM} key={SortingMethod.RANDOM}>{t('random')}</Radio.Button>
             </Radio.Group>
         </Form.Item>
     );
@@ -241,12 +238,12 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
     const renderImageQuality = (): JSX.Element => (
         <CVATTooltip title={t('imageQualityTooltip')}>
             <Form.Item
-                label={t('Image quality')}
+                label={t('imageQuality')}
                 name='imageQuality'
                 rules={[
                     {
                         required: true,
-                        message: t('The field is required.'),
+                        message: t('theFieldIsRequired'),
                     },
                     { validator: isInteger({ min: 5, max: 100 }) },
                 ]}
@@ -259,7 +256,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
     const renderOverlap = (): JSX.Element => (
         <CVATTooltip title={t('overlapSizeTooltip')}>
             <Form.Item
-                label={t('Overlap size')}
+                label={t('overlapSize')}
                 name='overlapSize'
                 dependencies={['segmentSize']}
                 rules={[{ validator: isInteger({ min: 0 }) }, validateOverlapSize]}
@@ -271,21 +268,21 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
 
     const renderSegmentSize = (): JSX.Element => (
         <CVATTooltip title={t('segmentSizeTooltip')}>
-            <Form.Item label={t('Segment size')} name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
+            <Form.Item label={t('segmentSize')} name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
                 <Input size='large' type='number' min={1} />
             </Form.Item>
         </CVATTooltip>
     );
 
     const renderStartFrame = (): JSX.Element => (
-        <Form.Item label={t('Start frame')} name='startFrame' rules={[{ validator: isInteger({ min: 0 }) }]}>
+        <Form.Item label={t('startFrame')} name='startFrame' rules={[{ validator: isInteger({ min: 0 }) }]}>
             <Input size='large' type='number' min={0} step={1} />
         </Form.Item>
     );
 
     const renderStopFrame = (): JSX.Element => (
         <Form.Item
-            label={t('Stop frame')}
+            label={t('stopFrame')}
             name='stopFrame'
             dependencies={['startFrame']}
             rules={[{ validator: isInteger({ min: 0 }) }, validateStopFrame]}
@@ -295,7 +292,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
     );
 
     const renderFrameStep = (): JSX.Element => (
-        <Form.Item label={t('Frame step')} name='frameStep' rules={[{ validator: isInteger({ min: 1 }) }]}>
+        <Form.Item label={t('frameStep')} name='frameStep' rules={[{ validator: isInteger({ min: 1 }) }]}>
             <Input size='large' type='number' min={1} step={1} />
         </Form.Item>
     );
@@ -304,7 +301,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
         <Form.Item
             hasFeedback
             name='bugTracker'
-            label={t('Issue tracker')}
+            label={t('issueTracker')}
             extra={t('issueTrackerExtra')}
             rules={[{ validator: validateURL }]}
         >
@@ -321,7 +318,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
             >
                 <Switch />
             </Form.Item>
-            <Text className='cvat-text-color'>{t('Prefer zip chunks')}</Text>
+            <Text className='cvat-text-color'>{t('preferZipChunks')}</Text>
             <Tooltip title={t('zipChunksTooltip')}>
                 <QuestionCircleOutlined style={{ opacity: 0.5 }} />
             </Tooltip>
@@ -337,7 +334,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
             >
                 <Switch defaultChecked />
             </Form.Item>
-            <Text className='cvat-text-color'>{t('Use cache')}</Text>
+            <Text className='cvat-text-color'>{t('useCache')}</Text>
             <Tooltip title={t('usingCacheTooltip')}>
                 <QuestionCircleOutlined style={{ opacity: 0.5 }} />
             </Tooltip>
@@ -348,7 +345,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
         <CVATTooltip
             title={t('chunkSizeTooltip')}
         >
-            <Form.Item label={t('Chunk size')} name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
+            <Form.Item label={t('chunkSize')} name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
                 <Input size='large' type='number' />
             </Form.Item>
         </CVATTooltip>
@@ -356,7 +353,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
 
     const renderConsensusReplicas = (): JSX.Element => (
         <Form.Item
-            label={t('Consensus Replicas')}
+            label={t('consensusReplicas')}
             name='consensusReplicas'
             rules={[
                 {
@@ -382,7 +379,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
         <SourceStorageField
             instanceId={projectId}
             locationValue={sourceStorageLocation}
-            switchDescription={t('Use project source storage')}
+            switchDescription={t('useProjectSourceStorage')}
             storageDescription={t('sourceStorageDescription')}
             useDefaultStorage={useProjectSourceStorage}
             onChangeUseDefaultStorage={onChangeUseProjectSourceStorage}
@@ -394,7 +391,7 @@ const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>)
         <TargetStorageField
             instanceId={projectId}
             locationValue={targetStorageLocation}
-            switchDescription={t('Use project target storage')}
+            switchDescription={t('useProjectTargetStorage')}
             storageDescription={t('targetStorageDescription')}
             useDefaultStorage={useProjectTargetStorage}
             onChangeUseDefaultStorage={onChangeUseProjectTargetStorage}
