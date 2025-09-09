@@ -6,25 +6,18 @@ metadata:
   name: pth-facebookresearch-sam2-hiera-large
   namespace: cvat
   annotations:
-    # --- 关键修改：将所有复杂信息扁平化为字符串 ---
-
-    # 将模型在UI中显示的名称作为'name'
-    name: "Segment Anything 2.1"
-
-    # 'type' 保持为字符串
-    type: "interactor"
-
-    # 将所有其他元信息，特别是'spec'对象，序列化为一个JSON字符串
-    # 并赋值给 'spec' 这个 annotation key
-    spec: |
-      {
-        "min_pos_points": 0,
-        "min_neg_points": 0,
-        "startswith_box_optional": true,
-        "version": 2,
-        "animated_gif": "https://raw.githubusercontent.com/cvat-ai/cvat/develop/site/content/en/images/hrnet_example.gif",
-        "help_message": "The interactor allows to get a mask of an object using at least one positive, and any negative points inside it"
-      }
+    name: Segment Anything 2.1
+    type: interactor
+    version: 2
+    animated_gif: https://raw.githubusercontent.com/cvat-ai/cvat/develop/site/content/en/images/hrnet_example.gif
+    help_message: The interactor allows to get a mask of an object using at least one positive, and any negative points inside it
+    spec:
+      - name: "min_pos_points"
+        value: 0
+      - name: "min_neg_points"
+        value: 0
+      - name: "startswith_box_optional"
+        value: true
 
 spec:
   description: Interactive object segmentation with Segment-Anything 2.1
