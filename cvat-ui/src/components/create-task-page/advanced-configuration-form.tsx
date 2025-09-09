@@ -3,8 +3,8 @@
 //
 // SPDX-License-Identifier: MIT
 
-import { withTranslation, WithTranslation } from 'react-i18next';
-import React, { RefObject } from 'react';
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import { PercentageOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import Input from 'antd/lib/input';
@@ -128,45 +128,34 @@ const validateStopFrame: RuleRender = ({ getFieldValue }): RuleObject => ({
     },
 });
 
-class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslation> {
-    private formRef: RefObject<FormInstance>;
+const AdvancedConfigurationForm = forwardRef((props: Props, ref: React.Ref<any>) => {
+    const { t } = useTranslation();
+    const formRef = useRef<FormInstance>(null);
 
-    public constructor(props: Props) {
-        super(props);
-        this.formRef = React.createRef<FormInstance>();
-    }
+    const {
+        onSubmit,
+        projectId,
+        useProjectSourceStorage,
+        useProjectTargetStorage,
+        sourceStorageLocation,
+        targetStorageLocation,
+        activeFileManagerTab,
+        onChangeSortingMethod,
+        onChangeUseProjectSourceStorage,
+        onChangeUseProjectTargetStorage,
+        onChangeSourceStorageLocation,
+        onChangeTargetStorageLocation,
+    } = props;
 
-    public submit(): Promise<void> {
-        const { onSubmit, projectId } = this.props;
-
-        if (this.formRef.current) {
-            if (projectId) {
-                return Promise.all([
-                    core.projects.get({ id: projectId }),
-                    this.formRef.current.validateFields(),
-                ]).then(([getProjectResponse, values]) => {
-                    const [project] = getProjectResponse;
-                    const frameFilter = values.frameStep ? `step=${values.frameStep}` : undefined;
-                    const entries = Object.entries(values).filter(
-                        (entry: [string, unknown]): boolean => entry[0] !== frameFilter,
-                    );
-
-                    return onSubmit({
-                        ...((Object.fromEntries(entries) as any) as AdvancedConfiguration),
-                        frameFilter,
-                        sourceStorage: values.useProjectSourceStorage ?
-                            new Storage(project.sourceStorage || { location: StorageLocation.LOCAL }) :
-                            new Storage(values.sourceStorage),
-                        targetStorage: values.useProjectTargetStorage ?
-                            new Storage(project.targetStorage || { location: StorageLocation.LOCAL }) :
-                            new Storage(values.targetStorage),
-                    });
-                });
-            }
-
-            return this.formRef.current.validateFields()
-                .then(
-                    (values: Store): Promise<void> => {
+    useImperativeHandle(ref, () => ({
+        submit(): Promise<void> {
+            if (formRef.current) {
+                if (projectId) {
+                    return Promise.all([
+                        core.projects.get({ id: projectId }),
+                        formRef.current.validateFields(),
+                    ]).then(([getProjectResponse, values]) => {
+                        const [project] = getProjectResponse;
                         const frameFilter = values.frameStep ? `step=${values.frameStep}` : undefined;
                         const entries = Object.entries(values).filter(
                             (entry: [string, unknown]): boolean => entry[0] !== frameFilter,
@@ -175,338 +164,300 @@ class AdvancedConfigurationForm extends React.PureComponent<Props & WithTranslat
                         return onSubmit({
                             ...((Object.fromEntries(entries) as any) as AdvancedConfiguration),
                             frameFilter,
-                            sourceStorage: new Storage(values.sourceStorage),
-                            targetStorage: new Storage(values.targetStorage),
+                            sourceStorage: values.useProjectSourceStorage ?
+                                new Storage(project.sourceStorage || { location: StorageLocation.LOCAL }) :
+                                new Storage(values.sourceStorage),
+                            targetStorage: values.useProjectTargetStorage ?
+                                new Storage(project.targetStorage || { location: StorageLocation.LOCAL }) :
+                                new Storage(values.targetStorage),
                         });
-                    },
-                );
-        }
+                    });
+                }
 
-        return Promise.reject(new Error('Form ref is empty'));
-    }
+                return formRef.current.validateFields()
+                    .then(
+                        (values: Store): Promise<void> => {
+                            const frameFilter = values.frameStep ? `step=${values.frameStep}` : undefined;
+                            const entries = Object.entries(values).filter(
+                                (entry: [string, unknown]): boolean => entry[0] !== frameFilter,
+                            );
 
-    public resetFields(): void {
-        if (this.formRef.current) {
-            this.formRef.current.resetFields();
-        }
-    }
+                            return onSubmit({
+                                ...((Object.fromEntries(entries) as any) as AdvancedConfiguration),
+                                frameFilter,
+                                sourceStorage: new Storage(values.sourceStorage),
+                                targetStorage: new Storage(values.targetStorage),
+                            });
+                        },
+                    );
+            }
 
-    /* eslint-disable class-methods-use-this */
-    private renderCopyDataChechbox(): JSX.Element {
-        const { t } = this.props;
-        return (
+            return Promise.reject(new Error('Form ref is empty'));
+        },
+        resetFields(): void {
+            if (formRef.current) {
+                formRef.current.resetFields();
+            }
+        },
+    }));
+
+    const renderCopyDataChechbox = (): JSX.Element => (
+        <Form.Item
+            help={t('copyDataHelpText')}
+            name='copyData'
+            valuePropName='checked'
+        >
+            <Checkbox>
+                <Text className='cvat-text-color'>{t('Copy data into CVAT')}</Text>
+            </Checkbox>
+        </Form.Item>
+    );
+
+    const renderSortingMethodRadio = (): JSX.Element => (
+        <Form.Item
+            label={t('Sorting method')}
+            name='sortingMethod'
+            rules={[
+                {
+                    required: true,
+                    message: t('The field is required.'),
+                },
+            ]}
+            help={t('sortingMethodHelpText')}
+        >
+            <Radio.Group buttonStyle='solid' onChange={(e) => onChangeSortingMethod(e.target.value)}>
+                <Radio.Button value={SortingMethod.LEXICOGRAPHICAL} key={SortingMethod.LEXICOGRAPHICAL}>
+                    {t('Lexicographical')}
+                </Radio.Button>
+                <Radio.Button value={SortingMethod.NATURAL} key={SortingMethod.NATURAL}>{t('Natural')}</Radio.Button>
+                <Radio.Button value={SortingMethod.PREDEFINED} key={SortingMethod.PREDEFINED}>
+                    {t('Predefined')}
+                </Radio.Button>
+                <Radio.Button value={SortingMethod.RANDOM} key={SortingMethod.RANDOM}>{t('Random')}</Radio.Button>
+            </Radio.Group>
+        </Form.Item>
+    );
+
+    const renderImageQuality = (): JSX.Element => (
+        <CVATTooltip title={t('imageQualityTooltip')}>
             <Form.Item
-                help={t('copyDataHelpText')}
-                name='copyData'
-                valuePropName='checked'
-            >
-                <Checkbox>
-                    <Text className='cvat-text-color'>Copy data into CVAT</Text>
-                </Checkbox>
-            </Form.Item>
-        );
-    }
-
-    private renderSortingMethodRadio(): JSX.Element {
-        const { onChangeSortingMethod, t } = this.props;
-
-        return (
-            <Form.Item
-                label='Sorting method'
-                name='sortingMethod'
+                label={t('Image quality')}
+                name='imageQuality'
                 rules={[
                     {
                         required: true,
-                        message: 'The field is required.',
+                        message: t('The field is required.'),
                     },
-                ]}
-                help={t('sortingMethodHelpText')}
-            >
-                <Radio.Group buttonStyle='solid' onChange={(e) => onChangeSortingMethod(e.target.value)}>
-                    <Radio.Button value={SortingMethod.LEXICOGRAPHICAL} key={SortingMethod.LEXICOGRAPHICAL}>
-                        Lexicographical
-                    </Radio.Button>
-                    <Radio.Button value={SortingMethod.NATURAL} key={SortingMethod.NATURAL}>Natural</Radio.Button>
-                    <Radio.Button value={SortingMethod.PREDEFINED} key={SortingMethod.PREDEFINED}>
-                        Predefined
-                    </Radio.Button>
-                    <Radio.Button value={SortingMethod.RANDOM} key={SortingMethod.RANDOM}>Random</Radio.Button>
-                </Radio.Group>
-            </Form.Item>
-        );
-    }
-
-    private renderImageQuality(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <CVATTooltip title={t('imageQualityTooltip')}>
-                <Form.Item
-                    label='Image quality'
-                    name='imageQuality'
-                    rules={[
-                        {
-                            required: true,
-                            message: 'The field is required.',
-                        },
-                        { validator: isInteger({ min: 5, max: 100 }) },
-                    ]}
-                >
-                    <Input size='large' type='number' min={5} max={100} suffix={<PercentageOutlined />} />
-                </Form.Item>
-            </CVATTooltip>
-        );
-    }
-
-    private renderOverlap(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <CVATTooltip title={t('overlapSizeTooltip')}>
-                <Form.Item
-                    label='Overlap size'
-                    name='overlapSize'
-                    dependencies={['segmentSize']}
-                    rules={[{ validator: isInteger({ min: 0 }) }, validateOverlapSize]}
-                >
-                    <Input size='large' type='number' min={0} />
-                </Form.Item>
-            </CVATTooltip>
-        );
-    }
-
-    private renderSegmentSize(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <CVATTooltip title={t('segmentSizeTooltip')}>
-                <Form.Item label='Segment size' name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                    <Input size='large' type='number' min={1} />
-                </Form.Item>
-            </CVATTooltip>
-        );
-    }
-
-    private renderStartFrame(): JSX.Element {
-        return (
-            <Form.Item label='Start frame' name='startFrame' rules={[{ validator: isInteger({ min: 0 }) }]}>
-                <Input size='large' type='number' min={0} step={1} />
-            </Form.Item>
-        );
-    }
-
-    private renderStopFrame(): JSX.Element {
-        return (
-            <Form.Item
-                label='Stop frame'
-                name='stopFrame'
-                dependencies={['startFrame']}
-                rules={[{ validator: isInteger({ min: 0 }) }, validateStopFrame]}
-            >
-                <Input size='large' type='number' min={0} step={1} />
-            </Form.Item>
-        );
-    }
-
-    private renderFrameStep(): JSX.Element {
-        return (
-            <Form.Item label='Frame step' name='frameStep' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                <Input size='large' type='number' min={1} step={1} />
-            </Form.Item>
-        );
-    }
-
-    private renderBugTracker(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <Form.Item
-                hasFeedback
-                name='bugTracker'
-                label='Issue tracker'
-                extra={t('issueTrackerExtra')}
-                rules={[{ validator: validateURL }]}
-            >
-                <Input size='large' />
-            </Form.Item>
-        );
-    }
-
-    private renderUzeZipChunks(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <Space>
-                <Form.Item
-                    name='useZipChunks'
-                    valuePropName='checked'
-                    className='cvat-settings-switch'
-                >
-                    <Switch />
-                </Form.Item>
-                <Text className='cvat-text-color'>Prefer zip chunks</Text>
-                <Tooltip title={t('zipChunksTooltip')}>
-                    <QuestionCircleOutlined style={{ opacity: 0.5 }} />
-                </Tooltip>
-            </Space>
-        );
-    }
-
-    private renderCreateTaskMethod(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <Space>
-                <Form.Item
-                    name='useCache'
-                    valuePropName='checked'
-                    className='cvat-settings-switch'
-                >
-                    <Switch defaultChecked />
-                </Form.Item>
-                <Text className='cvat-text-color'>Use cache</Text>
-                <Tooltip title={t('usingCacheTooltip')}>
-                    <QuestionCircleOutlined style={{ opacity: 0.5 }} />
-                </Tooltip>
-            </Space>
-        );
-    }
-
-    private renderChunkSize(): JSX.Element {
-        const { t } = this.props;
-        return (
-            <CVATTooltip
-                title={t('chunkSizeTooltip')}
-            >
-                <Form.Item label='Chunk size' name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
-                    <Input size='large' type='number' />
-                </Form.Item>
-            </CVATTooltip>
-        );
-    }
-
-    private renderConsensusReplicas(): JSX.Element {
-        return (
-            <Form.Item
-                label='Consensus Replicas'
-                name='consensusReplicas'
-                rules={[
-                    {
-                        validator: isInteger({
-                            min: 0,
-                            max: 10,
-                            filter: (intValue: number): boolean => intValue !== 1,
-                        }),
-                    },
+                    { validator: isInteger({ min: 5, max: 100 }) },
                 ]}
             >
-                <Input
-                    size='large'
-                    type='number'
-                    min={0}
-                    max={10}
-                    step={1}
-                />
+                <Input size='large' type='number' min={5} max={100} suffix={<PercentageOutlined />} />
             </Form.Item>
-        );
-    }
+        </CVATTooltip>
+    );
 
-    private renderSourceStorage(): JSX.Element {
-        const {
-            projectId,
-            useProjectSourceStorage,
-            sourceStorageLocation,
-            onChangeUseProjectSourceStorage,
-            onChangeSourceStorageLocation,
-        } = this.props;
-        return (
-            <SourceStorageField
-                instanceId={projectId}
-                locationValue={sourceStorageLocation}
-                switchDescription='Use project source storage'
-                storageDescription='Specify source storage for import resources like annotation, backups'
-                useDefaultStorage={useProjectSourceStorage}
-                onChangeUseDefaultStorage={onChangeUseProjectSourceStorage}
-                onChangeLocationValue={onChangeSourceStorageLocation}
+    const renderOverlap = (): JSX.Element => (
+        <CVATTooltip title={t('overlapSizeTooltip')}>
+            <Form.Item
+                label={t('Overlap size')}
+                name='overlapSize'
+                dependencies={['segmentSize']}
+                rules={[{ validator: isInteger({ min: 0 }) }, validateOverlapSize]}
+            >
+                <Input size='large' type='number' min={0} />
+            </Form.Item>
+        </CVATTooltip>
+    );
+
+    const renderSegmentSize = (): JSX.Element => (
+        <CVATTooltip title={t('segmentSizeTooltip')}>
+            <Form.Item label={t('Segment size')} name='segmentSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
+                <Input size='large' type='number' min={1} />
+            </Form.Item>
+        </CVATTooltip>
+    );
+
+    const renderStartFrame = (): JSX.Element => (
+        <Form.Item label={t('Start frame')} name='startFrame' rules={[{ validator: isInteger({ min: 0 }) }]}>
+            <Input size='large' type='number' min={0} step={1} />
+        </Form.Item>
+    );
+
+    const renderStopFrame = (): JSX.Element => (
+        <Form.Item
+            label={t('Stop frame')}
+            name='stopFrame'
+            dependencies={['startFrame']}
+            rules={[{ validator: isInteger({ min: 0 }) }, validateStopFrame]}
+        >
+            <Input size='large' type='number' min={0} step={1} />
+        </Form.Item>
+    );
+
+    const renderFrameStep = (): JSX.Element => (
+        <Form.Item label={t('Frame step')} name='frameStep' rules={[{ validator: isInteger({ min: 1 }) }]}>
+            <Input size='large' type='number' min={1} step={1} />
+        </Form.Item>
+    );
+
+    const renderBugTracker = (): JSX.Element => (
+        <Form.Item
+            hasFeedback
+            name='bugTracker'
+            label={t('Issue tracker')}
+            extra={t('issueTrackerExtra')}
+            rules={[{ validator: validateURL }]}
+        >
+            <Input size='large' />
+        </Form.Item>
+    );
+
+    const renderUzeZipChunks = (): JSX.Element => (
+        <Space>
+            <Form.Item
+                name='useZipChunks'
+                valuePropName='checked'
+                className='cvat-settings-switch'
+            >
+                <Switch />
+            </Form.Item>
+            <Text className='cvat-text-color'>{t('Prefer zip chunks')}</Text>
+            <Tooltip title={t('zipChunksTooltip')}>
+                <QuestionCircleOutlined style={{ opacity: 0.5 }} />
+            </Tooltip>
+        </Space>
+    );
+
+    const renderCreateTaskMethod = (): JSX.Element => (
+        <Space>
+            <Form.Item
+                name='useCache'
+                valuePropName='checked'
+                className='cvat-settings-switch'
+            >
+                <Switch defaultChecked />
+            </Form.Item>
+            <Text className='cvat-text-color'>{t('Use cache')}</Text>
+            <Tooltip title={t('usingCacheTooltip')}>
+                <QuestionCircleOutlined style={{ opacity: 0.5 }} />
+            </Tooltip>
+        </Space>
+    );
+
+    const renderChunkSize = (): JSX.Element => (
+        <CVATTooltip
+            title={t('chunkSizeTooltip')}
+        >
+            <Form.Item label={t('Chunk size')} name='dataChunkSize' rules={[{ validator: isInteger({ min: 1 }) }]}>
+                <Input size='large' type='number' />
+            </Form.Item>
+        </CVATTooltip>
+    );
+
+    const renderConsensusReplicas = (): JSX.Element => (
+        <Form.Item
+            label={t('Consensus Replicas')}
+            name='consensusReplicas'
+            rules={[
+                {
+                    validator: isInteger({
+                        min: 0,
+                        max: 10,
+                        filter: (intValue: number): boolean => intValue !== 1,
+                    }),
+                },
+            ]}
+        >
+            <Input
+                size='large'
+                type='number'
+                min={0}
+                max={10}
+                step={1}
             />
-        );
-    }
+        </Form.Item>
+    );
 
-    private renderTargetStorage(): JSX.Element {
-        const {
-            projectId,
-            useProjectTargetStorage,
-            targetStorageLocation,
-            onChangeUseProjectTargetStorage,
-            onChangeTargetStorageLocation,
-        } = this.props;
-        return (
-            <TargetStorageField
-                instanceId={projectId}
-                locationValue={targetStorageLocation}
-                switchDescription='Use project target storage'
-                storageDescription='Specify target storage for export resources like annotation, backups                '
-                useDefaultStorage={useProjectTargetStorage}
-                onChangeUseDefaultStorage={onChangeUseProjectTargetStorage}
-                onChangeLocationValue={onChangeTargetStorageLocation}
-            />
-        );
-    }
+    const renderSourceStorage = (): JSX.Element => (
+        <SourceStorageField
+            instanceId={projectId}
+            locationValue={sourceStorageLocation}
+            switchDescription={t('Use project source storage')}
+            storageDescription={t('sourceStorageDescription')}
+            useDefaultStorage={useProjectSourceStorage}
+            onChangeUseDefaultStorage={onChangeUseProjectSourceStorage}
+            onChangeLocationValue={onChangeSourceStorageLocation}
+        />
+    );
 
-    public render(): JSX.Element {
-        const { activeFileManagerTab } = this.props;
-        return (
-            <Form initialValues={initialValues} ref={this.formRef} layout='vertical'>
+    const renderTargetStorage = (): JSX.Element => (
+        <TargetStorageField
+            instanceId={projectId}
+            locationValue={targetStorageLocation}
+            switchDescription={t('Use project target storage')}
+            storageDescription={t('targetStorageDescription')}
+            useDefaultStorage={useProjectTargetStorage}
+            onChangeUseDefaultStorage={onChangeUseProjectTargetStorage}
+            onChangeLocationValue={onChangeTargetStorageLocation}
+        />
+    );
+
+    return (
+        <Form initialValues={initialValues} ref={formRef} layout='vertical'>
+            <Row>
+                <Col>{renderSortingMethodRadio()}</Col>
+            </Row>
+            {activeFileManagerTab === 'share' ? (
                 <Row>
-                    <Col>{this.renderSortingMethodRadio()}</Col>
+                    <Col>{renderCopyDataChechbox()}</Col>
                 </Row>
-                {activeFileManagerTab === 'share' ? (
-                    <Row>
-                        <Col>{this.renderCopyDataChechbox()}</Col>
-                    </Row>
-                ) : null}
-                <Row>
-                    <Col span={12}>{this.renderUzeZipChunks()}</Col>
-                    <Col span={12}>{this.renderCreateTaskMethod()}</Col>
-                </Row>
-                <Row justify='start'>
-                    <Col span={7}>{this.renderImageQuality()}</Col>
-                    <Col span={7} offset={1}>
-                        {this.renderOverlap()}
-                    </Col>
-                    <Col span={7} offset={1}>
-                        {this.renderSegmentSize()}
-                    </Col>
-                </Row>
+            ) : null}
+            <Row>
+                <Col span={12}>{renderUzeZipChunks()}</Col>
+                <Col span={12}>{renderCreateTaskMethod()}</Col>
+            </Row>
+            <Row justify='start'>
+                <Col span={7}>{renderImageQuality()}</Col>
+                <Col span={7} offset={1}>
+                    {renderOverlap()}
+                </Col>
+                <Col span={7} offset={1}>
+                    {renderSegmentSize()}
+                </Col>
+            </Row>
 
-                <Row justify='start'>
-                    <Col span={7}>{this.renderStartFrame()}</Col>
-                    <Col span={7} offset={1}>
-                        {this.renderStopFrame()}
-                    </Col>
-                    <Col span={7} offset={1}>
-                        {this.renderFrameStep()}
-                    </Col>
-                </Row>
+            <Row justify='start'>
+                <Col span={7}>{renderStartFrame()}</Col>
+                <Col span={7} offset={1}>
+                    {renderStopFrame()}
+                </Col>
+                <Col span={7} offset={1}>
+                    {renderFrameStep()}
+                </Col>
+            </Row>
 
-                <Row justify='start'>
-                    <Col span={7}>{this.renderChunkSize()}</Col>
-                </Row>
-                <Row justify='start'>
-                    <Col span={7}>
-                        {this.renderConsensusReplicas()}
-                    </Col>
-                </Row>
+            <Row justify='start'>
+                <Col span={7}>{renderChunkSize()}</Col>
+            </Row>
+            <Row justify='start'>
+                <Col span={7}>
+                    {renderConsensusReplicas()}
+                </Col>
+            </Row>
 
-                <Row>
-                    <Col span={24}>{this.renderBugTracker()}</Col>
-                </Row>
-                <Row justify='space-between'>
-                    <Col span={11}>
-                        {this.renderSourceStorage()}
-                    </Col>
-                    <Col span={11} offset={1}>
-                        {this.renderTargetStorage()}
-                    </Col>
-                </Row>
-            </Form>
-        );
-    }
-}
+            <Row>
+                <Col span={24}>{renderBugTracker()}</Col>
+            </Row>
+            <Row justify='space-between'>
+                <Col span={11}>
+                    {renderSourceStorage()}
+                </Col>
+                <Col span={11} offset={1}>
+                    {renderTargetStorage()}
+                </Col>
+            </Row>
+        </Form>
+    );
+});
 
-export default withTranslation()(AdvancedConfigurationForm);
-
+export default AdvancedConfigurationForm;
