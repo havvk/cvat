@@ -104,5 +104,15 @@ CLIENT_PLUGINS=plugins/sam2 CVAT_HOST=localhost CVAT_VERSION=v2.21.2 docker comp
 *   **现象**: `apt-get` 或 `pip install` 步骤非常缓慢或连接超时。
 *   **原因**: Docker 构建环境无法连接互联网，或访问国外软件源速度慢。
 *   **解决方案**:
-    1.  **配置代理**: 最佳实践是为 Docker 服务配置全局代理。如果不行，也可以在 `function.yaml` 或 `function-gpu.yaml` 的 `build.directives` 部分，通过 `ENV` 指令注入 `http_proxy` 和 `https_proxy` 环境变量。对于Linux主机，代理地址应设为 `http://127.0.0.1:PORT`。
-    2.  **更换镜像源**: 对于 `apt-get` 慢的问题，可以在 `RUN apt-get update` 之前，加入一个 `RUN sed ...` 命令，将软件源更换为国内的镜像（如 `mirrors.aliyun.com`）。
+    1.  **配置代理**: 最佳实践是为 Docker 服务配置全局代理。如果不行，也可以在 `function.yaml` 或 `function-gpu.yaml` 的 `build.directives` 部分，通过 `ENV` 指令注入 `http_proxy` 和 `https_proxy` 环境变量。对于Linux主机，代理地址应设为 `http://127.0.0.1:PORT`。例如：
+```
+  build:
+    image: cvat.pth.facebookresearch.sam2.hiera_large:latest-gpu
+    baseImage: ubuntu:22.04
+    buildArgs:
+      http_proxy: "http://host.docker.internal:8118"
+      https_proxy: "http://host.docker.internal:8118"
+      # no_proxy 很重要，防止内部通信也走代理
+      no_proxy: "localhost,127.0.0.1,cvat_redis_ondisk,*.cvat,172.17.0.1"
+```
+    1.  **更换镜像源**: 对于 `apt-get` 慢的问题，可以在 `RUN apt-get update` 之前，加入一个 `RUN sed ...` 命令，将软件源更换为国内的镜像（如 `mirrors.aliyun.com`）。
