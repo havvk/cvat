@@ -11,7 +11,7 @@
     "region": "区域",
     "noDeployedModelsFound": "未找到已部署的模型",
     "labelsNotFoundInTheSpecifiedModel": "在指定的模型中找不到标签",
-    "Invalid attribute value: \"{{value}}\"": "无效的属性值：\"{{value}}\"",
+    "invalidAttributeValue": "无效的属性值：\"{{value}}\"",
     "descendingSort": "降序排序",
     "ascendingSort": "升序排序",
     "label": "标签",
