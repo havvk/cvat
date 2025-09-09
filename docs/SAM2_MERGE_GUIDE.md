@@ -68,51 +68,112 @@ git merge hashjoe/feature/sam2
 CLIENT_PLUGINS=plugins/sam2 CVAT_HOST=localhost CVAT_VERSION=v2.21.2 docker compose -f docker-compose.yml -f docker-compose.dev.yml -f components/serverless/docker-compose.serverless.yml -p cvat up -d --build
 ```
 
-#### **第六步：部署 SAM2 无服务器函数**
+#### **第六步：【关键】预构建 SAM2 基础镜像**
 
-在 CVAT 服务成功运行后，打开一个新的终端，执行以下命令来部署用于处理 SAM2 模型推理的无服务器函数。
+这是本次优化的核心。我们将把所有耗时的下载和安装步骤，都集中在这一次性的构建中。
 
-```bash
-# 在 CPU 上部署
-./serverless/deploy_cpu.sh serverless/pytorch/facebookresearch/sam2
-```
+1.  **创建 Dockerfile**:
+    在 `serverless/pytorch/facebookresearch/sam2/hiera_large/` 目录下，创建一个名为 `Dockerfile.sam2` 的文件，并填入以下内容（**这是我们今天讨论的最终成果**）：
+
+    ```dockerfile
+    # Dockerfile.sam2
+
+    FROM ubuntu:22.04
+    ENV DEBIAN_FRONTEND=noninteractive NVIDIA_VISIBLE_DEVICES=all
+
+    # 接收来自 --build-arg 的代理参数
+    ARG HTTP_PROXY
+    ARG HTTPS_PROXY
+    ENV http_proxy=${HTTP_PROXY} https_proxy=${HTTPS_PROXY}
+
+    RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates curl git python3 python3-pip ffmpeg libsm6 libxext6 \
+        && rm -rf /var/lib/apt/lists/*
+
+    WORKDIR /opt/nuclio/sam2
+
+    RUN pip3 install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple \
+        torch torchvision torchaudio pycocotools matplotlib onnxruntime onnx
+
+    RUN pip3 install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple \
+        git+https://github.com/facebookresearch/sam2.git@c2ec8e14a185632b0a5d8b161928ceb50197eddc
+
+    RUN curl -L -O https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_large.pt
+
+    RUN ln -s /usr/bin/pip3 /usr/local/bin/pip && \
+        ln -s /usr/bin/python3 /usr/bin/python
+
+    ENV PYTHONPATH /opt/nuclio/sam2
+    ```
+
+2.  **执行构建命令**:
+    在 `serverless/pytorch/facebookresearch/sam2/hiera_large/` 目录下，运行以下命令。**这是解决网络问题的关键**。
+
+    ```bash
+    # 假设你的代理在 http://127.0.0.1:8118
+    # 对于 Linux 用户，必须使用 --add-host
+    # 对于 Mac/Windows Docker Desktop 用户，--add-host 是可选的，但加上也无妨
+    docker build \
+      --add-host=host.docker.internal:host-gateway \
+      --build-arg HTTP_PROXY="http://host.docker.internal:8118" \
+      --build-arg HTTPS_PROXY="http://host.docker.internal:8118" \
+      -f Dockerfile.sam2 \
+      -t sam2-hiera-large-base \
+      .
+    ```
+
+#### **第七步：修改 `function-gpu.yaml` 并部署**
+
+1.  **编辑 `function-gpu.yaml`**:
+    简化该文件，让它直接使用我们刚刚构建的基础镜像。
+
+    ```yaml
+    # ... (metadata 部分保持不变) ...
+    spec:
+      # ... (description, runtime, handler 等保持不变) ...
+      build:
+        # 定义最终的函数镜像名
+        image: cvat.pth.facebookresearch.sam2.hiera_large:latest-gpu
+        # 指定我们预构建的基础镜像
+        baseImage: sam2-hiera-large-base
+        # 移除所有 buildArgs 和 directives！
+
+      # ... (triggers, resources, platform 等保持不变) ...
+    ```
+
+2.  **部署函数**:
+    现在，`nuctl deploy` 将会跳过所有下载步骤，在几秒内完成部署。
+
+    ```bash
+    # 切换到 serverless 目录
+    cd serverless/
+
+    # 执行部署脚本，它现在会使用修改后的配置文件
+    # 脚本内部的 nuctl deploy 会变得飞快
+    ./deploy_gpu.sh pytorch/facebookresearch/sam2
+    ```
 
 ---
 
-### **附录：Serverless 函数部署问题排查**
+### **附录：Serverless 部署深度排查指南**
 
-在执行 `./serverless/deploy_cpu.sh` 或 `./serverless/deploy_gpu.sh` 脚本时，可能会遇到一些常见问题。
+#### **问题 1: `docker build` 网络缓慢或失败 (根源)**
 
-#### **问题 1: 在 macOS (Apple Silicon / M-系列芯片) 上部署失败**
+*   **现象**: `apt-get`, `pip`, `curl` 或 `git` 命令在构建基础镜像时极其缓慢、超时或报哈希错误。
+*   **根源**: 构建容器无法访问主机上的代理服务。在容器内部，`127.0.0.1` 指向容器自身，而不是主机。
+*   **终极解决方案**:
+    1.  **使用 `host.docker.internal`**: 在 `Dockerfile` 中，将代理地址设置为 `http://host.docker.internal:PORT`。
+    2.  **添加 `--add-host` (Linux 用户)**: 在执行 `docker build` 命令时，**必须**添加 `--add-host=host.docker.internal:host-gateway` 参数，以便容器能够解析这个特殊的 DNS 名称。
+    3.  **使用国内镜像源**: 在 `Dockerfile` 的 `RUN` 指令中，为 `apt-get` (`sed` 修改 `sources.list`) 和 `pip` (`-i ...`) 指定国内镜像源，可以获得双重加速。
 
-*   **现象**: `deploy_cpu.sh` 脚本在构建 `cvat.openvino.base` 镜像时报错，提示 `amd64` 与 `arm64` 架构不兼容。
-*   **原因**: `deploy_cpu.sh` 脚本硬编码了对一个仅支持 `amd64` (Intel/AMD) 架构的 OpenVINO 基础镜像的构建。
-*   **解决方案**: 由于部署 SAM2 (PyTorch模型) 并不需要 OpenVINO，可以直接编辑 `serverless/deploy_cpu.sh` 脚本，将 `docker build -t cvat.openvino.base ...` 这一行命令注释掉。
+#### **问题 2: `nuctl deploy` 长时间卡住或失败**
 
-#### **问题 2: 部署命令长时间卡在 `Building docker image`**
+*   **现象**: `nuctl deploy` 输出 `Building docker image` 后长时间无响应。
+*   **原因**: 如果您**没有**采用两阶段部署，`nuctl` 会在后台执行一个缓慢的 `docker build`。所有在问题1中描述的网络问题都会在这里复现。
+*   **解决方案**: **强烈建议放弃在线构建，并遵循本指南中的“阶段二”进行两阶段部署。** 这可以从根本上避免 `nuctl` 在部署时进行复杂的构建操作。
 
-*   **现象**: `nuctl deploy` 命令输出 `Building docker image` 后长时间没有响应。
-*   **原因**: 这通常是 `nuctl` 与 Docker 守护进程交互时被挂起，或者后台的 `docker build` 过程极其缓慢。
-*   **解决方案**:
-    1.  **确认状态**: 在新终端中运行 `docker ps` 检查是否有随机名称的构建容器正在运行。
-    2.  **查看日志**: 如果有构建容器，运行 `docker logs -f <container_id>` 来实时查看构建进度。
-    3.  **获取命令**: 如果没有构建容器，可以编辑部署脚本，在 `nuctl deploy` 后加入 `--verbose` 参数，这会打印出 `nuctl` 实际执行的 `docker build` 命令。
-    4.  **硬重启**: 最终的解决方案通常是重启 Docker 服务 (`sudo systemctl restart docker`)，然后重复“黄金重置流程”（参考 `DEPLOY_CUSTOM_MODEL_GUIDE.md`），再重新部署。
+#### **问题 3: 在 macOS (Apple Silicon) 上部署 CPU 函数失败**
 
-#### **问题 3: 构建过程中网络下载缓慢或失败**
-
-*   **现象**: `apt-get` 或 `pip install` 步骤非常缓慢或连接超时。
-*   **原因**: Docker 构建环境无法连接互联网，或访问国外软件源速度慢。
-*   **解决方案**:
-    1.  **配置代理**: 最佳实践是为 Docker 服务配置全局代理。如果不行，也可以在 `function.yaml` 或 `function-gpu.yaml` 的 `build.directives` 部分，通过 `ENV` 指令注入 `http_proxy` 和 `https_proxy` 环境变量。对于Linux主机，代理地址应设为 `http://127.0.0.1:PORT`。例如：
-```
-  build:
-    image: cvat.pth.facebookresearch.sam2.hiera_large:latest-gpu
-    baseImage: ubuntu:22.04
-    buildArgs:
-      http_proxy: "http://host.docker.internal:8118"
-      https_proxy: "http://host.docker.internal:8118"
-      # no_proxy 很重要，防止内部通信也走代理
-      no_proxy: "localhost,127.0.0.1,cvat_redis_ondisk,*.cvat,172.17.0.1"
-```
-    1.  **更换镜像源**: 对于 `apt-get` 慢的问题，可以在 `RUN apt-get update` 之前，加入一个 `RUN sed ...` 命令，将软件源更换为国内的镜像（如 `mirrors.aliyun.com`）。
+*   **现象**: `deploy_cpu.sh` 脚本因 `amd64` 与 `arm64` 架构不兼容而报错。
+*   **原因**: 该脚本尝试构建一个仅支持 `amd64` 的 OpenVINO 基础镜像。
+*   **解决方案**: 由于部署 SAM2 (PyTorch模型) 不需要 OpenVINO，可以直接编辑 `serverless/deploy_cpu.sh` 脚本，将 `docker build -t cvat.openvino.base ...` 这一行命令注释掉或删除。
