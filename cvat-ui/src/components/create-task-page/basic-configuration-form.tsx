@@ -4,7 +4,6 @@
 // SPDX-License-Identifier: MIT
 
 import React, { RefObject } from 'react';
-import { withTranslation, WithTranslation } from 'react-i18next';
 import Input from 'antd/lib/input';
 import Text from 'antd/lib/typography/Text';
 import Tooltip from 'antd/lib/tooltip';
@@ -21,12 +20,12 @@ interface Props {
     exampleMultiTaskName?: string;
 }
 
-export default withTranslation()(class BasicConfigurationForm extends React.PureComponent<Props & WithTranslation> {
+export default class BasicConfigurationForm extends React.PureComponent<Props> {
     private formRef: RefObject<FormInstance>;
     private inputRef: RefObject<Input>;
     private initialName: string;
 
-    public constructor(props: Props & WithTranslation) {
+    public constructor(props: Props) {
         super(props);
         this.formRef = React.createRef<FormInstance>();
         this.inputRef = React.createRef<Input>();
@@ -70,9 +69,7 @@ export default withTranslation()(class BasicConfigurationForm extends React.Pure
     }
 
     public render(): JSX.Element {
-        const {
-            many, exampleMultiTaskName, t,
-        } = this.props;
+        const { many, exampleMultiTaskName } = this.props;
 
         return (
             <Form ref={this.formRef} layout='vertical'>
@@ -98,27 +95,32 @@ export default withTranslation()(class BasicConfigurationForm extends React.Pure
                     <Text type='secondary'>
                         <Tooltip title={() => (
                             <>
-                                {t('youCanUseInTheTemplate')}
+                                You can use in the template:
                                 <ul>
                                     <li>
-                                        {t('someTextAnyText')}
+                                        some_text - any text
                                     </li>
                                     <li>
-                                        {t('indexFileInSet')}
+                                        {'{{'}
+                                        index
+                                        {'}}'}
+                                        &nbsp;- index file in set
                                     </li>
                                     <li>
-                                        {t('nameOfFile')}
+                                        {'{{'}
+                                        file_name
+                                        {'}}'}
+                                        &nbsp;- name of file
                                     </li>
                                 </ul>
-                                {t('example')}
-                                &nbsp;
+                                Example:&nbsp;
                                 <i>
                                     {exampleMultiTaskName || 'Task name 1 - video_1.mp4'}
                                 </i>
                             </>
                         )}
                         >
-                            {t('whenFormingTheName')}
+                            When forming the name, a template is used.
                             {' '}
                             <QuestionCircleOutlined />
                         </Tooltip>
@@ -127,4 +129,4 @@ export default withTranslation()(class BasicConfigurationForm extends React.Pure
             </Form>
         );
     }
-});
+}
