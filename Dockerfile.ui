@@ -17,6 +17,7 @@ COPY cvat-data/package.json /tmp/cvat-data/
 
 # Install common dependencies
 WORKDIR /tmp/
+RUN yarn config set npmRegistryServer https://registry.npmmirror.com
 RUN DISABLE_HUSKY=1 yarn install --immutable
 
 # Build source code
