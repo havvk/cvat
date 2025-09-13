@@ -389,7 +389,7 @@
     "invitationNote": "如果该电子邮件地址已在CVAT上注册，该用户将被添加到组织中",
     "theInputIsNotAValidEmail": "输入不是有效的电子邮件",
     "enterAnEmailAddress": "输入电子邮件地址",
-    "worker": "工人",
+    "worker": "标注员",
     "supervisor": "主管",
     "maintainer": "维护者",
     "inviteMore": "邀请更多",
