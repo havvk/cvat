@@ -34,7 +34,7 @@ urlpatterns = [
 
 if settings.IAM_TYPE == "BASIC":
     urlpatterns += [
-        path("register", RegisterViewEx.as_view(), name=BASIC_REGISTER_PATH_NAME),
+        # path("register", RegisterViewEx.as_view(), name=BASIC_REGISTER_PATH_NAME),
         # password
         path("password/reset", PasswordResetView.as_view(), name="rest_password_reset"),
         path(

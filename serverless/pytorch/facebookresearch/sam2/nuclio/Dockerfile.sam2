@@ -33,7 +33,7 @@ WORKDIR /opt/nuclio/sam2
 #    --no-cache-dir 减小镜像体积
 RUN pip3 install --no-cache-dir \
     -i https://pypi.tuna.tsinghua.edu.cn/simple \
-    torch torchvision torchaudio pycocotools matplotlib onnxruntime onnx
+    torch torchvision torchaudio pycocotools matplotlib onnxruntime onnx msgpack
 
 # 7. 安装 sam2 源码
 RUN pip3 install --no-cache-dir \

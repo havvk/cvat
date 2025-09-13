@@ -19,7 +19,7 @@ metadata:
 
 spec:
   description: Interactive object segmentation with Segment-Anything 2.1
-  runtime: 'python:3.8' # 保持不变，这指定了 nuclio 使用哪个 python runtime
+  runtime: 'python:3.10' # 保持不变，这指定了 nuclio 使用哪个 python runtime
   handler: main:handler
   eventTimeout: 30s
   # env 里的 PYTHONPATH 已经在基础镜像中设置，但这里保留也无妨
