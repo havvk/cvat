@@ -135,7 +135,9 @@ export function deleteInvitationAsync(invitationKey: string): ThunkAction {
         dispatch(invitationActions.deleteInvitation());
 
         try {
-            await cvat.organizations.deleteInvitation(invitationKey);
+            await cvat.server.request(`/api/invitations/${invitationKey}`, {
+                method: 'DELETE',
+            });
             dispatch(invitationActions.deleteInvitationSuccess());
         } catch (error) {
             dispatch(invitationActions.deleteInvitationFailed(error));
