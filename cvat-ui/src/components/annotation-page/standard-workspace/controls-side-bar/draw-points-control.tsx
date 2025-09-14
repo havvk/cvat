@@ -5,6 +5,8 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import CVATTooltip from 'components/common/cvat-tooltip';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { PointIcon } from 'icons';
@@ -21,6 +23,7 @@ export interface Props {
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-points');
 function DrawPointsControl(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -38,7 +41,9 @@ function DrawPointsControl(props: Props): JSX.Element {
     };
 
     return disabled ? (
-        <Icon className='cvat-draw-points-control cvat-disabled-canvas-control' component={PointIcon} />
+        <CVATTooltip title={t('tooltipDrawPoints')} placement='right'>
+            <Icon className='cvat-draw-points-control cvat-disabled-canvas-control' component={PointIcon} />
+        </CVATTooltip>
     ) : (
         <CustomPopover
             {...dynamicPopoverProps}
@@ -46,7 +51,9 @@ function DrawPointsControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.POINTS} />}
         >
-            <Icon {...dynamicIconProps} component={PointIcon} />
+            <CVATTooltip title={t('tooltipDrawPoints')} placement='right'>
+                <Icon {...dynamicIconProps} component={PointIcon} />
+            </CVATTooltip>
         </CustomPopover>
     );
 }

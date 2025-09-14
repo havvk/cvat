@@ -31,7 +31,16 @@ function MergeControl(props: Props): JSX.Element {
     const { normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     return disabled ? (
-        <Icon className='cvat-merge-control cvat-disabled-canvas-control' component={MergeIcon} />
+        <CVATTooltip
+            title={t('mergeShapesTracksTooltip', {
+                shortcut: canvasInstance instanceof Canvas ?
+                    normalizedKeyMap.SWITCH_MERGE_MODE_STANDARD_CONTROLS :
+                    normalizedKeyMap.SWITCH_MERGE_MODE_STANDARD_3D_CONTROLS,
+            })}
+            placement='right'
+        >
+            <Icon className='cvat-merge-control cvat-disabled-canvas-control' component={MergeIcon} />
+        </CVATTooltip>
     ) : (
         <CVATTooltip
             title={t('mergeShapesTracksTooltip', {

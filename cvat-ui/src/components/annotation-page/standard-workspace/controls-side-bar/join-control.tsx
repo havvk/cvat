@@ -70,7 +70,9 @@ function JoinControl(props: Props): JSX.Element {
     };
 
     return disabled ? (
-        <Icon className='cvat-join-control cvat-disabled-canvas-control' component={JoinIcon} />
+        <CVATTooltip title={t('joinMasksTooltip', { shortcut: normalizedKeyMap.SWITCH_JOIN_MODE_STANDARD_CONTROLS })} placement='right'>
+            <Icon className='cvat-join-control cvat-disabled-canvas-control' component={JoinIcon} />
+        </CVATTooltip>
     ) : (
         <>
             <GlobalHotKeys

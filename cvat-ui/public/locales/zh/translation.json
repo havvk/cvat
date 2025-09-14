@@ -83,6 +83,7 @@
     "selectARegionOfInterestTooltip": "选择感兴趣的区域",
     "rotateAnticlockwiseTooltip": "逆时针旋转图像 {{shortcut}}",
     "rotateClockwiseTooltip": "顺时针旋转图像 {{shortcut}}",
+    "rotateImageTooltip": "旋转图像",
     "pressToAddTagAgainTooltip": "按 {{shortcut}} 再次添加标签",
     "sliceTooltip": "切割蒙版/多边形形状 {{shortcut}}",
     "splitATrackTooltip": "分割轨迹 {{shortcut}}",
@@ -567,7 +568,6 @@
     "fromModel": "从模型",
     "pleaseSpecifyAName": "请指定一个名称",
     "youCanOnlyAppendNewValues": "您只能附加新值",
-    "pressEnterToAddAValue": "按 Enter 添加新值",
     "pleaseSpecifyValues": "请指定值",
     "attributeValues": "属性值",
     "thisValueIsDefault": "此值为默认值",
@@ -886,5 +886,15 @@
     "chunkSize": "块大小",
     "consensusReplicas": "共识副本",
     "useProjectSourceStorage": "使用项目源存储",
-    "useProjectTargetStorage": "使用项目目标存储"
+    "useProjectTargetStorage": "使用项目目标存储",
+    "tooltipOpenCVTools": "OpenCV 工具",
+    "tooltipDrawCuboid": "绘制新的长方体",
+    "tooltipDrawEllipse": "绘制新的椭圆",
+    "tooltipDrawMask": "绘制新的掩码",
+    "tooltipDrawPoints": "绘制新的点",
+    "tooltipDrawPolygon": "绘制新的多边形",
+    "tooltipDrawPolyline": "绘制新的折线",
+    "tooltipDrawRectangle": "绘制新的矩形",
+    "tooltipDrawSkeleton": "绘制新的骨架",
+    "tooltipAITools": "AI 工具"
 }

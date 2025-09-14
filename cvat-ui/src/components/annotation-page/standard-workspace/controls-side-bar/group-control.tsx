@@ -40,7 +40,9 @@ function GroupControl(props: Props): JSX.Element {
     }
 
     return disabled ? (
-        <Icon className='cvat-group-control cvat-disabled-canvas-control' component={GroupIcon} />
+        <CVATTooltip title={title.join(' ')} placement='right'>
+            <Icon className='cvat-group-control cvat-disabled-canvas-control' component={GroupIcon} />
+        </CVATTooltip>
     ) : (
         <CVATTooltip title={title.join(' ')} placement='right'>
             <Icon {...dynamicIconProps} component={GroupIcon} />

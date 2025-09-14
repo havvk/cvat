@@ -5,6 +5,8 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import CVATTooltip from 'components/common/cvat-tooltip';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { Canvas3d } from 'cvat-canvas3d-wrapper';
@@ -23,6 +25,7 @@ export interface Props {
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-cuboid');
 function DrawCuboidControl(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -40,7 +43,9 @@ function DrawCuboidControl(props: Props): JSX.Element {
     };
 
     return disabled ? (
-        <Icon className='cvat-draw-cuboid-control cvat-disabled-canvas-control' component={CubeIcon} />
+        <CVATTooltip title={t('tooltipDrawCuboid')} placement='right'>
+            <Icon className='cvat-draw-cuboid-control cvat-disabled-canvas-control' component={CubeIcon} />
+        </CVATTooltip>
     ) : (
         <CustomPopover
             {...dynamicPopoverProps}
@@ -48,7 +53,9 @@ function DrawCuboidControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.CUBOID} />}
         >
-            <Icon {...dynamicIconProps} component={CubeIcon} />
+            <CVATTooltip title={t('tooltipDrawCuboid')} placement='right'>
+                <Icon {...dynamicIconProps} component={CubeIcon} />
+            </CVATTooltip>
         </CustomPopover>
     );
 }

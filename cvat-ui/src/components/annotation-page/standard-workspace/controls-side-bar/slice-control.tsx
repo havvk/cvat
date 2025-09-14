@@ -76,7 +76,9 @@ function SliceControl(props: Props): JSX.Element {
     };
 
     return disabled ? (
-        <Icon className='cvat-slice-control cvat-disabled-canvas-control' component={SliceIcon} />
+        <CVATTooltip title={t('sliceTooltip', { shortcut: normalizedKeyMap.SWITCH_SLICE_MODE_STANDARD_CONTROLS })} placement='right'>
+            <Icon className='cvat-slice-control cvat-disabled-canvas-control' component={SliceIcon} />
+        </CVATTooltip>
     ) : (
         <>
             <GlobalHotKeys

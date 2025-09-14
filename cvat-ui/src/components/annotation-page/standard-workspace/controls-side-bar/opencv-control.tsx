@@ -556,8 +556,11 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                 className: 'cvat-opencv-control',
             };
 
+        const { t } = this.props;
         return !labels.length || frameData.deleted ? (
-            <Icon className='cvat-opencv-control cvat-disabled-canvas-control' component={OpenCVIcon} />
+            <CVATTooltip title={t('tooltipOpenCVTools')} placement='right'>
+                <Icon className='cvat-opencv-control cvat-disabled-canvas-control' component={OpenCVIcon} />
+            </CVATTooltip>
         ) : (
             <>
                 <CustomPopover
@@ -580,7 +583,9 @@ class OpenCVControlComponent extends React.PureComponent<Props & DispatchToProps
                         }
                     }}
                 >
-                    <Icon {...dynamicIconProps} component={OpenCVIcon} />
+                    <CVATTooltip title={t('tooltipOpenCVTools')} placement='right'>
+                        <Icon {...dynamicIconProps} component={OpenCVIcon} />
+                    </CVATTooltip>
                 </CustomPopover>
                 {isActivated ? (
                     <ApproximationAccuracy

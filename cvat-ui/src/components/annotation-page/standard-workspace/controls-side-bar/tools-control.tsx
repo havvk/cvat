@@ -1387,14 +1387,18 @@ export class ToolsControlComponent extends React.PureComponent<Props, State> {
         return showAnyContent ? (
             <>
                 <CustomPopover {...dynamicPopoverProps} placement='right' content={this.renderPopoverContent()}>
-                    <Icon {...dynamicIconProps} component={AIToolsIcon} />
+                    <CVATTooltip title={t('tooltipAITools')} placement='right'>
+                        <Icon {...dynamicIconProps} component={AIToolsIcon} />
+                    </CVATTooltip>
                 </CustomPopover>
                 {interactionContent}
                 {detectionContent}
                 {portals}
             </>
         ) : (
-            <Icon className=' cvat-tools-control cvat-disabled-canvas-control' component={AIToolsIcon} />
+            <CVATTooltip title={t('tooltipAITools')} placement='right'>
+                <Icon className=' cvat-tools-control cvat-disabled-canvas-control' component={AIToolsIcon} />
+            </CVATTooltip>
         );
     }
 }

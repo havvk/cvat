@@ -31,7 +31,16 @@ function SplitControl(props: Props): JSX.Element {
     const { normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     return disabled ? (
-        <Icon className='cvat-split-track-control cvat-disabled-canvas-control' component={SplitIcon} />
+        <CVATTooltip
+            title={t('splitATrackTooltip', {
+                shortcut: canvasInstance instanceof Canvas3d ?
+                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_3D_CONTROLS :
+                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_CONTROLS,
+            })}
+            placement='right'
+        >
+            <Icon className='cvat-split-track-control cvat-disabled-canvas-control' component={SplitIcon} />
+        </CVATTooltip>
     ) : (
         <CVATTooltip
             title={t('splitATrackTooltip', {
