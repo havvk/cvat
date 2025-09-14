@@ -89,7 +89,7 @@ function MemberItem(props: Readonly<Props>): JSX.Element {
                                 {invitation.owner && ` by ${invitation.owner.username}`}
                             </Text>
                         ) : null}
-                        {joinedDate ? <Text type='secondary'>{`Joined ${moment(joinedDate).fromNow()}`}</Text> : <Text type='secondary'>Invitation pending</Text>}
+                                                {joinedDate ? <Text type='secondary'>{`Joined ${moment(joinedDate).fromNow()}`}</Text> : (invitation && <Text type='secondary'>Invitation pending</Text>)}
                     </Col>
                     <Col span={3} className='cvat-organization-member-item-role'>
                         <MemberRoleSelector
