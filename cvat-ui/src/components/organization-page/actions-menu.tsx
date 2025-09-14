@@ -17,7 +17,7 @@ import { CombinedState } from 'reducers';
 import { LabelWithCountHOF } from 'components/common/label-with-count';
 import { makeBulkOperationAsync } from 'actions/bulk-actions';
 import { removeOrganizationMemberAsync } from 'actions/organization-actions';
-import { resendInvitationAsync } from 'actions/invitations-actions';
+import { resendInvitationAsync, deleteInvitationAsync } from 'actions/invitations-actions';
 import MemberRoleSelector from './member-role-selector';
 
 export interface MemberActionsMenuProps {
@@ -173,7 +173,7 @@ function MemberActionsMenu(props: Readonly<MemberActionsMenuProps>): JSX.Element
                     if (action.key === MenuKeys.RESEND_INVITATION) {
                         handleResendInvitation();
                     } else if (action.key === MenuKeys.DELETE_INVITATION) {
-                        handleRemoveMembership();
+                        handleDeleteInvitation();
                     } else if (action.key === 'remove_member') {
                         Modal.confirm({
                             className: 'cvat-modal-organization-member-remove',

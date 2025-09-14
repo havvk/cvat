@@ -79,6 +79,7 @@ import CVATMarkdown from './common/cvat-markdown';
 import EmailConfirmationPage from './email-confirmation-pages/email-confirmed';
 import EmailVerificationSentPage from './email-confirmation-pages/email-verification-sent';
 import IncorrectEmailConfirmationPage from './email-confirmation-pages/incorrect-email-confirmation';
+import InvitationConfirmPageComponent from './invitation-confirm-page/invitation-confirm-page';
 import CreateJobPage from './create-job-page/create-job-page';
 import QualityControlPage from './quality-control/quality-control-page';
 import AnalyticsReportPage from './analytics-report/analytics-report-page';
@@ -513,7 +514,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         const authParams = authQuery(queryParams);
 
         if (readyForRender) {
-            console.log('CVAT-APP render: readyForRender=true, user=', user);
             if (user && user.isVerified) {
                 return (
                     <GlobalErrorBoundary>
@@ -660,8 +660,5 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         );
     }
 }
-
-export default withRouter(CVATApplication);
-
 
 export default withRouter(CVATApplication);
