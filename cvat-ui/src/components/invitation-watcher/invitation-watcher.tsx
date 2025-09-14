@@ -40,7 +40,7 @@ function InvitationWatcher(): JSX.Element | null {
             const newInvitation = localStorage.getItem('newInvitation');
             if (newInvitation) {
                 localStorage.removeItem('newInvitation');
-                history.push('/invitations');
+                history.push('/tasks');
             }
         }
     }, [user, initialized, history]);
