@@ -22,6 +22,7 @@ import { makeBulkOperationAsync } from 'actions/bulk-actions';
 import UserSelector from 'components/task-page/user-selector';
 import { JobStageSelector, JobStateSelector } from 'components/job-item/job-selectors';
 import { makeKey } from 'reducers/consensus-reducer';
+import DropdownMenuItemWrapper from 'components/common/dropdown-menu-item-wrapper';
 import JobActionsItems from './actions-menu-items';
 
 interface Props {
@@ -182,7 +183,11 @@ function JobActionsComponent(
         };
         menuItems = [{
             key: `${editField}-selector`,
-            label: fieldSelectors[editField],
+            label: (
+                <DropdownMenuItemWrapper>
+                    {fieldSelectors[editField]}
+                </DropdownMenuItemWrapper>
+            ),
         }];
     } else {
         menuItems = JobActionsItems({

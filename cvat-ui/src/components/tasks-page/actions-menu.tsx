@@ -30,6 +30,7 @@ import UserSelector from 'components/task-page/user-selector';
 import OrganizationSelector from 'components/selectors/organization-selector';
 import { confirmTransferModal } from 'utils/modals';
 import { makeBulkOperationAsync } from 'actions/bulk-actions';
+import DropdownMenuItemWrapper from 'components/common/dropdown-menu-item-wrapper';
 import TaskActionsItems from './actions-menu-items';
 
 interface Props {
@@ -258,7 +259,11 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
         };
         menuItems = [{
             key: `${editField}-selector`,
-            label: fieldSelectors[editField],
+            label: (
+                <DropdownMenuItemWrapper>
+                    {fieldSelectors[editField]}
+                </DropdownMenuItemWrapper>
+            ),
         }];
     } else {
         menuItems = TaskActionsItems({
