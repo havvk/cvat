@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SelectValue, RefSelectProps } from 'antd/lib/select';
 import Autocomplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
@@ -76,7 +76,7 @@ const initialUsersStorage: {
     },
 };
 
-const UserSelector = forwardRef((props: Readonly<Props>, ref: React.Ref<HTMLDivElement>): JSX.Element => {
+export default function UserSelector(props: Readonly<Props>): JSX.Element {
     const {
         value, className, username, onSelect,
     } = props;
@@ -156,32 +156,28 @@ const UserSelector = forwardRef((props: Readonly<Props>, ref: React.Ref<HTMLDivE
 
     const combinedClassName = className ? `${className} cvat-user-search-field` : 'cvat-user-search-field';
     return (
-        <div ref={ref}>
-            <Autocomplete
-                ref={autocompleteRef}
-                value={searchPhrase}
-                placeholder={t('Select a user')}
-                onSearch={setSearchPhrase}
-                onSelect={handleSelect}
-                onBlur={onBlur}
-                onKeyDown={handleDropdownKeyDown}
-                className={combinedClassName}
-                popupClassName='cvat-user-search-dropdown'
-                options={[
-                    ...(!searchPhrase || 'reset assignee'.includes(searchPhrase.toLowerCase()) ? [{
-                        value: 'RESET_ASSIGNEE',
-                        label: t('Reset assignee'),
-                    }] : []),
-                    ...users.map((user) => ({
-                        value: user.id.toString(),
-                        label: user.username,
-                    })),
-                ]}
-            >
-                <Input onPressEnter={() => autocompleteRef.current?.blur()} />
-            </Autocomplete>
-        </div>
+        <Autocomplete
+            ref={autocompleteRef}
+            value={searchPhrase}
+            placeholder={t('Select a user')}
+            onSearch={setSearchPhrase}
+            onSelect={handleSelect}
+            onBlur={onBlur}
+            onKeyDown={handleDropdownKeyDown}
+            className={combinedClassName}
+            popupClassName='cvat-user-search-dropdown'
+            options={[
+                ...(!searchPhrase || 'reset assignee'.includes(searchPhrase.toLowerCase()) ? [{
+                    value: 'RESET_ASSIGNEE',
+                    label: t('Reset assignee'),
+                }] : []),
+                ...users.map((user) => ({
+                    value: user.id.toString(),
+                    label: user.username,
+                })),
+            ]}
+        >
+            <Input onPressEnter={() => autocompleteRef.current?.blur()} />
+        </Autocomplete>
     );
-});
-
-export default UserSelector;
+}
