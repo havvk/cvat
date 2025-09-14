@@ -79,6 +79,7 @@ import CVATMarkdown from './common/cvat-markdown';
 import EmailConfirmationPage from './email-confirmation-pages/email-confirmed';
 import EmailVerificationSentPage from './email-confirmation-pages/email-verification-sent';
 import IncorrectEmailConfirmationPage from './email-confirmation-pages/incorrect-email-confirmation';
+import InvitationConfirmPageComponent from './invitation-confirm-page/invitation-confirm-page';
 import CreateJobPage from './create-job-page/create-job-page';
 import QualityControlPage from './quality-control/quality-control-page';
 import AnalyticsReportPage from './analytics-report/analytics-report-page';
@@ -610,7 +611,17 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                             <Route exact path='/auth/incorrect-email-confirmation' component={IncorrectEmailConfirmationPage} />
                             <Route exact path='/auth/invitation/confirm' component={InvitationConfirmPageComponent} />
 
-                            
+                            <Route
+                                path='/organizations/:slug/invitation'
+                                render={({ location }) => (
+                                    <Redirect
+                                        to={{
+                                            pathname: '/auth/invitation/confirm',
+                                            search: location.search, // Pass the query params along
+                                        }}
+                                    />
+                                )}
+                            />
                             <Route exact path='/auth/login' component={LoginPageContainer} />
                             {isPasswordResetEnabled && (
                                 <Route exact path='/auth/password/reset' component={ResetPasswordPageComponent} />
