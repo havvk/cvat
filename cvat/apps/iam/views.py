@@ -24,15 +24,22 @@ from drf_spectacular.utils import (
     inline_serializer,
 )
 from furl import furl
-from rest_framework import serializers, views
+from rest_framework import serializers, status, views
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from cvat.apps.engine.log import ServerLogManager
+from cvat.apps.organizations.models import Invitation
 
 from .authentication import Signer
+from .serializers import InvitationConfirmSerializer
 from .utils import get_opa_bundle
+from rest_framework import status
+from cvat.apps.organizations.models import Invitation
+from .serializers import InvitationConfirmSerializer
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 slogger = ServerLogManager(__name__)
 
@@ -198,3 +205,72 @@ class ConfirmEmailViewEx(ConfirmEmailView):
             return self.post(*args, **kwargs)
         except Http404:
             return HttpResponseRedirect(settings.INCORRECT_EMAIL_CONFIRMATION_URL)
+
+
+@extend_schema(tags=["auth"])
+class InvitationConfirmView(views.APIView):
+    permission_classes = [AllowAny]
+
+    @extend_schema(
+        summary="Check an invitation key",
+        description="This method checks if an invitation key is valid and not expired.",
+        responses={
+            "200": OpenApiResponse(
+                description="The key is valid",
+                response=inline_serializer(
+                    name="InvitationStatus",
+                    fields={"email": serializers.EmailField()},
+                ),
+            ),
+            "404": OpenApiResponse(description="The key is invalid, expired or already accepted"),
+        },
+    )
+    def get(self, request, key):
+        try:
+            invitation = Invitation.objects.get(key=key)
+            if invitation.expired or invitation.accepted:
+                raise Invitation.DoesNotExist
+        except Invitation.DoesNotExist:
+            return Response("Invalid invitation key", status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"email": invitation.membership.user.email})
+
+    @extend_schema(
+        summary="Confirm an invitation and set user credentials",
+        description="This method sets the username and password for an invited user, activates the user, and accepts the invitation.",
+        request=InvitationConfirmSerializer,
+        responses={
+            "200": OpenApiResponse(description="The invitation has been accepted"),
+            "400": OpenApiResponse(description="Invalid data provided"),
+            "404": OpenApiResponse(description="The key is invalid, expired or already accepted"),
+        },
+    )
+    def post(self, request, key):
+        try:
+            invitation = Invitation.objects.get(key=key)
+            if invitation.expired or invitation.accepted:
+                raise Invitation.DoesNotExist
+        except Invitation.DoesNotExist:
+            return Response("Invalid invitation key", status=status.HTTP_404_NOT_FOUND)
+
+        serializer = InvitationConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = invitation.membership.user
+        if user.has_usable_password():
+            return Response("This user already has a usable password.", status=status.HTTP_400_BAD_REQUEST)
+
+        new_password = serializer.validated_data["new_password1"]
+        try:
+            validate_password(new_password, user)
+        except DjangoValidationError as e:
+            return Response({"password": list(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.username = serializer.validated_data["username"]
+        user.set_password(new_password)
+        user.is_active = True
+        user.save()
+
+        invitation.accept()
+
+        return Response("Invitation accepted successfully.", status=status.HTTP_200_OK)

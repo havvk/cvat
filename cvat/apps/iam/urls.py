@@ -16,6 +16,7 @@ from django.urls.conf import include
 
 from cvat.apps.iam.views import (
     ConfirmEmailViewEx,
+    InvitationConfirmView,
     LoginViewEx,
     RegisterViewEx,
     RulesView,
@@ -30,6 +31,7 @@ urlpatterns = [
     path("logout", LogoutView.as_view(), name="rest_logout"),
     path("signing", SigningView.as_view(), name="signing"),
     path("rules", RulesView.as_view(), name="rules"),
+    path("invitation/confirm/<str:key>", InvitationConfirmView.as_view(), name="invitation_confirm"),
 ]
 
 if settings.IAM_TYPE == "BASIC":

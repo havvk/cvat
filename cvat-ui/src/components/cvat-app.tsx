@@ -608,6 +608,19 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                             )}
                             <Route exact path='/auth/email-verification-sent' component={EmailVerificationSentPage} />
                             <Route exact path='/auth/incorrect-email-confirmation' component={IncorrectEmailConfirmationPage} />
+                            <Route exact path='/auth/invitation/confirm' component={InvitationConfirmPageComponent} />
+
+                            <Route
+                                path='/organizations/:slug/invitation'
+                                render={({ location }) => (
+                                    <Redirect
+                                        to={{
+                                            pathname: '/auth/invitation/confirm',
+                                            search: location.search, // Pass the query params along
+                                        }}
+                                    />
+                                )}
+                            />
                             <Route exact path='/auth/login' component={LoginPageContainer} />
                             {isPasswordResetEnabled && (
                                 <Route exact path='/auth/password/reset' component={ResetPasswordPageComponent} />

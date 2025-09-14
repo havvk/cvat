@@ -158,3 +158,38 @@ class LoginSerializerEx(LoginSerializer):
                 raise ValidationError("Unable to login with provided credentials")
 
         return self._validate_username_email(username, email, password)
+
+
+class InvitationConfirmSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=User._meta.get_field("username").max_length)
+    new_password1 = serializers.CharField(max_length=128)
+    new_password2 = serializers.CharField(max_length=128)
+
+    def validate_username(self, value):
+        # check that username is not used by another user
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("A user with that username already exists.")
+        return value
+
+    def validate(self, data):
+        if data["new_password1"] != data["new_password2"]:
+            raise serializers.ValidationError("The two password fields didn't match.")
+        return data
+
+
+class InvitationConfirmSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=User._meta.get_field("username").max_length)
+    new_password1 = serializers.CharField(max_length=128)
+    new_password2 = serializers.CharField(max_length=128)
+
+    def validate_username(self, value):
+        from django.contrib.auth.models import User
+        # check that username is not used by another user
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("A user with that username already exists.")
+        return value
+
+    def validate(self, data):
+        if data["new_password1"] != data["new_password2"]:
+            raise serializers.ValidationError("The two password fields didn't match.")
+        return data
