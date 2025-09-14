@@ -88,6 +88,10 @@ class RegisterSerializerEx(RegisterSerializer):
                 adapter.clean_password(self.cleaned_data["password1"], user=user)
             except DjangoValidationError as exc:
                 raise serializers.ValidationError(detail=serializers.as_serializer_error(exc))
+
+        if allauth_settings.EMAIL_VERIFICATION == allauth_settings.EmailVerificationMethod.MANDATORY:
+            user.is_active = False
+
         user.save()
         self.custom_signup(request, user)
 
