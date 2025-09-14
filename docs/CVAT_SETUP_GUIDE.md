@@ -37,59 +37,87 @@
     cd cvat
     ```
 
-### 第 2 步: 配置环境变量 (`.env` 文件)
+### 第 2 步: 理解并配置环境变量 (混合模式推荐)
 
-CVAT 的核心配置在 `.env` 文件中. 请根据您的需求创建此文件.
+CVAT 的配置是通过环境变量来完成的。在我们的实践中发现，不同类型的变量，其最佳配置方式有所不同。因此，我们推荐采用 `.env` 文件和 `docker-compose.override.yml` 文件并用的“混合模式”。
+
+#### 为何采用混合模式？
+
+- **`.env` 文件**: Docker Compose 会首先读取此文件，主要用于**变量替换**。也就是说，`docker-compose.yml` 文件中的 `${VARIABLE}` 占位符，会由此文件中的值替换。`CVAT_HOST` 就是一个典型的例子，它被用于 `traefik` 服务的路由规则中。
+- **`docker-compose.override.yml`**: 在此文件中通过 `environment` 块为服务设置环境变量，是**最可靠、优先级最高**的方式。它可以避免 `.env` 文件可能存在的编码、格式解析问题，确保配置被容器精准加载。对于需要传递给 CVAT 应用本身的变量（如数据库、邮件、功能开关等），推荐使用此方法。
+
+#### A. `.env` 文件配置
+
+在项目根目录下创建 `.env` 文件，用于存放需要被 Docker Compose 文件自身引用的变量。
 
 ```bash
-# 切换到 cvat 目录
-cd /app/cvat
+# .env
 
-# 创建 .env 文件
-cat <<EOF > .env
 # CVAT_HOST 必须是您访问 CVAT 时使用的主要主机名 (域名或IP).
-# 注意: 这里只能填写一个值!
+# 它将被用于替换 docker-compose.yml 中的 ${CVAT_HOST} 占位符。
 CVAT_HOST=<your_primary_hostname>
-
-# ALLOWED_HOSTS 是一个用逗号分隔的列表, 包含所有允许访问此服务的域名/IP.
-# 为了同时支持内网、外网和内部服务间通信, 推荐使用以下格式.
-ALLOWED_HOSTS=<your_external_domain>,<your_lan_ip>,localhost,cvat-server
-
-# 如果需要, 请配置您的代理服务器
-# HTTP_PROXY=http://127.0.0.1:8118
-# HTTPS_PROXY=http://127.0.0.1:8118
-EOF
 ```
 
-**配置示例:**
+#### B. `docker-compose.override.yml` 文件配置
 
-*   **场景**: 主要通过外网域名 `home.havvk.cc` 访问, 服务器的局域网 IP 是 `192.168.8.6`.
-*   **配置**: 
-    ```
-    CVAT_HOST=home.havvk.cc
-    ALLOWED_HOSTS=home.havvk.cc,192.168.8.6,localhost,cvat-server
-    ```
+在项目根目录下创建或编辑 `docker-compose.override.yml` 文件，用于存放所有需要传递给容器应用的环境变量。
 
-#### 可选配置: 设置默认界面语言
+下面的模板使用了 YAML 的“锚点”(&)功能，可以高效地为所有相关服务应用同一套配置。
 
-CVAT 支持多语言界面。您可以为整个实例设置一个全局的默认语言。
+```yaml
+# docker-compose.override.yml
 
-在 `.env` 文件中加入以下配置：
+# 定义一个名为 'cvat-environment' 的通用环境配置锚点
+x-cvat-environment: &cvat-environment
+  environment:
+    # --- 基础配置 (必须) ---
+    # ALLOWED_HOSTS 会被 CVAT 应用直接读取
+    ALLOWED_HOSTS: "<your_external_domain>,<your_lan_ip>,localhost,cvat-server"
+
+    # --- 语言配置 (可选) ---
+    LANGUAGE_CODE: "zh-Hans"
+
+    # --- 邮件服务配置 (可选, 邀请用户功能需要) ---
+    EMAIL_BACKEND: "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST: "your.smtp.server.com"
+    EMAIL_PORT: 587
+    EMAIL_HOST_USER: "your-email@example.com"
+    EMAIL_HOST_PASSWORD: "your-generated-email-auth-code" # 注意：这里是授权码，不是登录密码！
+    EMAIL_USE_TLS: "True"
+    DEFAULT_FROM_EMAIL: "your-email@example.com"
+
+services:
+  cvat_server:
+    <<: *cvat-environment # 应用通用配置
+
+  cvat_worker_import:
+    <<: *cvat-environment # 应用通用配置
+
+  cvat_worker_export:
+    <<: *cvat-environment # 应用通用配置
+
+  cvat_worker_annotation:
+    <<: *cvat-environment # 应用通用配置
+
+  # 为所有其他 worker 也应用此配置...
+  cvat_worker_utils:
+    <<: *cvat-environment
+  cvat_worker_quality_reports:
+    <<: *cvat-environment
+  cvat_worker_chunks:
+    <<: *cvat-environment
+  cvat_worker_consensus:
+    <<: *cvat-environment
+  cvat_worker_webhooks:
+      <<: *cvat-environment
 ```
-# 设置默认语言为简体中文
-LANGUAGE_CODE=zh-Hans
-```
-*   `zh-Hans` 代表简体中文。
-*   `zh-Hant` 代表繁体中文。
-*   默认值为 `en-us` (美式英语)。
-
-设置后，新用户或未指定语言偏好的用户，将默认看到中文界面。
+**请务必将上面模板中的占位符替换为你的真实信息。**
 
 ### 第 3 步: 启动 CVAT 服务
 
 ```bash
-# 注意: 如果您使用了 docker-compose.override.yml, 请确保在命令中包含它
-docker compose -f docker-compose.yml -f components/serverless/docker-compose.serverless.yml up -d --build
+# 你的命令中应该包含所有需要用到的 compose 文件
+docker compose -f docker-compose.yml -f components/serverless/docker-compose.serverless.yml -f docker-compose.override.yml up -d --build
 ```
 
 ### 第 4 步: 创建管理员账户
@@ -246,6 +274,167 @@ docker compose ps
 
 2.  **挂载并重启**:
     同样，确保文件被挂载，然后重启服务即可。
+
+---
+
+## 高级配置：处理共享目录权限
+
+### 1. 问题背景
+
+当以一个非 `root` 的普通用户身份在 Linux 服务器上部署 CVAT，并希望使用一个主机目录作为共享目录（例如，用于存放和准备数据集）时，会遇到一个典型的权限冲突问题。
+
+具体表现为：
+- 在 `docker-compose.override.yml` 中通过“绑定挂载”(Bind Mount) 将一个属于当前用户的主机目录（如 `/home/qingwei/dataset`）挂载到容器中。
+- `docker compose up` 启动容器后，该主机目录的所有者被自动修改为一个陌生的用户ID（如 `1000`）。
+- 导致当前主机用户失去了对该目录的写入权限，无法自由地准备数据集。
+
+### 2. 问题的根源：用户ID (UID) 不匹配
+
+这个问题的根源在于**主机用户**和**容器内用户**的 ID 不一致。
+
+- **主机用户**：你在服务器上登录的普通用户，例如 `qingwei`，拥有一个自己的用户ID（UID），比如 `1004`。
+- **容器用户**：CVAT 的 `cvat/server` 镜像，在构建时，内部创建了一个默认的运行用户（名为 `django`），并硬编码了其用户ID为 `1000`。
+
+当 Docker 将主机目录挂载进容器时，它检测到内外用户ID不匹配。为了保证容器内的程序（以ID `1000` 运行）能正常读写，Docker “自作主张”地将主机目录的所有者强行修改成了 `1000`。这就导致了主机用户 `1004` 失去了对自己目录的控制权。
+
+### 3. 最终解决方案：从源头统一用户ID
+
+最佳解决方案不是在运行时亡羊补牢，而是在构建镜像的源头，就让容器内的用户ID与你的主机用户ID保持一致。
+
+#### 第一步：获取你的主机用户ID和组ID
+
+在你的生产服务器上执行以下命令，获取你当前用户的 UID 和 GID。
+
+```bash
+# 获取用户ID (UID)
+id -u
+
+# 获取组ID (GID)
+id -g
+```
+请记下这两个数字，在下一步中我们假设它们都是 `1004`。
+
+#### 第二步：修改主 `Dockerfile`
+
+打开项目根目录下的主 `Dockerfile` 文件，找到并修改以下**两处**地方，将所有硬编码的 `1000` 替换成你自己的ID。
+
+1.  **修改创建用户时的 UID**：
+    ```dockerfile
+    # 找到这一行
+    RUN adduser --uid=1000 --shell /bin/bash --disabled-password --gecos "" ${USER}
+
+    # 将其修改为 (假设你的UID是1004)
+    RUN adduser --uid=1004 --shell /bin/bash --disabled-password --gecos "" ${USER}
+    ```
+
+2.  **修改最终切换用户时的 UID 和 GID**：
+    ```dockerfile
+    # 找到这一行
+    USER 1000:1000
+
+    # 将其修改为 (假设你的UID和GID都是1004)
+    USER 1004:1004
+    ```
+
+#### 第三步：(重要) 清理旧的数据卷
+
+由于你之前可能已经启动过服务，Docker 会保留一些带有旧权限（所有者为 1000）的数据卷。这会导致新的、以用户 `1004` 运行的容器在启动时，因无法读取旧文件（如 `secret_key.py`, 日志文件等）而产生 `Permission denied` 错误。
+
+因此，我们需要彻底删除这些旧的数据卷。
+
+**警告**：此操作会删除 CVAT 相关的所有数据，包括数据库、密钥、日志等。请确保是在做全新部署或可以接受数据重置。
+
+```bash
+# 使用你完整的 docker compose 命令，在末尾加上 down -v
+# -v 参数会删除所有关联的命名数据卷
+docker compose -f ... down -v
+```
+
+#### 第四步：重新构建并启动
+
+现在，万事俱备。我们可以用修改后的 `Dockerfile` 重新构建一个为你“量身定制”的镜像，并启动服务。
+
+1.  **强制无缓存构建 `cvat_server` 镜像**：
+    `--no-cache` 标志确保 Docker 不会使用旧的缓存层，而是完全应用我们对 `Dockerfile` 的修改。
+    ```bash
+    docker compose -f ... build --no-cache cvat_server
+    ```
+
+2.  **启动所有服务**：
+    ```bash
+    docker compose -f ... up -d
+    ```
+
+完成这些步骤后，你的 CVAT 实例将会以一个与你主机用户完全匹配的用户ID来运行。你的共享目录所有权将保持不变，容器也能正常启动和读写，所有权限问题都将得到根本解决。
+
+### 附录：失败的尝试与解析
+
+在调试过程中，我们曾尝试过在 `docker-compose.override.yml` 中使用 `user: "1004"` 指令来强制容器使用主机用户ID。
+
+这个方法虽然能解决共享目录的所有权问题，但它会导致一个新的、更棘手的问题：容器内的启动脚本 `backend_entrypoint.sh` 因为所有者是 `1000` 而用户 `1004` 没有执行权限，导致容器无限重启。
+
+这证明，仅仅在运行时指定用户是不够的，必须在构建镜像时就统一用户ID，才是最干净、最可靠的方案。
+
+---
+
+## 高级配置：用户注册管理
+
+在生产环境中，为了安全起见，必须关闭公共注册功能，并采用管理员控制的方式来添加新用户。
+
+### 1. 关闭公共注册
+
+在我们的调试中发现，此版本的 CVAT 无法通过环境变量来关闭注册。最直接、最可靠的禁用方法是直接移除注册功能的 URL 入口。
+
+#### 操作步骤：
+
+##### 原理说明
+> 这种方法之所以能让前端的“创建账户”链接消失，是因为前端 UI 在加载时，会向后端 API 查询服务器信息，其中就包括是否允许注册的标志。后端在响应这个查询时，会检查名为 `rest_register` 的 URL 是否存在。当我们注释掉 `urls.py` 中的代码后，后端找不到该 URL，便认为注册功能已禁用，从而告知前端不要显示注册链接。
+
+1.  **修改 `cvat/apps/iam/urls.py` 文件**：
+    找到以下这行代码：
+    ```python
+    path("register", RegisterViewEx.as_view(), name=BASIC_REGISTER_PATH_NAME),
+    ```
+    将其注释掉：
+    ```python
+    # path("register", RegisterViewEx.as_view(), name=BASIC_REGISTER_PATH_NAME),
+    ```
+
+2.  **重新构建并重启服务**：
+    因为这是一个后端代码的修改，你需要重新构建 `cvat_server` 镜像并重启服务。
+    ```bash
+    # 重新构建
+    docker compose -f ... build --no-cache cvat_server
+
+    # 重启服务
+    docker compose -f ... up -d
+    ```
+    完成后，访问注册页面将会返回 404 Not Found。
+
+### 2. 安全地添加新用户
+
+关闭公共注册后，你有以下两种推荐的方式来添加新用户：
+
+#### 方式一：管理员手动创建 (最直接)
+
+作为管理员，你可以登录到 CVAT 的后台管理界面来手动为新用户创建账号，然后将用户名和初始密码告诉他们。
+
+1.  访问后台地址：`http://<你的服务器IP>:<端口>/admin`
+2.  使用你创建的超级用户登录。
+3.  在后台的 "Users" 部分，点击 "Add user"，然后填写信息即可。
+
+#### 方式二：通过“组织(Organization)”功能发送邀请 (推荐)
+
+这是 CVAT 设计的团队协作模式，也是最接近“邀请链接”的模式。
+
+1.  **管理员创建一个“组织”**：在 CVAT 主界面中，你可以创建一个组织。
+2.  **管理员邀请成员**：进入组织管理页面，点击“邀请成员”(Invite Members)。
+3.  **发送邀请邮件**：在邀请框中输入新用户的邮箱地址。CVAT 会向这个邮箱发送一封包含专属邀请链接的邮件。
+4.  **用户通过链接注册/加入**：用户点击邮件中的链接即可完成注册或加入组织。
+
+#### **启用邀请功能的前提：配置邮件服务**
+
+要让“组织邀请”能够正常发送邮件，你**必须**通过环境变量提供一个有效的 SMTP 邮件服务器配置。具体配置方法请参考本指南的“第 2 步: 理解并配置环境变量 (混合模式推荐)”章节。
 
 ## 后续步骤
 

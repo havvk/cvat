@@ -761,10 +761,21 @@ ASSET_MAX_COUNT_PER_GUIDE = 30
 
 SMOKESCREEN_ENABLED = True
 
+
 # By default, email backend is django.core.mail.backends.smtp.EmailBackend
-# But it won't work without additional configuration, so we set it to None
-# to check configuration and throw ImproperlyConfigured if thats a case
-EMAIL_BACKEND = None
+# But it won't work without additional configuration.
+# The code below reads EMAIL_* environment variables and enables SMTP if they are specified.
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+if EMAIL_BACKEND == 'django.core.mail.backends.smtp.EmailBackend':
+    EMAIL_HOST = os.getenv('EMAIL_HOST')
+    if EMAIL_HOST is None:
+        raise ImproperlyConfigured('EMAIL_HOST must be set to use the SMTP email backend.')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = to_bool(os.getenv('EMAIL_USE_TLS', True))
+    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+
 
 ONE_RUNNING_JOB_IN_QUEUE_PER_USER = to_bool(os.getenv("ONE_RUNNING_JOB_IN_QUEUE_PER_USER", False))
 
