@@ -196,7 +196,7 @@ const componentShortcuts = {
     HIDE_MASK_SINGLE_SHAPE: {
         name: 'Hide mask',
         description: 'Hide currently edited mask',
-        sequences: ['h'],
+        sequences: ['ctrl+h'],
         scope: ShortcutScope.SINGLE_SHAPE_ANNOTATION_WORKSPACE,
     },
 };
