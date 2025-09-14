@@ -130,17 +130,14 @@ export function resendInvitationAsync(
     };
 }
 
-export function deleteInvitationAsync(invitation: Invitation): ThunkAction {
+export function deleteInvitationAsync(invitationKey: string): ThunkAction {
     return async function (dispatch) {
-        console.log('Attempting to delete invitation:', invitation.key);
         dispatch(invitationActions.deleteInvitation());
 
         try {
-            await invitation.delete();
-            console.log('Invitation deleted successfully from API.');
+            await cvat.organizations.deleteInvitation(invitationKey);
             dispatch(invitationActions.deleteInvitationSuccess());
         } catch (error) {
-            console.error('Failed to delete invitation via API. Error:', error);
             dispatch(invitationActions.deleteInvitationFailed(error));
         }
     };

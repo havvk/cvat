@@ -113,7 +113,7 @@ function MemberActionsMenu(props: Readonly<MemberActionsMenuProps>): JSX.Element
         dispatch(makeBulkOperationAsync(
             invitationsToDelete,
             async (m) => {
-                await dispatch(deleteInvitationAsync(m.invitation));
+                await dispatch(deleteInvitationAsync(m.invitation.key));
             },
             (m, idx, total) => `Deleting invitation for ${m.user.username} (${idx + 1}/${total})`,
             fetchMembers,
