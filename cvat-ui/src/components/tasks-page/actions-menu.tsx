@@ -265,6 +265,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                 </DropdownMenuItemWrapper>
             ),
         }];
+        console.log('tasks-page menuItems:', menuItems);
     } else {
         menuItems = TaskActionsItems({
             startEditField,
