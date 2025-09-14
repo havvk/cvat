@@ -258,7 +258,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
         };
         menuItems = [{
             key: `${editField}-selector`,
-            label: <div onClick={(e) => e.stopPropagation()}>{fieldSelectors[editField]}</div>,
+            label: fieldSelectors[editField],
         }];
     } else {
         menuItems = TaskActionsItems({

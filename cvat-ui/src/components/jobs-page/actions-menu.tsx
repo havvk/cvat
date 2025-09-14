@@ -182,7 +182,7 @@ function JobActionsComponent(
         };
         menuItems = [{
             key: `${editField}-selector`,
-            label: <div onClick={(e) => e.stopPropagation()}>{fieldSelectors[editField]}</div>,
+            label: fieldSelectors[editField],
         }];
     } else {
         menuItems = JobActionsItems({
