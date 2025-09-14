@@ -513,6 +513,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         const authParams = authQuery(queryParams);
 
         if (readyForRender) {
+            console.log('CVAT-APP render: readyForRender=true, user=', user);
             if (user && user.isVerified) {
                 return (
                     <GlobalErrorBoundary>
@@ -659,5 +660,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         );
     }
 }
+
+export default withRouter(CVATApplication);
+
 
 export default withRouter(CVATApplication);
