@@ -24,7 +24,7 @@ export default function InvitationConfirmPage(): JSX.Element {
 
     useEffect(() => {
         const params = new URLSearchParams(history.location.search);
-        const invitationKey = params.get('key');
+        const invitationKey = params.get('invitation');
         if (!invitationKey) {
             setError('Invitation key not found in URL.');
             setLoading(false);

@@ -84,6 +84,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
     const onInvite = useCallback((values: Store) => {
         dispatch(inviteOrganizationMembersAsync(organizationInstance, values.users, () => {
             fetchMembers();
+            notification.success({ message: t('Invitations have been sent') });
         }));
         setVisibleInviteModal(false);
     }, [organizationInstance, fetchMembers]);
