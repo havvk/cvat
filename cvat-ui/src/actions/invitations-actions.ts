@@ -21,6 +21,9 @@ export enum InvitationsActionTypes {
     RESEND_INVITATION = 'RESEND_INVITATION',
     RESEND_INVITATION_SUCCESS = 'RESEND_INVITATION_SUCCESS',
     RESEND_INVITATION_FAILED = 'RESEND_INVITATION_FAILED',
+    DELETE_INVITATION = 'DELETE_INVITATION',
+    DELETE_INVITATION_SUCCESS = 'DELETE_INVITATION_SUCCESS',
+    DELETE_INVITATION_FAILED = 'DELETE_INVITATION_FAILED',
 }
 
 const invitationActions = {
@@ -46,6 +49,9 @@ const invitationActions = {
     resendInvitationFailed: (error: any) => createAction(
         InvitationsActionTypes.RESEND_INVITATION_FAILED, { error },
     ),
+    deleteInvitation: () => createAction(InvitationsActionTypes.DELETE_INVITATION),
+    deleteInvitationSuccess: () => createAction(InvitationsActionTypes.DELETE_INVITATION_SUCCESS),
+    deleteInvitationFailed: (error: any) => createAction(InvitationsActionTypes.DELETE_INVITATION_FAILED, { error }),
 };
 
 export type InvitationActions = ActionUnion<typeof invitationActions>;
@@ -120,6 +126,19 @@ export function resendInvitationAsync(
             if (onFinish) onFinish();
         } catch (error) {
             dispatch(invitationActions.resendInvitationFailed(error));
+        }
+    };
+}
+
+export function deleteInvitationAsync(invitation: Invitation): ThunkAction {
+    return async function (dispatch) {
+        dispatch(invitationActions.deleteInvitation());
+
+        try {
+            await invitation.delete();
+            dispatch(invitationActions.deleteInvitationSuccess());
+        } catch (error) {
+            dispatch(invitationActions.deleteInvitationFailed(error));
         }
     };
 }

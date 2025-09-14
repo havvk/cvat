@@ -108,6 +108,18 @@ function MemberActionsMenu(props: Readonly<MemberActionsMenuProps>): JSX.Element
         ));
     };
 
+    const handleDeleteInvitation = (): void => {
+        const invitationsToDelete = actionsApplicable[MenuKeys.DELETE_INVITATION];
+        dispatch(makeBulkOperationAsync(
+            invitationsToDelete,
+            async (m) => {
+                await dispatch(deleteInvitationAsync(m.invitation));
+            },
+            (m, idx, total) => `Deleting invitation for ${m.user.username} (${idx + 1}/${total})`,
+            fetchMembers,
+        ));
+    };
+
     let menuItems: NonNullable<MenuProps['items']> = [
         {
             key: MenuKeys.EDIT_ROLE,
