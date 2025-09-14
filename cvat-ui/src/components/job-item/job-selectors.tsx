@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Select from 'antd/lib/select';
 import { JobStage, JobState } from 'cvat-core-wrapper';
 import { handleDropdownKeyDown } from 'utils/dropdown-utils';
@@ -12,8 +12,10 @@ interface JobStateSelectorProps {
     onSelect: (newValue: JobState) => void;
 }
 
-export function JobStateSelector({ value, onSelect }: Readonly<JobStateSelectorProps>): JSX.Element {
-    return (
+export const JobStateSelector = forwardRef(({
+    value, onSelect,
+}: Readonly<JobStateSelectorProps>, ref: React.Ref<HTMLDivElement>): JSX.Element => (
+    <div ref={ref}>
         <Select
             className='cvat-job-item-state'
             popupClassName='cvat-job-item-state-dropdown'
@@ -27,16 +29,18 @@ export function JobStateSelector({ value, onSelect }: Readonly<JobStateSelectorP
             <Select.Option value={JobState.REJECTED}>{JobState.REJECTED}</Select.Option>
             <Select.Option value={JobState.COMPLETED}>{JobState.COMPLETED}</Select.Option>
         </Select>
-    );
-}
+    </div>
+));
 
 interface JobStageSelectorProps {
     value: JobStage | null;
     onSelect: (newValue: JobStage) => void;
 }
 
-export function JobStageSelector({ value, onSelect }: Readonly<JobStageSelectorProps>): JSX.Element {
-    return (
+export const JobStageSelector = forwardRef(({
+    value, onSelect,
+}: Readonly<JobStageSelectorProps>, ref: React.Ref<HTMLDivElement>): JSX.Element => (
+    <div ref={ref}>
         <Select
             className='cvat-job-item-stage'
             popupClassName='cvat-job-item-stage-dropdown'
@@ -55,5 +59,5 @@ export function JobStageSelector({ value, onSelect }: Readonly<JobStageSelectorP
                 {JobStage.ACCEPTANCE}
             </Select.Option>
         </Select>
-    );
-}
+    </div>
+));
