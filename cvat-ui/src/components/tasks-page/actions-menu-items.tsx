@@ -5,7 +5,7 @@
 import React from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd/lib/menu';
-import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 import { usePlugins } from 'utils/hooks';
 import { LabelWithCountHOF } from 'components/common/label-with-count';
 import { CVATMenuEditLabel } from '../common/cvat-menu-edit-label';
@@ -27,6 +27,7 @@ interface MenuItemsData {
     onDeleteTask: () => void;
     startEditField: (key: string) => void;
     selectedIds: number[];
+    t: TFunction;
 }
 
 const bulkAllowedKeys = ['edit_assignee', 'backup_task', 'export_task_dataset', 'delete_task', 'edit_organization'];
@@ -49,8 +50,8 @@ export default function TaskActionsItems(menuItemsData: MenuItemsData, taskMenuP
         onRunAutoAnnotation,
         onMoveTaskToProject,
         onDeleteTask,
+        t,
     } = menuItemsData;
-    const { t } = useTranslation();
 
     const isBulkMode = selectedIds.length > 1;
     const isDisabled = (key: string): boolean => isBulkMode && !bulkAllowedKeys.includes(key);
