@@ -5773,6 +5773,7 @@ __metadata:
     redux-devtools-extension: "npm:^2.13.9"
     redux-logger: "npm:^4.0.0"
     redux-thunk: "npm:^2.3.0"
+    reselect: "npm:^5.1.1"
   languageName: unknown
   linkType: soft
 
@@ -15650,6 +15651,13 @@ __metadata:
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
   checksum: 10c0/b2bfdd09db16c082c4326e573a82c0771daaf7b53b9ce8ad60ea46aa6e30aaf475fe9b164800b89f93b748d2c234d8abff945d2551ba47bf5698e04cd7713267
+  languageName: node
+  linkType: hard
+
+"reselect@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "reselect@npm:5.1.1"
+  checksum: 10c0/219c30da122980f61853db3aebd173524a2accd4b3baec770e3d51941426c87648a125ca08d8c57daa6b8b086f2fdd2703cb035dd6231db98cdbe1176a71f489
   languageName: node
   linkType: hard
 
