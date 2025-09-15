@@ -230,6 +230,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
             onBackupProject,
             onDeleteProject,
             selectedIds,
+            t,
         }, props);
     }
 
