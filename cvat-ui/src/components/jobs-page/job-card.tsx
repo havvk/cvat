@@ -87,8 +87,7 @@ function JobCardComponent(props: Readonly<Props>): JSX.Element {
                                 previewClassName='cvat-jobs-page-job-item-card-preview'
                             />
                             <div className='cvat-job-page-list-item-id'>
-                                {t('ID:')}
-                                {` ${job.id}`}
+                                {`${t('ID')}: ${job.id}`}
                             </div>
                             {tag && <div className='cvat-job-page-list-item-type'>{tag}</div>}
                             <div className='cvat-job-page-list-item-dimension'>{job.dimension.toUpperCase()}</div>

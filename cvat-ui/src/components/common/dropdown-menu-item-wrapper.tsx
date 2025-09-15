@@ -6,9 +6,8 @@ interface Props {
 
 const DropdownMenuItemWrapper = forwardRef((props: Props, ref: React.Ref<HTMLDivElement>): JSX.Element => {
     const { children } = props;
-    console.log('DropdownMenuItemWrapper ref:', ref);
     return (
-        <div ref={ref} onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+        <div ref={ref} onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} role='menuitem' tabIndex={-1}>
             {children}
         </div>
     );

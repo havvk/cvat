@@ -54,7 +54,7 @@ export default function JobActionsItems(
 
     menuItems.push([{
         key: 'task',
-        label: withCount(t('Go to the task'), 'task', `/tasks/${taskId}`),
+        label: withCount(t('goToTheTask'), 'task', `/tasks/${taskId}`),
         disabled: isDisabled('task'),
     }, 0]);
 
@@ -102,7 +102,7 @@ export default function JobActionsItems(
     menuItems.push([{
         key: 'edit_assignee',
         onClick: () => startEditField('assignee'),
-        label: <CVATMenuEditLabel>{withCount(t('Assignee'), 'edit_assignee')}</CVATMenuEditLabel>,
+        label: <CVATMenuEditLabel>{withCount(t('assignee'), 'edit_assignee')}</CVATMenuEditLabel>,
         disabled: isDisabled('edit_assignee'),
     }, 60]);
 

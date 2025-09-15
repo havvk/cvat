@@ -189,7 +189,6 @@ function JobActionsComponent(
                 </DropdownMenuItemWrapper>
             ),
         }];
-        console.log('jobs-page menuItems:', menuItems);
     } else {
         menuItems = JobActionsItems({
             startEditField,
