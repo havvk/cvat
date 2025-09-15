@@ -98,7 +98,7 @@ const componentShortcuts = {
     SWITCH_HIDDEN: {
         name: 'Hide/show an object',
         description: 'Change hidden state for an active object',
-        sequences: ['h'],
+        sequences: ['shift+h'],
         scope: ShortcutScope.OBJECTS_SIDEBAR,
     },
     SWITCH_OCCLUDED: {
