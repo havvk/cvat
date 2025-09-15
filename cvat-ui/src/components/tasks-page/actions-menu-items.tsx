@@ -98,7 +98,7 @@ export default function TaskActionsItems(menuItemsData: MenuItemsData, taskMenuP
     menuItems.push([{
         key: 'edit_assignee',
         onClick: () => startEditField('assignee'),
-        label: <CVATMenuEditLabel>{withCount(t('Assignee'), 'edit_assignee')}</CVATMenuEditLabel>,
+        label: <CVATMenuEditLabel>{withCount(t('assignee'), 'edit_assignee')}</CVATMenuEditLabel>,
         disabled: isDisabled('edit_assignee'),
     }, 50]);
 
