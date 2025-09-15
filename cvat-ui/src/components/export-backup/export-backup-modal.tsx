@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -22,6 +22,7 @@ import { makeBulkOperationAsync } from 'actions/bulk-actions';
 import {
     getCore, Job, ProjectOrTaskOrJob, Storage, StorageData, StorageLocation,
 } from 'cvat-core-wrapper';
+import { createSelector } from 'reselect';
 
 import CVATMarkdown from 'components/common/cvat-markdown';
 import TargetStorageField from 'components/storage/target-storage-field';
@@ -46,6 +47,12 @@ const initialValues: FormValues = {
     lightweight: true,
 };
 
+const EMPTY_ARRAY: number[] = [];
+const selectProjectsSelected = (state: CombinedState) => state.projects.selected;
+const selectTasksSelected = (state: CombinedState) => state.tasks.selected;
+const selectProjectsCurrent = (state: CombinedState) => state.projects.current;
+const selectTasksCurrent = (state: CombinedState) => state.tasks.current;
+
 function ExportBackupModal(): JSX.Element {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -61,17 +68,19 @@ function ExportBackupModal(): JSX.Element {
     const [nameTemplate, setNameTemplate] = useState('backup_task_{{id}}');
 
     const instanceT = useSelector((state: CombinedState) => state.export.instanceType);
-    const selectedIds = useSelector((state: CombinedState) => {
+    const selectedProjects = useSelector(selectProjectsSelected);
+    const selectedTasks = useSelector(selectTasksSelected);
+    const selectedIds = useMemo(() => {
         if (instanceT === 'project') {
-            return state.projects.selected;
+            return selectedProjects;
         }
         if (instanceT === 'task') {
-            return state.tasks.selected;
+            return selectedTasks;
         }
-        return [];
-    });
-    const allTasks = useSelector((state: CombinedState) => state.tasks.current);
-    const allProjects = useSelector((state: CombinedState) => state.projects.current);
+        return EMPTY_ARRAY;
+    }, [instanceT, selectedProjects, selectedTasks]);
+    const allTasks = useSelector(selectTasksCurrent);
+    const allProjects = useSelector(selectProjectsCurrent);
 
     const instance = useSelector((state: CombinedState) => {
         if (!instanceT) {

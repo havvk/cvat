@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     connect, shallowEqual, useDispatch, useSelector,
@@ -30,6 +30,7 @@ import {
     Dumper, ProjectOrTaskOrJob, Job, Project,
     Storage, StorageData, StorageLocation, Task,
 } from 'cvat-core-wrapper';
+import { createSelector } from 'reselect';
 
 type FormValues = {
     selectedFormat: string | undefined;
@@ -50,6 +51,20 @@ const initialValues: FormValues = {
     useProjectTargetStorage: true,
 };
 
+const selectProjects = (state: CombinedState) => state.projects;
+const selectTasks = (state: CombinedState) => state.tasks;
+const selectJobs = (state: CombinedState) => state.jobs;
+
+const selectSelectedProjectIds = createSelector([selectProjects], (projects) => projects.selected);
+const selectSelectedTaskIds = createSelector([selectTasks], (tasks) => tasks.selected);
+const selectSelectedJobIds = createSelector([selectJobs], (jobs) => jobs.selected);
+
+const selectAllProjects = createSelector([selectProjects], (projects) => projects.current);
+const selectAllTasks = createSelector([selectTasks], (tasks) => tasks.current);
+const selectAllJobs = createSelector([selectJobs], (jobs) => jobs.current);
+
+const EMPTY_ARRAY: number[] = [];
+
 function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
     const { t } = useTranslation();
     const { dumpers, instance } = props;
@@ -66,35 +81,19 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const {
-        selectedIds,
-        allTasks,
-        allProjects,
-        allJobs,
-    } = useSelector((state: CombinedState) => {
-        const getSelectedIds = (): number[] => {
-            if (instanceType === 'project') {
-                return state.projects.selected;
-            }
+    const selectedProjectIds = useSelector(selectSelectedProjectIds);
+    const selectedTaskIds = useSelector(selectSelectedTaskIds);
+    const selectedJobIds = useSelector(selectSelectedJobIds);
+    const allProjects = useSelector(selectAllProjects);
+    const allTasks = useSelector(selectAllTasks);
+    const allJobs = useSelector(selectAllJobs);
 
-            if (instanceType === 'task') {
-                return state.tasks.selected;
-            }
-
-            if (instanceType === 'job') {
-                return state.jobs.selected;
-            }
-
-            return [];
-        };
-
-        return {
-            selectedIds: getSelectedIds(),
-            allTasks: state.tasks.current,
-            allProjects: state.projects.current,
-            allJobs: state.jobs.current,
-        };
-    }, shallowEqual);
+    const selectedIds = useMemo(() => {
+        if (instanceType === 'project') return selectedProjectIds;
+        if (instanceType === 'task') return selectedTaskIds;
+        if (instanceType === 'job') return selectedJobIds;
+        return EMPTY_ARRAY;
+    }, [instanceType, selectedProjectIds, selectedTaskIds, selectedJobIds]);
 
     const isBulkMode = selectedIds.length > 1;
     const [selectedInstances, setSelectedInstances] = useState<ProjectOrTaskOrJob[]>([]);

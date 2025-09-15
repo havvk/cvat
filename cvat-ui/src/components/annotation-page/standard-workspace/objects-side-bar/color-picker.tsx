@@ -138,4 +138,4 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
     );
 }
 
-export default React.forwardRef(withTranslation()(ColorPicker));
+export default withTranslation()(React.forwardRef(ColorPicker));
