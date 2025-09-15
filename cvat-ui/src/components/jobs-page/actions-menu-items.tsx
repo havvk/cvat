@@ -5,7 +5,7 @@
 import React from 'react';
 import { MenuProps } from 'antd/lib/menu';
 import { LoadingOutlined } from '@ant-design/icons';
-import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { usePlugins } from 'utils/hooks';
 import { CVATMenuEditLabel } from 'components/common/cvat-menu-edit-label';
 import { LabelWithCountHOF } from 'components/common/label-with-count';
@@ -23,6 +23,7 @@ interface MenuItemsData {
     onDeleteJob: (() => void) | null;
     startEditField: (key: string) => void;
     selectedIds: number[];
+    t: TFunction;
 }
 
 export default function JobActionsItems(
@@ -42,8 +43,8 @@ export default function JobActionsItems(
         onMergeConsensusJob,
         onDeleteJob,
         selectedIds = [],
+        t,
     } = menuItemsData;
-    const { t } = useTranslation();
 
     const isBulkMode = selectedIds.length > 1;
     const bulkAllowedKeys = ['edit_assignee', 'edit_state', 'edit_stage', 'export_job', 'delete'];

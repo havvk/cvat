@@ -17,10 +17,17 @@ import { getJobsAsync } from 'actions/jobs-actions';
 import { anySearch } from 'utils/any-search';
 import { useResourceQuery } from 'utils/hooks';
 import { selectionActions } from 'actions/selection-actions';
+import { createSelector } from 'reselect';
 
 import TopBarComponent from './top-bar';
 import JobsContentComponent from './jobs-content';
 import EmptyListComponent from './empty-list';
+
+const selectJobsCurrent = (state: CombinedState) => state.jobs.current;
+const selectAllJobIds = createSelector(
+    [selectJobsCurrent],
+    (currentJobs) => currentJobs.map((j) => j.id),
+);
 
 function JobsPageComponent(): JSX.Element {
     const dispatch = useDispatch();
@@ -29,7 +36,7 @@ function JobsPageComponent(): JSX.Element {
     const query = useSelector((state: CombinedState) => state.jobs.query);
     const fetching = useSelector((state: CombinedState) => state.jobs.fetching);
     const count = useSelector((state: CombinedState) => state.jobs.count);
-    const allJobIds = useSelector((state: CombinedState) => state.jobs.current.map((j) => j.id));
+    const allJobIds = useSelector(selectAllJobIds);
     const selectedCount = useSelector((state: CombinedState) => state.jobs.selected.length);
     const bulkFetching = useSelector((state: CombinedState) => state.bulkActions.fetching);
     const onSelectAll = useCallback(() => {

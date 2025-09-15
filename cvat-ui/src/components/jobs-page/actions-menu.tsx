@@ -203,6 +203,7 @@ function JobActionsComponent(
             onMergeConsensusJob: consensusJobsPresent && jobInstance.parentJobId === null ? onMergeConsensusJob : null,
             onDeleteJob: jobInstance.type === JobType.GROUND_TRUTH ? onDeleteJob : null,
             selectedIds,
+            t,
         }, props);
     }
 
