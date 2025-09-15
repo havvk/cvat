@@ -62,7 +62,7 @@ export default function JobActionsItems(
     if (projectId) {
         menuItems.push([{
             key: 'project',
-            label: withCount(t('Go to the project'), 'project', `/projects/${projectId}`),
+            label: withCount(t('goToTheProject'), 'project', `/projects/${projectId}`),
             disabled: isDisabled('project'),
         }, 10]);
     }
@@ -71,7 +71,7 @@ export default function JobActionsItems(
         menuItems.push([{
             key: 'bug_tracker',
             onClick: onOpenBugTracker,
-            label: withCount(t('Go to the bug tracker'), 'bug_tracker'),
+            label: withCount(t('goToTheBugTracker'), 'bug_tracker'),
             disabled: isDisabled('bug_tracker'),
         }, 20]);
     }
@@ -79,14 +79,14 @@ export default function JobActionsItems(
     menuItems.push([{
         key: 'import_job',
         onClick: onImportAnnotations,
-        label: withCount(t('Import annotations'), 'import_job'),
+        label: withCount(t('importAnnotations'), 'import_job'),
         disabled: isDisabled('import_job'),
     }, 30]);
 
     menuItems.push([{
         key: 'export_job',
         onClick: onExportAnnotations,
-        label: withCount(t('Export annotations'), 'export_job'),
+        label: withCount(t('exportAnnotations'), 'export_job'),
         disabled: isDisabled('export_job'),
     }, 40]);
 
@@ -94,7 +94,7 @@ export default function JobActionsItems(
         menuItems.push([{
             key: 'merge_specific_consensus_jobs',
             onClick: onMergeConsensusJob,
-            label: withCount(t('Merge consensus job'), 'merge_specific_consensus_jobs'),
+            label: withCount(t('mergeConsensusJob'), 'merge_specific_consensus_jobs'),
             disabled: isMergingConsensusEnabled || isDisabled('merge_specific_consensus_jobs'),
             itemIcon: isMergingConsensusEnabled ? <LoadingOutlined /> : undefined,
         }, 50]);
@@ -123,7 +123,7 @@ export default function JobActionsItems(
 
     menuItems.push([{
         key: 'view-analytics',
-        label: withCount(t('View analytics'), 'view-analytics', `/tasks/${taskId}/jobs/${jobId}/analytics`),
+        label: withCount(t('viewAnalytics'), 'view-analytics', `/tasks/${taskId}/jobs/${jobId}/analytics`),
         disabled: isDisabled('view-analytics'),
     }, 90]);
 
