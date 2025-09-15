@@ -1,5 +1,9 @@
 services:
   cvat_ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+      target: cvat-ui
     command: yarn workspace cvat-ui start
     ports:
       - "3000:3000"
