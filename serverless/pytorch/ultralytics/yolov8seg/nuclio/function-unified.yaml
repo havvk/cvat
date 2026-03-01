@@ -1,0 +1,55 @@
+metadata:
+  annotations:
+    framework: pytorch
+    name: YOLOv8-Seg Unified Grading
+    spec: '[{"name": "no_scratch", "attributes": []}, {"name": "minor_scratch", "attributes":
+      []}, {"name": "moderate_scratch", "attributes": []}, {"name": "severe_scratch",
+      "attributes": []}, {"name": "inclusion", "attributes": []}, {"name": "pit",
+      "attributes": []}]'
+    type: detector
+  name: yolov8-seg-unified-grading
+  namespace: cvat
+spec:
+  build:
+    baseImage: sam3-tracker-base:latest
+    directives:
+      preCopy:
+      - kind: USER
+        value: root
+      - kind: ENV
+        value: HTTP_PROXY="http://172.17.0.1:8118" HTTPS_PROXY="http://172.17.0.1:8118"
+          http_proxy="http://172.17.0.1:8118" https_proxy="http://172.17.0.1:8118"
+      - kind: RUN
+        value: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --no-cache-dir
+          ultralytics numpy==1.24.4 scikit-image==0.24.0 opencv-python-headless==4.8.0.76
+      - kind: ENV
+        value: HTTP_PROXY="" HTTPS_PROXY="" http_proxy="" https_proxy=""
+      - kind: WORKDIR
+        value: /opt/nuclio
+    image: cvat.pth.ultralytics.yolov8seg.unified.gpu
+  description: Detects grains and other combined features using a specialized YOLOv8
+    segmentation model
+  env:
+  - name: MODEL_WEIGHT_PATH
+    value: /app/model/best.pt
+  eventTimeout: 60s
+  handler: main:handler
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+  runtime: python:3.10
+  triggers:
+    myHttpTrigger:
+      attributes:
+        maxRequestBodySize: 33554432
+      kind: http
+      maxWorkers: 1
+      workerAvailabilityTimeoutMilliseconds: 10000
+  volumes:
+  - volume:
+      hostPath:
+        path: /app/models/Unified-Grading-Defects-1536-Run394/weights
+      name: unified-model-weights
+    volumeMount:
+      mountPath: /app/model
+      name: unified-model-weights

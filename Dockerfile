@@ -3,7 +3,7 @@ ARG BASE_IMAGE=ubuntu:22.04
 
 FROM ${BASE_IMAGE} AS build-image-base
 
-RUN apt-get update && \
+RUN sed -i "s@http://ports.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list && apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
         curl \
         g++ \
@@ -112,7 +112,7 @@ ARG CVAT_CONFIGURATION="production"
 ENV DJANGO_SETTINGS_MODULE="cvat.settings.${CVAT_CONFIGURATION}"
 
 # Install necessary apt packages
-RUN apt-get update && \
+RUN sed -i "s@http://ports.ubuntu.com@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list && apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
         bzip2 \
         ca-certificates \

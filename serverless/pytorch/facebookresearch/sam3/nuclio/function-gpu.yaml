@@ -1,0 +1,46 @@
+metadata:
+  annotations:
+    animated_gif: https://raw.githubusercontent.com/cvat-ai/cvat/develop/site/content/en/images/hrnet_example.gif
+    help_message: The interactor allows to get a mask of an object using SAM3
+    min_neg_points: 0
+    min_pos_points: 0
+    name: Segment Anything Model 3 (Tracker)
+    spec: null
+    startswith_box_optional: true
+    type: interactor
+    version: 2
+  name: pth-facebookresearch-sam3-tracker
+  namespace: cvat
+spec:
+  build:
+    baseImage: sam3-tracker-base
+    image: cvat.pth.facebookresearch.sam3.tracker:latest-gpu
+  description: Interactive object segmentation with SAM3
+  env:
+  - name: PYTHONPATH
+    value: /opt/nuclio/sam3
+  eventTimeout: 120s
+  handler: main:handler
+  platform:
+    attributes:
+      mountMode: volume
+      restartPolicy:
+        maximumRetryCount: 3
+        name: always
+  runtime: python:3.10
+  triggers:
+    myHttpTrigger:
+      attributes:
+        maxRequestBodySize: 33554432
+      kind: http
+      maxWorkers: 1
+      workerAvailabilityTimeoutMilliseconds: 10000
+  volumes:
+  - volume:
+      hostPath:
+        path: /app/models/sam3
+      name: sam3-model-dir
+    volumeMount:
+      mountPath: /models/sam3
+      name: sam3-model-dir
+      readOnly: true

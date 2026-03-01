@@ -2319,7 +2319,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 if (state.shapeType === 'mask') {
                     const { points } = state;
                     const [left, top, right, bottom] = points.slice(-4);
-                    const imageBitmap = expandChannels(255, 255, 255, points);
+                    const imageBitmap = expandChannels(255, 0, 0, points);
                     imageDataToDataURL(imageBitmap, right - left + 1, bottom - top + 1, (dataURL: string) => new
                     Promise((resolve) => {
                         if (bitmapUpdateReqId === this.bitmapUpdateReqId) {

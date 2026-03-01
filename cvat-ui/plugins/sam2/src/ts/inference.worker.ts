@@ -72,7 +72,15 @@ if ((self as any).importScripts) {
                 error: 'Worker was not initialized',
             });
         } else if (e.data.action === WorkerAction.DECODE) {
-            decoder.run((e.data.payload as DecodeBody)).then((results) => {
+            // Rebuild Tensor objects after postMessage deserialization.
+            // postMessage uses Structured Clone which strips class prototypes,
+            // causing Tensor.location to become undefined.
+            const rawPayload = e.data.payload as DecodeBody;
+            const feeds: Record<string, Tensor> = {};
+            for (const [key, val] of Object.entries(rawPayload)) {
+                feeds[key] = new Tensor(val.type, (val as any).cpuData, val.dims);
+            }
+            decoder.run(feeds).then((results) => {
                 postMessage({
                     action: WorkerAction.DECODE,
                     payload: {

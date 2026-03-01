@@ -1,0 +1,58 @@
+metadata:
+  annotations:
+    framework: pytorch
+    name: SAM3 PCS Detector
+    spec: '[{"name": "scratch", "attributes": []}, {"name": "dent", "attributes":
+      []}, {"name": "crack", "attributes": []}, {"name": "stain", "attributes": []},
+      {"name": "defect", "attributes": []}, {"name": "damage", "attributes": []},
+      {"name": "corrosion", "attributes": []}, {"name": "hole", "attributes": []},
+      {"name": "person", "attributes": []}, {"name": "car", "attributes": []}, {"name":
+      "object", "attributes": []}]'
+    type: detector
+  name: pth-facebookresearch-sam3-pcs-detector
+  namespace: cvat
+spec:
+  build:
+    baseImage: sam3-tracker-base:latest
+    directives:
+      preCopy:
+      - kind: USER
+        value: root
+      - kind: ENV
+        value: HTTP_PROXY="http://192.168.8.28:8118" HTTPS_PROXY="http://192.168.8.28:8118"
+          http_proxy="http://192.168.8.28:8118" https_proxy="http://192.168.8.28:8118"
+      - kind: RUN
+        value: pip install --no-cache-dir scikit-image==0.24.0 numpy==1.24.4 opencv-python-headless==4.8.0.76
+      - kind: ENV
+        value: HTTP_PROXY="" HTTPS_PROXY="" http_proxy="" https_proxy=""
+      - kind: WORKDIR
+        value: /opt/nuclio
+    image: cvat.pth.facebookresearch.sam3.detector.gpu
+  description: Promptable Concept Segmentation using SAM3 for automatic mask and polygon
+    generation
+  env:
+  - name: PYTHONPATH
+    value: /opt/nuclio/sam3
+  - name: SAM3_MODEL_PATH
+    value: /opt/nuclio/models/sam3
+  eventTimeout: 60s
+  handler: main:handler
+  resources:
+    limits:
+      nvidia.com/gpu: 1
+  runtime: python:3.10
+  triggers:
+    myHttpTrigger:
+      attributes:
+        maxRequestBodySize: 33554432
+      kind: http
+      maxWorkers: 1
+      workerAvailabilityTimeoutMilliseconds: 10000
+  volumes:
+  - volume:
+      hostPath:
+        path: /app/models/sam3
+      name: sam3-model-weights
+    volumeMount:
+      mountPath: /opt/nuclio/models/sam3
+      name: sam3-model-weights
