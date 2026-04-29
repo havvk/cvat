@@ -200,7 +200,7 @@ def _create_segments_and_jobs(
     db_task.save()
 
 def _count_files(data):
-    share_root = settings.SHARE_ROOT
+    share_root = str(settings.SHARE_ROOT)
     server_files = []
 
     for path in data["server_files"]:
