@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
     Builder, Config, ImmutableTree, JsonLogicTree, Query, Utils as QbUtils, AntdConfig, AntdWidgets,
 } from '@react-awesome-query-builder/antd';
@@ -74,6 +75,7 @@ const getAttributesSubfields = (labels: Label[]): Record<string, any> => {
 };
 
 function FiltersModalComponent(): JSX.Element {
+    const { t } = useTranslation();
     const labels = useSelector((state: CombinedState) => state.annotation.job.labels);
     const activeFilters = useSelector((state: CombinedState) => state.annotation.annotations.filters);
     const visible = useSelector((state: CombinedState) => state.annotation.filtersPanelVisible);
@@ -86,9 +88,20 @@ function FiltersModalComponent(): JSX.Element {
     useEffect(() => {
         const initialConfig = {
             ...AntdConfig,
+            conjunctions: {
+                ...AntdConfig.conjunctions,
+                AND: {
+                    ...AntdConfig.conjunctions.AND,
+                    label: t('and'),
+                },
+                OR: {
+                    ...AntdConfig.conjunctions.OR,
+                    label: t('or'),
+                },
+            },
             fields: {
                 label: {
-                    label: 'Label',
+                    label: t('label'),
                     type: 'select',
                     valueSources: ['value'] as ('value')[],
                     fieldSettings: {
@@ -99,60 +112,60 @@ function FiltersModalComponent(): JSX.Element {
                     },
                 },
                 type: {
-                    label: 'Type',
+                    label: t('Type'),
                     type: 'select',
                     fieldSettings: {
                         listValues: [
-                            { value: 'shape', title: 'Shape' },
-                            { value: 'track', title: 'Track' },
-                            { value: 'tag', title: 'Tag' },
+                            { value: 'shape', title: t('objectType.shape') },
+                            { value: 'track', title: t('objectType.track') },
+                            { value: 'tag', title: t('objectType.tag') },
                         ],
                     },
                 },
                 shape: {
-                    label: 'Shape',
+                    label: t('shape'),
                     type: 'select',
                     fieldSettings: {
                         listValues: [
-                            { value: 'rectangle', title: 'Rectangle' },
-                            { value: 'points', title: 'Points' },
-                            { value: 'polyline', title: 'Polyline' },
-                            { value: 'polygon', title: 'Polygon' },
-                            { value: 'cuboid', title: 'Cuboid' },
-                            { value: 'ellipse', title: 'Ellipse' },
-                            { value: 'skeleton', title: 'Skeleton' },
-                            { value: 'mask', title: 'Mask' },
+                            { value: 'rectangle', title: t('shapeType.rectangle') },
+                            { value: 'points', title: t('shapeType.points') },
+                            { value: 'polyline', title: t('shapeType.polyline') },
+                            { value: 'polygon', title: t('shapeType.polygon') },
+                            { value: 'cuboid', title: t('shapeType.cuboid') },
+                            { value: 'ellipse', title: t('shapeType.ellipse') },
+                            { value: 'skeleton', title: t('shapeType.skeleton') },
+                            { value: 'mask', title: t('shapeType.mask') },
                         ],
                     },
                 },
                 occluded: {
-                    label: 'Occluded',
+                    label: t('occluded'),
                     type: 'boolean',
                 },
                 width: {
-                    label: 'Width',
+                    label: t('width'),
                     type: 'number',
                     fieldSettings: { min: 0 },
                 },
                 height: {
-                    label: 'Height',
+                    label: t('height'),
                     type: 'number',
                     fieldSettings: { min: 0 },
                 },
                 objectID: {
-                    label: 'ObjectID',
+                    label: t('objectID'),
                     type: 'number',
                     hideForCompare: true,
                     fieldSettings: { min: 0 },
                 },
                 serverID: {
-                    label: 'ServerID',
+                    label: t('serverID'),
                     type: 'number',
                     hideForCompare: true,
                     fieldSettings: { min: 0 },
                 },
                 attr: {
-                    label: 'Attributes',
+                    label: t('Attributes'),
                     type: '!struct',
                     subfields: getAttributesSubfields(labels),
                     fieldSettings: {
@@ -162,6 +175,12 @@ function FiltersModalComponent(): JSX.Element {
             },
             settings: {
                 ...AntdConfig.settings,
+                addRuleLabel: t('addRule'),
+                addGroupLabel: t('addGroup'),
+                fieldPlaceholder: t('selectField'),
+                notLabel: t('not'),
+                deleteLabel: t('delete'),
+                delGroupLabel: t('delete'),
                 renderField: (_props: any) => (
                     <FieldDropdown {...omit(_props)} customProps={omit(_props.customProps, 'showSearch')} />
                 ),
@@ -177,7 +196,7 @@ function FiltersModalComponent(): JSX.Element {
         } catch (_) {
             setFilters([]);
         }
-    }, []);
+    }, [labels, t]);
 
     useEffect(() => {
         window.localStorage.setItem(FILTERS_HISTORY, JSON.stringify(filters));
@@ -281,14 +300,14 @@ function FiltersModalComponent(): JSX.Element {
                     onClick={() => applyFilters([])}
                     className='cvat-filters-modal-clear-button'
                 >
-                    Clear filters
+                    {t('clearFilters')}
                 </Button>,
                 <Button
                     key='cancel'
                     onClick={() => dispatch(showFilters(false))}
                     className='cvat-filters-modal-cancel-button'
                 >
-                    Cancel
+                    {t('Cancel')}
                 </Button>,
                 <Button
                     key='submit'
@@ -297,7 +316,7 @@ function FiltersModalComponent(): JSX.Element {
                     onClick={confirmModal}
                     className='cvat-filters-modal-submit-button'
                 >
-                    Submit
+                    {t('Submit')}
                 </Button>,
             ]}
         >
@@ -318,7 +337,7 @@ function FiltersModalComponent(): JSX.Element {
                         type='text'
                         className='cvat-filters-modal-recently-used-button'
                     >
-                        Recently used
+                        {t('recentlyUsed')}
                         {' '}
                         <DownOutlined />
                     </Button>

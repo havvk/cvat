@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
 import Collapse from 'antd/lib/collapse';
@@ -54,6 +55,7 @@ function attrAreTheSame(prevProps: Props, nextProps: Props): boolean {
 }
 
 function ItemAttributesComponent(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         collapsed, attributes, values, readonly, changeAttribute, collapse,
         sizeParams, changeSize,
@@ -67,7 +69,7 @@ function ItemAttributesComponent(props: Props): JSX.Element {
                 onChange={collapse}
                 items={[{
                     key: 'details',
-                    label: <Text style={{ fontSize: 10 }} type='secondary'>DETAILS</Text>,
+                    label: <Text style={{ fontSize: 10 }} type='secondary'>{t('details')}</Text>,
                     children: [
                         sizeParams && (
                             <Row key='size' justify='space-around' className='cvat-objects-sidebar-size-params'>
