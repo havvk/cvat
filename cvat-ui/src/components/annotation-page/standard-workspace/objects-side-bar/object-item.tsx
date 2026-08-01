@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import Collapse from 'antd/lib/collapse';
 
@@ -49,6 +50,7 @@ interface Props {
 }
 
 function ObjectItemComponent(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         activated,
         readonly,
@@ -83,10 +85,12 @@ function ObjectItemComponent(props: Props): JSX.Element {
         workspace,
     } = props;
 
-    const type =
-        objectType === ObjectType.TAG ?
-            ObjectType.TAG.toUpperCase() :
-            `${shapeType.toUpperCase()} ${objectType.toUpperCase()}`;
+    const type = objectType === ObjectType.TAG ?
+        t(`objectType.${ObjectType.TAG}`) :
+        t('objectType.shapeWithType', {
+            shapeType: t(`shapeType.${shapeType}`),
+            objectType: t(`objectType.${objectType}`),
+        });
 
     const className = !activated ?
         'cvat-objects-sidebar-state-item' :
@@ -156,7 +160,7 @@ function ObjectItemComponent(props: Props): JSX.Element {
                         className='cvat-objects-sidebar-state-item-elements-collapse'
                         items={[{
                             key: 'elements',
-                            label: <Text style={{ fontSize: 10 }} type='secondary'>PARTS</Text>,
+                            label: <Text style={{ fontSize: 10 }} type='secondary'>{t('parts')}</Text>,
                             children: elements.map((element: number) => (
                                 <ObjectItemElementComponent
                                     key={element}

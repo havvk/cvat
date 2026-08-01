@@ -3,12 +3,23 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18n from 'i18next';
 import { InfoCircleTwoTone, LoadingOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
 import { CanvasHint } from 'cvat-canvas-wrapper';
 
 const FORCE_MESSAGE_FLAG = 'force';
+
+function translateHintContent(content: string): string {
+    const hintKeyByContent: Record<string, string> = {
+        'Click a mask or polygon shape you would like to slice': 'clickMaskOrPolygonToSlice',
+        'Click masks you would like to join together. To unselect click selected mask one more time':
+            'clickMasksToJoin',
+    };
+
+    return hintKeyByContent[content] ? i18n.t(hintKeyByContent[content]) : content;
+}
 
 interface State {
     hints: CanvasHint[] | null;
@@ -54,7 +65,7 @@ export default class CanvasTipsComponent extends React.PureComponent<{}, State> 
                     return (
                         <div key={idx} className={`cvat-canvas-hints-block ${className || ''}`}>
                             { Icon }
-                            <Text>{content as string}</Text>
+                            <Text>{translateHintContent(content as string)}</Text>
                         </div>
                     );
                 }
@@ -63,7 +74,7 @@ export default class CanvasTipsComponent extends React.PureComponent<{}, State> 
                     <div key={idx} className={`cvat-canvas-hints-block ${className || ''}`}>
                         <ul>
                             {(content as string[]).map((line, secIdx) => (
-                                <li key={secIdx}>{line}</li>
+                                <li key={secIdx}>{translateHintContent(line)}</li>
                             ))}
                         </ul>
                     </div>
@@ -83,7 +94,7 @@ export default class CanvasTipsComponent extends React.PureComponent<{}, State> 
                             className='cvat-canvas-hints-hide-button'
                             type='link'
                         >
-                            Hide
+                            {i18n.t('hide')}
                         </Button>
                     )}
                 </div>

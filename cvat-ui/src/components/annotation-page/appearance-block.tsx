@@ -150,7 +150,7 @@ function AppearanceBlock(props: Props): JSX.Element {
             items={[{
                 label: (
                     <Text strong className='cvat-objects-appearance-collapse-header'>
-                        Appearance
+                        {t('appearance')}
                     </Text>
                 ),
                 key: 'appearance',
@@ -162,9 +162,9 @@ function AppearanceBlock(props: Props): JSX.Element {
                             value={colorBy}
                             onChange={changeShapesColorBy}
                         >
-                            <Radio.Button value={ColorBy.LABEL}>{ColorBy.LABEL}</Radio.Button>
-                            <Radio.Button value={ColorBy.INSTANCE}>{ColorBy.INSTANCE}</Radio.Button>
-                            <Radio.Button value={ColorBy.GROUP}>{ColorBy.GROUP}</Radio.Button>
+                            <Radio.Button value={ColorBy.LABEL}>{t(`colorByOption.${ColorBy.LABEL}`)}</Radio.Button>
+                            <Radio.Button value={ColorBy.INSTANCE}>{t(`colorByOption.${ColorBy.INSTANCE}`)}</Radio.Button>
+                            <Radio.Button value={ColorBy.GROUP}>{t(`colorByOption.${ColorBy.GROUP}`)}</Radio.Button>
                         </Radio.Group>
                         <Text type='secondary'>{t('Opacity')}</Text>
                         <Slider
@@ -189,7 +189,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                             }}
                             checked={outlined}
                         >
-                            Outlined borders
+                            {t('outlinedBorders')}
                             <ColorPicker
                                 onChange={(color) => changeShapesOutlinedBorders(outlined, color)}
                                 value={outlineColor}
@@ -213,7 +213,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                                         });
                                     }}
                                 >
-                                    Cuboid orientation
+                                    {t('cuboidOrientation')}
                                 </Checkbox>
                             </div>
                         )}
@@ -223,7 +223,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                                 onChange={changeShowBitmap}
                                 checked={showBitmap}
                             >
-                                Show bitmap
+                                {t('showBitmap')}
                             </Checkbox>
                         )}
                         {is2D && (
@@ -232,7 +232,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                                 onChange={changeShowProjections}
                                 checked={showProjections}
                             >
-                                Show projections
+                                {t('showProjections')}
                             </Checkbox>
                         )}
                     </div>
