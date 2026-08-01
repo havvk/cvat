@@ -32,13 +32,13 @@ function SetupTagPopover(props: Props): JSX.Element {
             <Row justify='start'>
                 <Col>
                     <Text className='cvat-text-color' strong>
-                        Setup tag
+                        {t('setupTag')}
                     </Text>
                 </Col>
             </Row>
             <Row justify='start'>
                 <Col>
-                    <Text className='cvat-text-color'>Label</Text>
+                    <Text className='cvat-text-color'>{t('label')}</Text>
                 </Col>
             </Row>
             <Row justify='start'>
