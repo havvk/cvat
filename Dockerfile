@@ -3,8 +3,9 @@ ARG BASE_IMAGE=ubuntu:22.04
 
 FROM ${BASE_IMAGE} AS build-image-base
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu|http://mirrors.tuna.tsinghua.edu.cn/ubuntu|g; s|http://security.ubuntu.com/ubuntu|http://mirrors.tuna.tsinghua.edu.cn/ubuntu|g' /etc/apt/sources.list && \
+    apt-get -o Acquire::Retries=5 update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=5 --fix-missing --no-install-recommends install -yq \
         curl \
         g++ \
         gcc \
@@ -46,8 +47,11 @@ RUN curl -sL https://github.com/cisco/openh264/archive/v${OPENH264_VERSION}.tar.
     make -j5 && make install-shared PREFIX=${PREFIX} && make clean
 
 WORKDIR /tmp/ffmpeg
-RUN curl -sL https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.gz --output - | \
-    tar -zx --strip-components=1 && \
+RUN curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+        https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.gz \
+        --output /tmp/ffmpeg.tar.gz && \
+    tar -zxf /tmp/ffmpeg.tar.gz --strip-components=1 && \
+    rm /tmp/ffmpeg.tar.gz && \
     ./configure --disable-nonfree --disable-gpl --enable-libopenh264 \
         --enable-shared --disable-static --disable-doc --disable-programs --prefix="${PREFIX}" && \
     make -j5 && make install && make clean
@@ -72,6 +76,18 @@ RUN --mount=type=cache,target=/root/.cache/pip/http-v2 \
 # This stage builds wheels for all dependencies (except PyAV)
 FROM build-image-base AS build-image
 
+ARG RUST_VERSION=1.85.1
+ENV RUSTUP_HOME=/opt/rustup \
+    CARGO_HOME=/opt/cargo \
+    RUSTUP_MAX_RETRIES=5 \
+    PATH=/opt/cargo/bin:${PATH}
+RUN curl --fail --location --retry 5 --retry-all-errors --retry-delay 2 \
+        https://sh.rustup.rs --output /tmp/rustup-init.sh && \
+    sh /tmp/rustup-init.sh -y --profile minimal --no-modify-path \
+        --default-toolchain ${RUST_VERSION} && \
+    rm /tmp/rustup-init.sh && \
+    cargo --version && rustc --version
+
 COPY cvat/requirements/ /tmp/cvat/requirements/
 COPY utils/dataset_manifest/requirements.txt /tmp/utils/dataset_manifest/requirements.txt
 
@@ -81,9 +97,18 @@ RUN sed -i '/^av==/d' /tmp/utils/dataset_manifest/requirements.txt
 ARG CVAT_CONFIGURATION="production"
 
 RUN --mount=type=cache,target=/root/.cache/pip/http-v2 \
-    DATUMARO_HEADLESS=1 python3 -m pip wheel --no-deps --no-binary lxml,xmlsec \
-    -r /tmp/cvat/requirements/${CVAT_CONFIGURATION}.txt \
-    -w /tmp/wheelhouse
+    git config --global http.version HTTP/1.1 && \
+    success=0; \
+    for attempt in 1 2 3 4 5; do \
+        if DATUMARO_HEADLESS=1 python3 -m pip wheel --no-deps --no-binary lxml,xmlsec \
+            -r /tmp/cvat/requirements/${CVAT_CONFIGURATION}.txt \
+            -w /tmp/wheelhouse; then \
+            success=1; \
+            break; \
+        fi; \
+        sleep 3; \
+    done; \
+    test "$success" = 1
 
 FROM golang:1.24.4 AS build-smokescreen
 
@@ -112,8 +137,9 @@ ARG CVAT_CONFIGURATION="production"
 ENV DJANGO_SETTINGS_MODULE="cvat.settings.${CVAT_CONFIGURATION}"
 
 # Install necessary apt packages
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get --no-install-recommends install -yq \
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu|http://mirrors.tuna.tsinghua.edu.cn/ubuntu|g; s|http://security.ubuntu.com/ubuntu|http://mirrors.tuna.tsinghua.edu.cn/ubuntu|g' /etc/apt/sources.list && \
+    apt-get -o Acquire::Retries=5 update && \
+    DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=5 --fix-missing --no-install-recommends install -yq \
         bzip2 \
         ca-certificates \
         curl \
@@ -151,8 +177,9 @@ RUN adduser --uid=1000 --shell /bin/bash --disabled-password --gecos "" ${USER}
 
 ARG CLAM_AV="no"
 RUN if [ "$CLAM_AV" = "yes" ]; then \
-        apt-get update && \
-        apt-get --no-install-recommends install -yq \
+        sed -i 's|http://archive.ubuntu.com/ubuntu|http://mirrors.tuna.tsinghua.edu.cn/ubuntu|g; s|http://security.ubuntu.com/ubuntu|http://mirrors.tuna.tsinghua.edu.cn/ubuntu|g' /etc/apt/sources.list && \
+        apt-get -o Acquire::Retries=5 update && \
+        apt-get -o Acquire::Retries=5 --fix-missing --no-install-recommends install -yq \
             clamav \
             libclamunrar9 && \
         sed -i 's/ReceiveTimeout 30/ReceiveTimeout 300/g' /etc/clamav/freshclam.conf && \
@@ -164,9 +191,9 @@ RUN if [ "$CLAM_AV" = "yes" ]; then \
 # Install wheels from the build image
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:${PATH}"
-# setuptools should be uninstalled after updating google-cloud-storage
-# https://github.com/googleapis/python-storage/issues/740
-RUN python -m pip install --upgrade setuptools
+# google-cloud-storage 2.13.0 still imports pkg_resources. New setuptools
+# releases no longer ship it, so keep the runtime on a compatible version.
+RUN python -m pip install setuptools==75.8.0
 ARG PIP_VERSION
 ARG PIP_DISABLE_PIP_VERSION_CHECK=1
 
@@ -195,6 +222,17 @@ COPY cvat/nginx.conf /etc/nginx/nginx.conf
 COPY --chown=${USER} supervisord/ ${HOME}/supervisord
 COPY --chown=${USER} backend_entrypoint.d/ ${HOME}/backend_entrypoint.d
 COPY --chown=${USER} manage.py rqscheduler.py backend_entrypoint.sh wait_for_deps.sh ${HOME}/
+
+# Git may check Python entrypoints out with CRLF on Windows. A CR in the
+# shebang makes Linux look for an interpreter named "python3\r" and prevents
+# the backend from starting. Normalize only the executable entrypoint files.
+RUN sed -i 's/\r$//' \
+        ${HOME}/manage.py \
+        ${HOME}/rqscheduler.py \
+        ${HOME}/backend_entrypoint.sh \
+        ${HOME}/wait_for_deps.sh && \
+    find ${HOME}/backend_entrypoint.d ${HOME}/supervisord -type f \
+        -exec sed -i 's/\r$//' {} +
 COPY --chown=${USER} utils/ ${HOME}/utils
 COPY --chown=${USER} cvat/ ${HOME}/cvat
 

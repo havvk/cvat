@@ -252,14 +252,14 @@ services:
       - cvat_server
     labels:
       traefik.enable: "true"
-      traefik.http.services.cvat-ui.loadbalancer.server.port: "80"
+      traefik.http.services.cvat-ui.loadbalancer.server.port: "8000"
       traefik.http.routers.cvat-ui.rule: Host(`${CVAT_HOST:-localhost}`)
       traefik.http.routers.cvat-ui.entrypoints: web
     networks:
       - cvat
 
   traefik:
-    image: traefik:v3.3
+    image: traefik:v3.6.16
     container_name: traefik
     restart: always
     ports:
@@ -267,6 +267,10 @@ services:
       - 8090:8090
     environment:
       CVAT_HOST: ${CVAT_HOST:-localhost}
+      # Docker Engine 29 no longer accepts the legacy API version used by
+      # Traefik 3.3 during provider discovery. Pin a supported API version so
+      # Traefik can load CVAT routes from container labels.
+      DOCKER_API_VERSION: '1.44'
       DJANGO_LOG_VIEWER_HOST: grafana
       DJANGO_LOG_VIEWER_PORT: 3000
 
@@ -371,6 +375,7 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: true
       GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
       GF_AUTH_DISABLE_LOGIN_FORM: true
+      GF_USERS_DEFAULT_LANGUAGE: zh-Hans
       GF_SERVER_ROOT_URL: http://${CVAT_HOST:-localhost}/analytics
       GF_INSTALL_PLUGINS: 'grafana-clickhouse-datasource 4.8.2'
       GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/all_events.json

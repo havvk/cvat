@@ -98,7 +98,7 @@ services:
         https_proxy:
         no_proxy:
         socks_proxy:
-        CLIENT_PLUGINS: ${CLIENT_PLUGINS}
+        CLIENT_PLUGINS: ${CLIENT_PLUGINS:-plugins/sam2}
       dockerfile: Dockerfile.ui
 
   cvat_clickhouse:
