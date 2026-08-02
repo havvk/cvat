@@ -368,8 +368,8 @@ function BrushTools(): React.ReactPortal | null {
             ) : null}
             { ['brush', 'eraser'].includes(currentTool) ? (
                 <Select value={brushForm} onChange={(value: 'circle' | 'square') => setBrushForm(value)}>
-                    <Select.Option value='circle'>Circle</Select.Option>
-                    <Select.Option value='square'>Square</Select.Option>
+                    <Select.Option value='circle'>{t('circle')}</Select.Option>
+                    <Select.Option value='square'>{t('square')}</Select.Option>
                 </Select>
             ) : null}
             <Button

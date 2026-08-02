@@ -27,16 +27,16 @@ interface Props {
     exampleMultiTaskName?: string;
 }
 
-// 使用 forwardRef 来接收来自父组件的 ref
+// Use forwardRef to receive the ref passed by the parent component.
 const BasicConfigurationForm = forwardRef((props: Props, ref: RefObject<any>) => {
     const { many, exampleMultiTaskName, onChange } = props;
-    const { t } = useTranslation(); // 使用 useTranslation hook
+    const { t } = useTranslation();
     const formRef = useRef<FormInstance>(null);
     const inputRef = useRef<Input>(null);
 
     const initialName = many ? '{{file_name}}' : '';
 
-    // 使用 useImperativeHandle 将子组件的内部方法暴露给父组件的 ref
+    // Expose the component methods through the parent ref.
     useImperativeHandle(ref, () => ({
         submit(): Promise<void> {
             if (formRef.current) {
@@ -56,7 +56,7 @@ const BasicConfigurationForm = forwardRef((props: Props, ref: RefObject<any>) =>
         },
     }));
 
-    // 使用 useEffect 来模拟 componentDidMount
+    // Run the initialization logic after mounting.
     useEffect(() => {
         onChange({
             name: initialName,
@@ -75,11 +75,11 @@ const BasicConfigurationForm = forwardRef((props: Props, ref: RefObject<any>) =>
                 className={many ? 'cvat-task-name-field-has-tooltip' : ''}
                 hasFeedback
                 name='name'
-                label={<span>{t('Name')}</span>} // 国际化 label
+                label={<span>{t('name')}</span>}
                 rules={[
                     {
                         required: true,
-                        message: t('Task name cannot be empty'), // 国际化 message
+                        message: t('taskNameCannotBeEmpty'),
                     },
                 ]}
                 initialValue={initialName}

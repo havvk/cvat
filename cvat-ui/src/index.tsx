@@ -3,7 +3,6 @@
 //
 // SPDX-License-Identifier: MIT
 
-import './i18n';
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { connect, Provider } from 'react-redux';
@@ -11,8 +10,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import enUS from 'antd/lib/locale/en_US';
 import zhCN from 'antd/lib/locale/zh_CN';
-import i18n from './i18n';
-
 import { getAboutAsync } from 'actions/about-actions';
 import { authenticatedAsync } from 'actions/auth-actions';
 import { getFormatsAsync } from 'actions/formats-actions';
@@ -31,6 +28,7 @@ import { getInvitationsAsync } from 'actions/invitations-actions';
 import { getRequestsAsync } from 'actions/requests-async-actions';
 import { getServerAPISchemaAsync } from 'actions/server-actions';
 import { navigationActions } from 'actions/navigation-actions';
+import i18n, { isChineseLanguage } from './i18n';
 import { CombinedState, NotificationsState, PluginsState } from './reducers';
 
 createCVATStore(createRootReducer);
@@ -139,12 +137,12 @@ const ReduxAppWrapper = connect(mapStateToProps, mapDispatchToProps)(CVATApplica
 
 const root = createRoot(document.getElementById('root') as HTMLDivElement);
 
-const App = () => {
-    const [locale, setLocale] = useState(i18n.language === 'zh' ? zhCN : enUS);
+function App(): JSX.Element {
+    const [locale, setLocale] = useState(isChineseLanguage(i18n.resolvedLanguage) ? zhCN : enUS);
 
     useEffect(() => {
-        const listener = (lng: string) => {
-            setLocale(lng === 'zh' ? zhCN : enUS);
+        const listener = (lng: string): void => {
+            setLocale(isChineseLanguage(lng) ? zhCN : enUS);
         };
         i18n.on('languageChanged', listener);
 
@@ -164,7 +162,7 @@ const App = () => {
             </ConfigProvider>
         </Provider>
     );
-};
+}
 
 root.render(<App />);
 

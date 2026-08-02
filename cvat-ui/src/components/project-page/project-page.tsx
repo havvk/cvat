@@ -137,7 +137,7 @@ export default function ProjectPageComponent(): JSX.Element {
         }
     }, [deletes]);
 
-    const allTaskIds = tasks.map((t) => t.id);
+    const allTaskIds = tasks.map((task) => task.id);
     const selectableTaskIds = allTaskIds.filter((taskId) => !deletedTasks[taskId]);
     const onSelectAll = useCallback(() => {
         dispatch(selectionActions.selectResources(selectableTaskIds, SelectedResourceType.TASKS));
@@ -339,7 +339,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-task-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}`)}
                                     >
-                                        {t('Create a new task')}
+                                        {t('createNewTask')}
                                     </Button>
                                     <Button
                                         type='primary'

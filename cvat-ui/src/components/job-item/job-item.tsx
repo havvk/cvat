@@ -23,6 +23,7 @@ import {
 } from 'cvat-core-wrapper';
 import { useIsMounted } from 'utils/hooks';
 import { useTranslation } from 'react-i18next';
+import { getMomentLocale } from 'i18n';
 import UserSelector from 'components/task-page/user-selector';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { CombinedState } from 'reducers';
@@ -32,7 +33,7 @@ import JobActionsComponent from 'components/jobs-page/actions-menu';
 import { JobStageSelector, JobStateSelector } from './job-selectors';
 
 function formatDate(value: moment.Moment): string {
-    return value.format('MMM Do YYYY HH:mm');
+    return value.format('lll');
 }
 
 interface Props {
@@ -111,7 +112,7 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
 }
 
 function JobItem(props: Readonly<Props>): JSX.Element {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const {
         job, task, onJobUpdate, childJobs, defaultCollapsed, onCollapseChange, selected, onClick,
     } = props;
@@ -120,9 +121,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
     const deleted = job.id in deletes ? deletes[job.id] === true : false;
 
     const { stage, state } = job;
-    const created = moment(job.createdDate);
-    const updated = moment(job.updatedDate);
-    const now = moment(moment.now());
+    const momentLocale = getMomentLocale(i18n.language);
+    const created = moment(job.createdDate).locale(momentLocale);
+    const updated = moment(job.updatedDate).locale(momentLocale);
+    const now = moment(moment.now()).locale(momentLocale);
 
     const style = {};
     if (deleted) {
@@ -131,7 +133,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
     }
     const frameCountPercent = ((job.frameCount / (task.size || 1)) * 100).toFixed(0);
     const frameCountPercentRepresentation = frameCountPercent === '0' ? '<1' : frameCountPercent;
-    const jobName = `Job #${job.id}`;
+    const jobName = t('jobNumber', { id: job.id });
 
     let childJobViews: React.JSX.Element[] = [];
     if (childJobs && childJobs.length > 0) {
@@ -203,7 +205,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col className='cvat-job-item-select'>
                                     <Row>
-                                        <Text>{t('assignee')}:</Text>
+                                        <Text>
+                                            {t('assignee')}
+:
+                                        </Text>
                                     </Row>
                                     <UserSelector
                                         className='cvat-job-assignee-selector'
@@ -217,7 +222,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Col className='cvat-job-item-select'>
                                     <Row justify='space-between' align='middle'>
                                         <Col>
-                                            <Text>{t('Stage')}:</Text>
+                                            <Text>
+                                                {t('Stage')}
+:
+                                            </Text>
                                         </Col>
                                     </Row>
                                     <JobStageSelector
@@ -230,7 +238,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Col className='cvat-job-item-select'>
                                     <Row justify='space-between' align='middle'>
                                         <Col>
-                                            <Text>{t('State')}:</Text>
+                                            <Text>
+                                                {t('State')}
+:
+                                            </Text>
                                         </Col>
                                     </Row>
                                     <JobStateSelector
@@ -254,6 +265,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                     <Text type='secondary'>
                                         {`${moment
                                             .duration(now.diff(created))
+                                            .locale(momentLocale)
                                             .humanize()}`}
                                     </Text>
                                 </Col>

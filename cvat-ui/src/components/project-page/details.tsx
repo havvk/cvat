@@ -9,6 +9,7 @@ import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
 import { useTranslation } from 'react-i18next';
+import { getMomentLocale } from 'i18n';
 
 import { getCore, Project } from 'cvat-core-wrapper';
 import LabelsEditor from 'components/labels-editor/labels-editor';
@@ -25,7 +26,8 @@ interface DetailsComponentProps {
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { project, onUpdateProject } = props;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const createdDate = moment(project.createdDate).locale(getMomentLocale(i18n.language)).format('L');
     const [projectName, setProjectName] = useState(project.name);
 
     return (
@@ -54,13 +56,12 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                             t('projectIdCreatedByOwnerOnDate', {
                                 id: project.id,
                                 owner: project.owner.username,
-                                date: moment(project.createdDate).format('L'),
+                                date: createdDate,
                             }) :
                             t('projectIdCreatedOnDate', {
                                 id: project.id,
-                                date: moment(project.createdDate).format('L'),
-                            })
-                        }
+                                date: createdDate,
+                            })}
                     </Text>
                     <MdGuideControl instanceType='project' id={project.id} />
                     <BugTrackerEditor

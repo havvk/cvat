@@ -254,7 +254,7 @@ function LabelForm(props: Props): JSX.Element {
 
             for (const value of values) {
                 if (!patterns.validateAttributeValue.pattern.test(value)) {
-                    return Promise.reject(new Error(t('Invalid attribute value: "{{value}}"', { value })));
+                    return Promise.reject(new Error(t('invalidAttributeValueWithValue', { value })));
                 }
             }
 
@@ -358,7 +358,7 @@ function LabelForm(props: Props): JSX.Element {
 
             for (const number of numbers) {
                 if (Number.isNaN(number)) {
-                    return Promise.reject(new Error(t('"{{number}}" is not a number', { number })));
+                    return Promise.reject(new Error(t('notANumber', { number })));
                 }
             }
 

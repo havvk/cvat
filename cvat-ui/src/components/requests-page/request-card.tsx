@@ -3,6 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Link } from 'react-router-dom';
 
 import { Row, Col } from 'antd/lib/grid';
@@ -16,6 +18,7 @@ import Button from 'antd/lib/button';
 import { RQStatus, Request } from 'cvat-core-wrapper';
 
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import StatusMessage from './request-status';
 import RequestActionsComponent from './actions-menu';
 
@@ -47,28 +50,48 @@ function constructLink(request: Request): string | null {
     return null;
 }
 
-function constructName(operation: Request['operation']): string | null {
+function constructName(operation: Request['operation'], t: TFunction): string | null {
     const {
         target, jobID, taskID, projectID,
     } = operation;
 
     if (target === 'project' && projectID) {
-        return `Project #${projectID}`;
+        return t('projectNumber', { id: projectID });
     }
     if (target === 'task' && taskID) {
-        return `Task #${taskID}`;
+        return t('taskNumber', { id: taskID });
     }
     if (target === 'job' && jobID) {
-        return `Job #${jobID}`;
+        return t('jobNumber', { id: jobID });
     }
     return null;
 }
 
-function constructTimestamps(request: Request): JSX.Element {
-    const started = moment(request.startedDate).format('MMM Do YY, H:mm');
-    const finished = moment(request.finishedDate).format('MMM Do YY, H:mm');
-    const created = moment(request.createdDate).format('MMM Do YY, H:mm');
-    const expired = moment(request.expiryDate).format('MMM Do YY, H:mm');
+function constructOperationName(type: string, t: TFunction): string {
+    const termKeys: Record<string, string> = {
+        create: 'requestActionCreate',
+        export: 'requestActionExport',
+        import: 'requestActionImport',
+        autoannotate: 'requestActionAutoAnnotate',
+        project: 'project',
+        task: 'task',
+        job: 'job',
+        dataset: 'requestResourceDataset',
+        backup: 'requestResourceBackup',
+        annotations: 'requestResourceAnnotations',
+    };
+
+    return type.split(':')
+        .map((word) => (termKeys[word] ? t(termKeys[word]) : word.charAt(0).toUpperCase() + word.slice(1)))
+        .join(' ');
+}
+
+function constructTimestamps(request: Request, t: TFunction, language: string): JSX.Element {
+    const momentLocale = getMomentLocale(language);
+    const started = moment(request.startedDate).locale(momentLocale).format('lll');
+    const finished = moment(request.finishedDate).locale(momentLocale).format('lll');
+    const created = moment(request.createdDate).locale(momentLocale).format('lll');
+    const expired = moment(request.expiryDate).locale(momentLocale).format('lll');
     const { operation: { type }, url } = request;
 
     switch (request.status) {
@@ -78,10 +101,10 @@ function constructTimestamps(request: Request): JSX.Element {
                 return (
                     <>
                         <Row>
-                            <Text type='secondary'>{`Started by ${request.owner.username} on ${started}`}</Text>
+                            <Text type='secondary'>{t('startedByOn', { username: request.owner.username, date: started })}</Text>
                         </Row>
                         <Row>
-                            <Text type='secondary'>{`Expires on ${expired}`}</Text>
+                            <Text type='secondary'>{t('expiresOn', { date: expired })}</Text>
                         </Row>
                     </>
                 );
@@ -89,10 +112,10 @@ function constructTimestamps(request: Request): JSX.Element {
             return (
                 <>
                     <Row>
-                        <Text type='secondary'>{`Started by ${request.owner.username} on ${started}`}</Text>
+                        <Text type='secondary'>{t('startedByOn', { username: request.owner.username, date: started })}</Text>
                     </Row>
                     <Row>
-                        <Text type='secondary'>{`Finished on ${finished}`}</Text>
+                        <Text type='secondary'>{t('finishedOn', { date: finished })}</Text>
                     </Row>
                 </>
             );
@@ -100,11 +123,11 @@ function constructTimestamps(request: Request): JSX.Element {
         case RQStatus.FAILED: {
             return (request.startedDate ? (
                 <Row>
-                    <Text type='secondary'>{`Started by ${request.owner.username} on ${started}`}</Text>
+                    <Text type='secondary'>{t('startedByOn', { username: request.owner.username, date: started })}</Text>
                 </Row>
             ) : (
                 <Row>
-                    <Text type='secondary'>{`Enqueued by ${request.owner.username} on ${created}`}</Text>
+                    <Text type='secondary'>{t('enqueuedByOn', { username: request.owner.username, date: created })}</Text>
                 </Row>
             ));
         }
@@ -112,10 +135,10 @@ function constructTimestamps(request: Request): JSX.Element {
             return (
                 <>
                     <Row>
-                        <Text type='secondary'>{`Enqueued by ${request.owner.username} on ${created}`}</Text>
+                        <Text type='secondary'>{t('enqueuedByOn', { username: request.owner.username, date: created })}</Text>
                     </Row>
                     <Row>
-                        <Text type='secondary'>{`Started on ${started}`}</Text>
+                        <Text type='secondary'>{t('startedOn', { date: started })}</Text>
                     </Row>
                 </>
             );
@@ -123,7 +146,7 @@ function constructTimestamps(request: Request): JSX.Element {
         default: {
             return (
                 <Row>
-                    <Text type='secondary'>{`Enqueued by ${request.owner.username} on ${created}`}</Text>
+                    <Text type='secondary'>{t('enqueuedByOn', { username: request.owner.username, date: created })}</Text>
                 </Row>
             );
         }
@@ -140,6 +163,7 @@ const dimensions = {
 };
 
 function RequestCard(props: Readonly<Props>): JSX.Element {
+    const { t, i18n } = useTranslation();
     const {
         request, cancelled, selected, onClick,
     } = props;
@@ -148,9 +172,9 @@ function RequestCard(props: Readonly<Props>): JSX.Element {
 
     const linkToEntity = constructLink(request);
     const percent = request.status === RQStatus.FINISHED ? 100 : (request.progress ?? 0) * 100;
-    const timestamps = constructTimestamps(request);
+    const timestamps = constructTimestamps(request, t, i18n.language);
 
-    const name = constructName(operation);
+    const name = constructName(operation, t);
 
     const percentProgress = (request.status === RQStatus.FAILED || !percent) ? '' : `${percent.toFixed(2)}%`;
 
@@ -177,7 +201,7 @@ function RequestCard(props: Readonly<Props>): JSX.Element {
                             <Row style={{ paddingBottom: [RQStatus.FAILED].includes(request.status) ? '10px' : '0' }}>
                                 <Col className='cvat-requests-type' {...dimensions}>
                                     <Text>
-                                        {type.split(':').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                                        {constructOperationName(type, t)}
                                         {' '}
                                     </Text>
                                 </Col>
@@ -234,7 +258,7 @@ function RequestCard(props: Readonly<Props>): JSX.Element {
                                         operation?.lightweight ? (
                                             <Row>
                                                 <Col className='cvat-lightweight-label'>
-                                                    <Text type='secondary'>Lightweight backup</Text>
+                                                    <Text type='secondary'>{t('lightweightBackup')}</Text>
                                                 </Col>
                                             </Row>
                                         ) : null

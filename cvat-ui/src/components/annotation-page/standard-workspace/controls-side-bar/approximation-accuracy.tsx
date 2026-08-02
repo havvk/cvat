@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { CSSProperties } from 'react';
+import i18n from 'i18next';
 import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
@@ -22,13 +23,13 @@ marks[0] = {
     style: {
         color: '#1890ff',
     },
-    label: <strong>less</strong>,
+    label: <strong>{i18n.t('less')}</strong>,
 };
 marks[MAX_ACCURACY] = {
     style: {
         color: '#61c200',
     },
-    label: <strong>more</strong>,
+    label: <strong>{i18n.t('more')}</strong>,
 };
 
 export function thresholdFromAccuracy(approxPolyAccuracy: number): number {

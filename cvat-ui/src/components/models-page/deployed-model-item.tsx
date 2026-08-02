@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import { Row, Col } from 'antd/lib/grid';
 import Tag from 'antd/lib/tag';
 import Text from 'antd/lib/typography/Text';
@@ -39,7 +40,7 @@ const useCardHeight = useCardHeightHOC({
 
 export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
     const { model, selected, onClick } = props;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [isModalShown, setIsModalShown] = useState(false);
     const height = useCardHeight();
     const style: React.CSSProperties = { height };
@@ -55,7 +56,7 @@ export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
         setIsModalShown(false);
     };
 
-    const created = moment(model.createdDate).fromNow();
+    const created = moment(model.createdDate).locale(getMomentLocale(i18n.language)).fromNow();
     const modelDescription = !systemModel ?
         <Text type='secondary'>{t('addedCreated', { created })}</Text> :
         <Text type='secondary'>{t('systemModel')}</Text>;

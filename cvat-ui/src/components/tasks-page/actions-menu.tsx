@@ -83,8 +83,8 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
     const onMergeConsensusJobs = useCallback(() => {
         if (taskInstance.consensusEnabled) {
             Modal.confirm({
-                title: t('The consensus jobs will be merged'),
-                content: t('Existing annotations in parent jobs will be updated. Continue?'),
+                title: t('theConsensusJobsWillBeMerged'),
+                content: t('updateParentJobAnnosConfirm'),
                 className: 'cvat-modal-confirm-consensus-merge-task',
                 onOk: () => {
                     dispatch(mergeConsensusJobsAsync(taskInstance));
@@ -146,7 +146,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     await dispatch(updateTaskAsync(task, { assignee }));
                 }
             },
-            (task, idx, total) => t('Updating assignee for task #{{taskId}} ({{current}}/{{total}})', {
+            (task, idx, total) => t('updatingTaskAssigneeProgress', {
                 taskId: task.id,
                 current: idx + 1,
                 total,
@@ -158,11 +158,11 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
         const tasksToDelete = currentTasks.filter((task) => selectedIds.includes(task.id));
         Modal.confirm({
             title: isBulkMode ?
-                t('Delete {{count}} selected tasks', { count: tasksToDelete.length }) :
-                t('The task {{taskId}} will be deleted', { taskId: taskInstance.id }),
+                t('deleteCountSelectedTasks', { count: tasksToDelete.length }) :
+                t('taskWillBeDeletedConfirmation', { taskId: taskInstance.id }),
             content: isBulkMode ?
-                t('All related data (images, annotations) for all selected tasks will be lost. Continue?') :
-                t('All related data (images, annotations) will be lost. Continue?'),
+                t('confirmDeleteAllTaskData') :
+                t('confirmDeleteAllProjectData'),
             className: 'cvat-modal-confirm-delete-task',
             onOk: () => {
                 setTimeout(() => {
@@ -183,7 +183,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? t('Delete selected') : t('Delete'),
+            okText: isBulkMode ? t('deleteSelected') : t('Delete'),
         });
     }, [taskInstance, currentTasks, selectedIds, isBulkMode]);
 
@@ -205,7 +205,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     task.organizationId = newOrganization?.id ?? null;
                     await dispatch(updateTaskAsync(task, {}, ResourceUpdateTypes.UPDATE_ORGANIZATION));
                 },
-                (task, idx, total) => t('Updating organization for task #{{taskId}} ({{current}}/{{total}})', {
+                (task, idx, total) => t('updatingTaskOrgProgress', {
                     taskId: task.id,
                     current: idx + 1,
                     total,

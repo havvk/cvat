@@ -76,7 +76,9 @@ export const validateConfirmation: ((firstFieldName: string, t: (key: string) =>
     },
 });
 
-const validateAgreement: ((userAgreements: UserAgreement[], t: (key: string, options?: any) => string) => RuleRender) = (
+const validateAgreement: ((
+    userAgreements: UserAgreement[], t: (key: string, options?: any) => string
+) => RuleRender) = (
     userAgreements: UserAgreement[],
     t,
 ): RuleRender => () => ({
@@ -298,7 +300,7 @@ function RegisterFormComponent(props: Props): JSX.Element {
                         loading={fetching}
                         disabled={fetching}
                     >
-                        {t('Create account')}
+                        {t('createAccount')}
                     </Button>
                 </Form.Item>
             </Form>

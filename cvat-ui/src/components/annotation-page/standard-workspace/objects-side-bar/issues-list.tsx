@@ -20,13 +20,14 @@ import { reviewActions } from 'actions/review-actions';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { ActiveControl, CombinedState, Workspace } from 'reducers';
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ConflictSeverity, QualityConflict, Issue } from 'cvat-core-wrapper';
 import { changeShowGroundTruth } from 'actions/settings-actions';
 import { ShowGroundTruthIcon } from 'icons';
 
 export default function LabelsListComponent(): JSX.Element {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
     const frame = useSelector((state: CombinedState): number => state.annotation.player.frame.number);
     const frameIssues = useSelector((state: CombinedState): Issue[] => state.review.frameIssues);
@@ -181,7 +182,11 @@ export default function LabelsListComponent(): JSX.Element {
                                     </Col>
                                     <Col offset={1}>
                                         <Text type='secondary'>
-                                            {t('createdTimeAgo', { time: moment(frameIssue.createdDate).fromNow() })}
+                                            {t('createdTimeAgo', {
+                                                time: moment(frameIssue.createdDate)
+                                                    .locale(getMomentLocale(i18n.language))
+                                                    .fromNow(),
+                                            })}
                                         </Text>
                                     </Col>
                                 </Row>

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Autocomplete from 'antd/lib/auto-complete';
 import { SelectValue } from 'antd/lib/select';
 
@@ -23,6 +24,7 @@ type Project = {
 };
 
 export default function ProjectSearchField(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { value, filter, onSelect } = props;
     const [searchPhrase, setSearchPhrase] = useState('');
 
@@ -56,8 +58,12 @@ export default function ProjectSearchField(props: Props): JSX.Element {
     };
 
     const handleSelect = (_value: SelectValue): void => {
-        setSearchPhrase(projects.filter((proj) => proj.id === +_value)[0].name);
-        onSelect(_value ? +_value : null);
+        const selectedID = _value ? +_value : null;
+        const selectedProject = projects.find((project) => project.id === selectedID);
+        if (selectedProject) {
+            setSearchPhrase(selectedProject.name);
+        }
+        onSelect(selectedID);
     };
 
     useEffect(() => {
@@ -88,7 +94,7 @@ export default function ProjectSearchField(props: Props): JSX.Element {
     return (
         <Autocomplete
             value={searchPhrase}
-            placeholder='Select project'
+            placeholder={t('selectProject')}
             onSearch={handleSearch}
             onSelect={handleSelect}
             className='cvat-project-search-field'

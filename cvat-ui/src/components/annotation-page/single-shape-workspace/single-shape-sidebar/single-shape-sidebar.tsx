@@ -473,38 +473,42 @@ function SingleShapeSidebar(): JSX.Element {
                                 <ul>
                                     { typeof state.nextFrame === 'number' ? (
                                         <li>
-                                            <Trans i18nKey="clickSkipHelpText">
+                                            <Trans i18nKey='clickSkipHelpText'>
                                                 Click
-                                                <Text strong> Skip </Text>
+                                                <Text strong>{t('Skip')}</Text>
                                                 if there is nothing to annotate
                                             </Trans>
                                         </li>
                                     ) : (
                                         <li>
-                                            <Trans i18nKey="clickSubmitHelpText">
+                                            <Trans i18nKey='clickSubmitHelpText'>
                                                 Click
-                                                <Text strong> Submit Results </Text>
+                                                <Text strong>{t('submitResults')}</Text>
                                                 to finish the job
                                             </Trans>
                                         </li>
                                     )}
                                     <li>
-                                        <Trans i18nKey="holdAltToAvoidDragHelpText">
+                                        <Trans i18nKey='holdAltToAvoidDragHelpText'>
                                             Hold
                                             <Text strong> [Alt] </Text>
                                             button to avoid drag the image and avoid drawing
                                         </Trans>
                                     </li>
                                     <li>
-                                        <Trans i18nKey="pressToUndoHelpText" values={{ undo: normalizedKeyMap.UNDO }}>
+                                        <Trans i18nKey='pressToUndoHelpText' values={{ undo: normalizedKeyMap.UNDO }}>
                                             Press
-                                            <Text strong> {` ${normalizedKeyMap.UNDO} `} </Text>
+                                            <Text strong>
+                                                {' '}
+                                                {` ${normalizedKeyMap.UNDO} `}
+                                                {' '}
+                                            </Text>
                                             to undo a created object
                                         </Trans>
                                     </li>
                                     { (!isPolylabel || !state.pointsCountIsPredefined || state.pointsCount > 1) && (
                                         <li>
-                                            <Trans i18nKey="pressToResetDrawHelpText" values={{ cancel: normalizedKeyMap.CANCEL_SINGLE_SHAPE }}>
+                                            <Trans i18nKey='pressToResetDrawHelpText' values={{ cancel: normalizedKeyMap.CANCEL_SINGLE_SHAPE }}>
                                                 Press
                                                 <Text strong>
                                                     {` ${normalizedKeyMap.CANCEL_SINGLE_SHAPE} `}
@@ -516,7 +520,7 @@ function SingleShapeSidebar(): JSX.Element {
 
                                     { (isPolylabel && (!state.pointsCountIsPredefined || state.pointsCount > 1)) && (
                                         <li>
-                                            <Trans i18nKey="pressToFinishDrawHelpText" values={{ draw: normalizedKeyMap.SWITCH_DRAW_MODE_SINGLE_SHAPE }}>
+                                            <Trans i18nKey='pressToFinishDrawHelpText' values={{ draw: normalizedKeyMap.SWITCH_DRAW_MODE_SINGLE_SHAPE }}>
                                                 Press
                                                 <Text strong>
                                                     {` ${normalizedKeyMap.SWITCH_DRAW_MODE_SINGLE_SHAPE} `}
@@ -527,7 +531,7 @@ function SingleShapeSidebar(): JSX.Element {
                                     ) }
                                     { activatedStateID !== null && (
                                         <li>
-                                            <Trans i18nKey="pressToDeleteHelpText" values={{ del: normalizedKeyMap.DELETE_OBJECT_SINGLE_SHAPE }}>
+                                            <Trans i18nKey='pressToDeleteHelpText' values={{ del: normalizedKeyMap.DELETE_OBJECT_SINGLE_SHAPE }}>
                                                 Press
                                                 <Text strong>
                                                     {` ${normalizedKeyMap.DELETE_OBJECT_SINGLE_SHAPE} `}

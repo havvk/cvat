@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React, { useEffect, useRef } from 'react';
+import i18n from 'i18next';
 import { connect, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
@@ -417,7 +418,7 @@ export const TopViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-topview'>
                 { !canvasIsReady && <Spinner /> }
-                <div className='cvat-canvas3d-header'>Top</div>
+                <div className='cvat-canvas3d-header'>{i18n.t('top')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -442,7 +443,7 @@ export const SideViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-sideview'>
                 { !canvasIsReady && <Spinner /> }
-                <div className='cvat-canvas3d-header'>Side</div>
+                <div className='cvat-canvas3d-header'>{i18n.t('side')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -467,7 +468,7 @@ export const FrontViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-frontview'>
                 { !canvasIsReady && <Spinner /> }
-                <div className='cvat-canvas3d-header'>Front</div>
+                <div className='cvat-canvas3d-header'>{i18n.t('front')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}

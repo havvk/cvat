@@ -117,7 +117,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     onClick={(): void => history.push('/tasks/create')}
                                     icon={<PlusOutlined />}
                                 >
-                                    {t('Create a new task')}
+                                    {t('createNewTask')}
                                 </Button>
                                 <Button
                                     className='cvat-create-multi-tasks-button'

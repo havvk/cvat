@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -112,6 +113,7 @@ function mapDispatchToProps(dispatch: ThunkDispatch<CombinedState, {}, Action>):
 }
 
 function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Element {
+    const { t } = useTranslation();
     const {
         states,
         labels,
@@ -256,11 +258,12 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
                     setSidebarCollapsed(!sidebarCollapsed);
                 }}
             >
-                {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                {sidebarCollapsed ?
+                    <MenuFoldOutlined title={t('show')} /> : <MenuUnfoldOutlined title={t('hide')} />}
             </span>
             <Row justify='center' className='cvat-tag-annotation-sidebar-empty'>
                 <Col>
-                    <Text strong>Can&apos;t place tag on this frame.</Text>
+                    <Text strong>{t('cannotPlaceTagOnFrame')}</Text>
                 </Col>
             </Row>
         </Layout.Sider>
@@ -275,11 +278,15 @@ function TagAnnotationSidebar(props: StateToProps & DispatchToProps): JSX.Elemen
                         setSidebarCollapsed(!sidebarCollapsed);
                     }}
                 >
-                    {sidebarCollapsed ? <MenuFoldOutlined title='Show' /> : <MenuUnfoldOutlined title='Hide' />}
+                    {sidebarCollapsed ?
+                        <MenuFoldOutlined title={t('show')} /> : <MenuUnfoldOutlined title={t('hide')} />}
                 </span>
                 <Row justify='start' className='cvat-tag-annotation-sidebar-tag-label'>
                     <Col>
-                        <Text strong>Tag label:</Text>
+                        <Text strong>
+                            {t('tagLabel')}
+:
+                        </Text>
                     </Col>
                 </Row>
                 <Row justify='start' className='cvat-tag-annotation-sidebar-label-select'>

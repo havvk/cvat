@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import { Project } from 'cvat-core-wrapper';
+import { getMomentLocale } from 'i18n';
 import { useCardHeightHOC, usePlugins } from 'utils/hooks';
 import Preview from 'components/common/preview';
 import ProjectActionsComponent from './actions-menu';
@@ -47,7 +48,7 @@ export default function ProjectItemComponent(props: Props): JSX.Element {
     const ribbonPlugins = usePlugins((state: CombinedState) => state.plugins.components.projectItem.ribbon, props);
     const height = useCardHeight();
     const ownerName = instance.owner ? instance.owner.username : null;
-    const updated = moment(instance.updatedDate).locale(i18n.language).fromNow();
+    const updated = moment(instance.updatedDate).locale(getMomentLocale(i18n.language)).fromNow();
     const deletes = useSelector((state: CombinedState) => state.projects.activities.deletes);
     const deleted = instance.id in deletes ? deletes[instance.id] : false;
 

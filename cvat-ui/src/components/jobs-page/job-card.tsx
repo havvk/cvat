@@ -60,7 +60,7 @@ function JobCardComponent(props: Readonly<Props>): JSX.Element {
 
     let tag = null;
     if (job.type === JobType.GROUND_TRUTH) {
-        tag = t('Ground truth');
+        tag = t('groundTruth');
     } else if (job.type === JobType.ANNOTATION && job.consensusReplicas > 0) {
         tag = t('Consensus');
     }
@@ -97,12 +97,14 @@ function JobCardComponent(props: Readonly<Props>): JSX.Element {
                     onClick={onClick}
                 >
                     <Descriptions column={1} size='small'>
-                        <Descriptions.Item label={t('Stage and state')}>{`${job.stage} ${job.state}`}</Descriptions.Item>
-                        <Descriptions.Item label={t('Frames')}>{job.stopFrame - job.startFrame + 1}</Descriptions.Item>
+                        <Descriptions.Item label={t('stageAndState')}>
+                            {`${t(job.stage)} ${t(job.state)}`}
+                        </Descriptions.Item>
+                        <Descriptions.Item label={t('frames')}>{job.stopFrame - job.startFrame + 1}</Descriptions.Item>
                         {job.assignee ? (
-                            <Descriptions.Item label={t('Assignee')}>{job.assignee.username}</Descriptions.Item>
+                            <Descriptions.Item label={t('assignee')}>{job.assignee.username}</Descriptions.Item>
                         ) : (
-                            <Descriptions.Item label={t('Assignee')}> </Descriptions.Item>
+                            <Descriptions.Item label={t('assignee')}> </Descriptions.Item>
                         )}
                     </Descriptions>
                     <JobActionsComponent

@@ -368,7 +368,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                 return e?.fileList[0];
             }}
             name='dragger'
-            rules={[{ required: true, message: 'The file is required' }]}
+            rules={[{ required: true, message: t('fileRequired') }]}
         >
             <Upload.Dragger
                 listType='text'
@@ -397,7 +397,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                 <p className='ant-upload-drag-icon'>
                     <InboxOutlined />
                 </p>
-                <p className='ant-upload-text'>Click or drag file to this area</p>
+                <p className='ant-upload-text'>{t('clickOrDragFile')}</p>
             </Upload.Dragger>
         </Form.Item>
     );
@@ -430,15 +430,15 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
 
     const renderCustomName = (): JSX.Element => (
         <Form.Item
-            label={<Text strong>File name</Text>}
+            label={<Text strong>{t('fileName')}</Text>}
             name='fileName'
             hasFeedback
             dependencies={['selectedFormat']}
-            rules={[{ validator: validateFileName }, { required: true, message: 'Please, specify a name' }]}
+            rules={[{ validator: validateFileName }, { required: true, message: t('pleaseSpecifyName') }]}
             required
         >
             <Input
-                placeholder='Dataset file name'
+                placeholder={t('datasetFileName')}
                 className='cvat-modal-import-filename-input'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     dispatch(reducerActions.setFileName(e.target.value || ''));
@@ -551,12 +551,12 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
             >
                 <Form.Item
                     name='selectedFormat'
-                    label='Import format'
-                    rules={[{ required: true, message: 'Format must be selected' }]}
+                    label={t('importFormat')}
+                    rules={[{ required: true, message: t('formatMustBeSelected') }]}
                     hasFeedback
                 >
                     <Select
-                        placeholder={`Select ${resource} format`}
+                        placeholder={t('selectResourceFormat', { resource: t(resource) })}
                         className='cvat-modal-import-select'
                         virtual={false}
                         onChange={(format: string) => {
@@ -601,7 +601,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                             }}
                         />
                     </Form.Item>
-                    <Text strong>Convert masks to polygons</Text>
+                    <Text strong>{t('convertMasksToPolygons')}</Text>
                     <CVATTooltip title={t('optionRelevantForMasksOnly')}>
                         <QuestionCircleOutlined />
                     </CVATTooltip>
@@ -618,7 +618,7 @@ function ImportDatasetModal(props: StateToProps): JSX.Element {
                             }}
                         />
                     </Form.Item>
-                    <Text strong>Use default settings</Text>
+                    <Text strong>{t('useDefaultSettings')}</Text>
                     <CVATTooltip title={helpMessage}>
                         <QuestionCircleOutlined />
                     </CVATTooltip>

@@ -1,13 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
-import { Row, Col, Form, Input, Button, notification } from 'antd';
+import {
+    Row, Col, Form, Input, Button, notification,
+} from 'antd';
 import Text from 'antd/lib/typography/Text';
 import Spin from 'antd/lib/spin';
-
-import { getCore } from 'cvat-core-wrapper';
-
-const core = getCore();
 
 async function getCSRFToken(): Promise<string> {
     const response = await fetch('/api/server/about');
@@ -15,6 +13,7 @@ async function getCSRFToken(): Promise<string> {
 }
 
 export default function InvitationConfirmPage(): JSX.Element {
+    const { t } = useTranslation();
     const [form] = Form.useForm();
     const history = useHistory();
     const [email, setEmail] = useState<string | null>(null);
@@ -26,7 +25,7 @@ export default function InvitationConfirmPage(): JSX.Element {
         const params = new URLSearchParams(history.location.search);
         const invitationKey = params.get('invitation');
         if (!invitationKey) {
-            setError('Invitation key not found in URL.');
+            setError(t('invitationKeyMissing'));
             setLoading(false);
             return;
         }
@@ -38,21 +37,21 @@ export default function InvitationConfirmPage(): JSX.Element {
                 if (response.ok) {
                     return response.json();
                 }
-                throw new Error('Failed to verify invitation');
+                throw new Error(t('failedToVerifyInvitation'));
             })
             .then((data) => {
                 setEmail(data.email);
                 form.setFieldsValue({ email: data.email });
             })
             .catch(() => {
-                setError('This invitation is invalid, expired, or has already been accepted.');
+                setError(t('invitationInvalidOrExpired'));
             })
             .finally(() => {
                 setLoading(false);
             });
     }, [history, form]);
 
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: any): Promise<void> => {
         if (key) {
             try {
                 setLoading(true);
@@ -77,18 +76,20 @@ export default function InvitationConfirmPage(): JSX.Element {
                 }
 
                 notification.success({
-                    message: 'Account created successfully',
-                    description: 'You can now log in with your new credentials.',
+                    message: t('accountCreatedSuccessfully'),
+                    description: t('loginWithNewCredentials'),
                 });
                 history.push('/auth/login');
             } catch (err: any) {
-                let message = 'Could not create account.';
+                let message = t('couldNotCreateAccount');
                 try {
                     const parsed = JSON.parse(err.message);
                     message = Object.values(parsed).flat().join(' ');
-                } catch {}
+                } catch {
+                    // Keep the localized fallback when the server response is not JSON.
+                }
                 notification.error({
-                    message: 'Registration failed',
+                    message: t('registrationFailed'),
                     description: message,
                 });
             } finally {
@@ -113,29 +114,29 @@ export default function InvitationConfirmPage(): JSX.Element {
         <div className='cvat-invitation-confirm-page' style={{ padding: '20px' }}>
             <Row justify='center' align='middle'>
                 <Col md={8} lg={6} xl={4}>
-                    <h2>Create your account</h2>
+                    <h2>{t('createYourAccount')}</h2>
                     <Form
                         form={form}
                         name='invitation_confirm'
                         onFinish={onFinish}
                         layout='vertical'
                     >
-                        <Form.Item label='E-mail'>
+                        <Form.Item label={t('email')}>
                             <Input value={email || ''} disabled />
                         </Form.Item>
 
                         <Form.Item
                             name='username'
-                            label='Username'
-                            rules={[{ required: true, message: 'Please input your Username!' }]}
+                            label={t('username')}
+                            rules={[{ required: true, message: t('pleaseInputUsername') }]}
                         >
                             <Input />
                         </Form.Item>
 
                         <Form.Item
                             name='password'
-                            label='Password'
-                            rules={[{ required: true, message: 'Please input your password!' }]}
+                            label={t('Password')}
+                            rules={[{ required: true, message: t('pleaseInputPassword') }]}
                             hasFeedback
                         >
                             <Input.Password />
@@ -143,17 +144,17 @@ export default function InvitationConfirmPage(): JSX.Element {
 
                         <Form.Item
                             name='confirm'
-                            label='Confirm Password'
+                            label={t('confirmPassword')}
                             dependencies={['password']}
                             hasFeedback
                             rules={[
-                                { required: true, message: 'Please confirm your password!' },
+                                { required: true, message: t('pleaseConfirmPassword') },
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
                                         if (!value || getFieldValue('password') === value) {
                                             return Promise.resolve();
                                         }
-                                        return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                        return Promise.reject(new Error(t('passwordsDoNotMatch')));
                                     },
                                 }),
                             ]}
@@ -163,7 +164,7 @@ export default function InvitationConfirmPage(): JSX.Element {
 
                         <Form.Item>
                             <Button type='primary' htmlType='submit' loading={loading} block>
-                                Create Account
+                                {t('createAccount')}
                             </Button>
                         </Form.Item>
                     </Form>

@@ -77,8 +77,8 @@ function JobActionsComponent(
     const onMergeConsensusJob = useCallback(() => {
         if (consensusJobsPresent && jobInstance.parentJobId === null) {
             Modal.confirm({
-                title: t('The consensus job will be merged'),
-                content: t('Existing annotations in the parent job will be updated. Continue?'),
+                title: t('theConsensusJobWillBeMerged'),
+                content: t('confirmUpdateParentAnnos'),
                 className: 'cvat-modal-confirm-consensus-merge-job',
                 onOk: () => {
                     dispatch(mergeConsensusJobsAsync(jobInstance));
@@ -97,11 +97,11 @@ function JobActionsComponent(
         const isBulk = jobsToDelete.length > 1;
         Modal.confirm({
             title: isBulk ?
-                t('Delete {{count}} selected jobs', { count: jobsToDelete.length }) :
-                t('The job {{jobId}} will be deleted', { jobId: jobInstance.id }),
+                t('deleteCountSelectedJobs', { count: jobsToDelete.length }) :
+                t('jobWillBeDeletedConfirmation', { jobId: jobInstance.id }),
             content: isBulk ?
-                t('All related data (annotations) for all selected jobs will be lost. Continue?') :
-                t('All related data (annotations) will be lost. Continue?'),
+                t('confirmDeleteAllJobAnnos') :
+                t('confirmDeleteAllAnnos'),
             className: 'cvat-modal-confirm-delete-job',
             onOk: () => {
                 setTimeout(() => {
@@ -120,7 +120,7 @@ function JobActionsComponent(
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulk ? t('Delete selected') : t('Delete'),
+            okText: isBulk ? t('deleteSelected') : t('Delete'),
         });
     }, [jobInstance, allJobs, selectedIds, dispatch]);
 

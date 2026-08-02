@@ -5,6 +5,7 @@
 import './styles.scss';
 import React, { useCallback, useState } from 'react';
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import { Col, Row } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
 import Text from 'antd/lib/typography/Text';
@@ -49,7 +50,7 @@ function setUpWebhookStatus(status: number, t: (key: string, options?: any) => s
 }
 
 function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [pingFetching, setPingFetching] = useState<boolean>(false);
     const {
         webhookInstance, selected, onClick,
@@ -58,8 +59,9 @@ function WebhookItem(props: Readonly<WebhookItemProps>): JSX.Element | null {
         id, description, updatedDate, createdDate, owner, targetURL, events,
     } = webhookInstance;
 
-    const updated = moment(updatedDate).fromNow();
-    const created = moment(createdDate).format('MMMM Do YYYY');
+    const momentLocale = getMomentLocale(i18n.language);
+    const updated = moment(updatedDate).locale(momentLocale).fromNow();
+    const created = moment(createdDate).locale(momentLocale).format('LL');
     const username = owner ? owner.username : null;
 
     const { lastStatus } = webhookInstance;

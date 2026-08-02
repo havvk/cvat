@@ -126,7 +126,10 @@ function DetectorRunner(props: Props): JSX.Element {
     return (
         <div className='cvat-run-model-content'>
             <Row align='middle'>
-                <Col span={4}>{t('Model:')}</Col>
+                <Col span={4}>
+                    {t('model')}
+:
+                </Col>
                 <Col span={20}>
                     <Select
                         placeholder={dimension === DimensionType.DIMENSION_2D ? t('selectAModel') : t('noModelsAvailable')}

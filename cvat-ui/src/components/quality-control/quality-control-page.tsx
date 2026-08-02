@@ -7,6 +7,7 @@ import './styles.scss';
 import React, {
     useCallback, useEffect, useReducer, useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Tabs, { TabsProps } from 'antd/lib/tabs';
 import Title from 'antd/lib/typography/Title';
@@ -184,6 +185,7 @@ const reducer = (state: State, action: ActionUnion<typeof reducerActions>): Stat
 
 const supportedTabs = ['overview', 'settings', 'management'];
 function QualityControlPage(): JSX.Element {
+    const { t } = useTranslation();
     const [state, dispatch] = useReducer(reducer, {
         instance: null,
         instanceType: null,
@@ -260,7 +262,7 @@ function QualityControlPage(): JSX.Element {
             dispatch(reducerActions.setQualitySettings(settings, childrenSettings));
         } catch (error: unknown) {
             notification.error({
-                message: 'Could not receive quality settings',
+                message: t('couldNotReceiveQualitySettings'),
                 description: `${error instanceof Error ? error.message : ''}`,
             });
             throw error;
@@ -307,10 +309,10 @@ function QualityControlPage(): JSX.Element {
             }) ?? null;
 
             dispatch(reducerActions.setQualitySettings(updatedInstanceSettings, updatedChildrenSettings));
-            notification.info({ message: 'Settings have been updated' });
+            notification.info({ message: t('settingsUpdated') });
         } catch (error: unknown) {
             notification.error({
-                message: 'Could not save quality settings',
+                message: t('couldNotSaveQualitySettings'),
                 description: typeof Error === 'object' ? (error as object).toString() : '',
             });
             throw error;
@@ -398,7 +400,7 @@ function QualityControlPage(): JSX.Element {
                 <div className='cvat-quality-control-page-error'>
                     <Result
                         status='error'
-                        title='Could not open the page'
+                        title={t('couldNotOpenPage')}
                         subTitle={error.message}
                         extra={backNavigation}
                     />
@@ -432,7 +434,7 @@ function QualityControlPage(): JSX.Element {
         if (qualitySettings) {
             tabsItems.push({
                 key: 'overview',
-                label: 'Overview',
+                label: t('overview'),
                 children: (
                     <QualityOverviewTab
                         instance={instance}
@@ -448,7 +450,7 @@ function QualityControlPage(): JSX.Element {
         if (isTaskWithGT && validationLayout && qualitySettings) {
             tabsItems.push({
                 key: 'management',
-                label: 'Management',
+                label: t('management'),
                 children: (
                     <QualityManagementTab
                         task={instance}
@@ -466,7 +468,7 @@ function QualityControlPage(): JSX.Element {
         if (isTaskWithGT || isProject) {
             tabsItems.push({
                 key: 'settings',
-                label: 'Settings',
+                label: t('settings'),
                 children: (
                     <QualitySettingsTab
                         instance={instance}

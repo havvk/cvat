@@ -7,8 +7,9 @@ import React, {
     useState, useRef, useEffect, useCallback,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
 import Modal from 'antd/lib/modal';
@@ -30,7 +31,7 @@ import {
     removeOrganizationAsync,
     updateOrganizationAsync,
 } from 'actions/organization-actions';
-import { OrganizationMembersQuery, CombinedState } from 'reducers';
+import { OrganizationMembersQuery } from 'reducers';
 import { Organization, User } from 'cvat-core-wrapper';
 import {
     SortingComponent,
@@ -67,12 +68,12 @@ const FilteringComponent = ResourceFilterHOC(
 );
 
 function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
-    const { t } = useTranslation();
-    const { 
+    const { t, i18n } = useTranslation();
+    const {
         organizationInstance, userInstance, fetchMembers, query,
         onApplyFilter, onApplySearch, onApplySorting, selectedCount, onSelectAll,
     } = props;
-    const { 
+    const {
         owner, createdDate, description, updatedDate, slug, name, contact,
     } = organizationInstance;
     const { id: userID } = userInstance;
@@ -85,7 +86,7 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
     const onInvite = useCallback((values: Store) => {
         dispatch(inviteOrganizationMembersAsync(organizationInstance, values.users, () => {
             fetchMembers();
-            notification.success({ message: t('Invitations have been sent') });
+            notification.success({ message: t('invitationsSent') });
         }));
         setVisibleInviteModal(false);
     }, [organizationInstance, fetchMembers]);
@@ -293,8 +294,16 @@ function OrganizationTopBar(props: Readonly<Props>): JSX.Element {
                                 {contact.location}
                             </Text>
                         </div>
-                        <Text type='secondary'>{t('createdOn', { date: moment(createdDate).format('MMMM Do YYYY') })}</Text>
-                        <Text type='secondary'>{t('updatedOn', { date: moment(updatedDate).fromNow() })}</Text>
+                        <Text type='secondary'>
+                            {t('createdOn', {
+                                date: moment(createdDate).locale(getMomentLocale(i18n.language)).format('LL'),
+                            })}
+                        </Text>
+                        <Text type='secondary'>
+                            {t('updatedOn', {
+                                date: moment(updatedDate).locale(getMomentLocale(i18n.language)).fromNow(),
+                            })}
+                        </Text>
                     </div>
                 </Col>
                 <Col span={12} className='cvat-organization-top-bar-buttons-block'>

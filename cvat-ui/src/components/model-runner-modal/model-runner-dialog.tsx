@@ -70,7 +70,7 @@ function ModelRunnerDialog(props: StateToProps & DispatchToProps & WithTranslati
                     setTaskInstance(_task);
                 }
             }).catch((error: any) => {
-                notification.error({ message: t('Could not get task details'), description: error.toString() });
+                notification.error({ message: t('couldNotGetTaskDetails'), description: error.toString() });
             });
         }
     }, [visible, task]);
@@ -82,7 +82,7 @@ function ModelRunnerDialog(props: StateToProps & DispatchToProps & WithTranslati
             footer={[]}
             onCancel={(): void => closeDialog()}
             maskClosable
-            title={t('Automatic annotation')}
+            title={t('automaticAnnotation')}
         >
             { taskInstance ? (
                 <DetectorRunner

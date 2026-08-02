@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Form from 'antd/lib/form';
 import Select from 'antd/lib/select';
 import { CloudStorage } from 'reducers';
@@ -24,6 +25,7 @@ interface Props {
 const { Option } = Select;
 
 export default function CloudStorageTab(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { searchPhrase, setSearchPhrase } = props;
     const {
         formRef, cloudStorage, onSelectFiles, onSelectCloudStorage,
@@ -54,9 +56,9 @@ export default function CloudStorageTab(props: Props): JSX.Element {
             />
             {cloudStorage ? (
                 <Form.Item
-                    label='Select data source'
+                    label={t('selectDataSource')}
                     name='manifestSelect'
-                    rules={[{ required: true, message: 'Please, specify a data source' }]}
+                    rules={[{ required: true, message: t('pleaseSpecifyDataSource') }]}
                     initialValue={(cloudStorage.manifests?.length) ? cloudStorage.manifests[0] : null}
                 >
                     <Select
@@ -75,9 +77,9 @@ export default function CloudStorageTab(props: Props): JSX.Element {
 
             {cloudStorage && selectedSource ? (
                 <Form.Item
-                    label='Files'
+                    label={t('files')}
                     name='cloudStorageFiles'
-                    rules={[{ required: true, message: 'Please, select a files' }]}
+                    rules={[{ required: true, message: t('pleaseSelectFiles') }]}
                 >
                     <CloudStorageBrowser
                         resource={cloudStorage}

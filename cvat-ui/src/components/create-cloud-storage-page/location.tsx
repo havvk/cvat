@@ -19,7 +19,7 @@ interface Props {
     onSelectRegion: any;
     internalCommonProps: any;
 
-    label: 'Location' | 'Region';
+    label: string;
     name: 'location' | 'region';
     values: string[][];
     href: string;

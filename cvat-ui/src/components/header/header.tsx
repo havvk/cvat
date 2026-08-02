@@ -231,7 +231,7 @@ function HeaderComponent(props: Props): JSX.Element {
 
     const aboutPlugins = usePlugins((state: CombinedState) => state.plugins.components.about.links.items, props);
     const aboutLinks: [JSX.Element, number][] = [];
-    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t("whatsNew")}</a></Col>), 0]);
+    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t('whatsNew')}</a></Col>), 0]);
     aboutLinks.push([(<Col key='license'><a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>{t('mitLicense')}</a></Col>), 10]);
     aboutLinks.push([(<Col key='discord'><a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>{t('findUsOnDiscord')}</a></Col>), 20]);
 
@@ -245,8 +245,20 @@ function HeaderComponent(props: Props): JSX.Element {
             content: (
                 <div>
                     <p>{`${about.server.description}`}</p>
-                    <p><Text strong>{t('serverVersion')}:</Text><Text type='secondary'>{` ${about.server.version}`}</Text></p>
-                    <p><Text strong>{t('uiVersion')}:</Text><Text type='secondary'>{` ${about.packageVersion.ui}`}</Text></p>
+                    <p>
+                        <Text strong>
+                            {t('serverVersion')}
+:
+                        </Text>
+                        <Text type='secondary'>{` ${about.server.version}`}</Text>
+                    </p>
+                    <p>
+                        <Text strong>
+                            {t('uiVersion')}
+:
+                        </Text>
+                        <Text type='secondary'>{` ${about.packageVersion.ui}`}</Text>
+                    </p>
                     <Row justify='space-around'>
                         { aboutLinks.sort((item1, item2) => item1[1] - item2[1])
                             .map((item) => item[0]) }
@@ -308,7 +320,7 @@ function HeaderComponent(props: Props): JSX.Element {
     menuItems.push([{
         key: 'organization',
         icon: organizationFetching || organizationsListFetching ? <LoadingOutlined /> : <TeamOutlined />,
-                                label: t('organization'),
+        label: t('organization'),
         disabled: organizationFetching || organizationsListFetching,
         children: [
             ...(currentOrganization ? [{
@@ -393,8 +405,8 @@ function HeaderComponent(props: Props): JSX.Element {
 
     const languageMenu: MenuProps = {
         items: [
-            { key: 'en-US', label: 'English' },
-            { key: 'zh', label: '简体中文' },
+            { key: 'en-US', label: t('language.english') },
+            { key: 'zh', label: t('language.simplifiedChinese') },
         ],
         onClick: (item) => {
             i18n.changeLanguage(item.key);

@@ -5,6 +5,7 @@
 
 import './styles.scss';
 import React from 'react';
+import i18n from 'i18next';
 import { connect } from 'react-redux';
 import Result from 'antd/lib/result';
 import Text from 'antd/lib/typography/Text';
@@ -106,19 +107,19 @@ class GlobalErrorBoundary extends React.PureComponent<Props, State> {
                 <div className='cvat-global-boundary'>
                     <Result
                         status='error'
-                        title='Oops, something went wrong'
-                        subTitle='More likely there are some issues with the tool'
+                        title={i18n.t('unexpectedErrorTitle')}
+                        subTitle={i18n.t('unexpectedErrorSubtitle')}
                     >
                         <div>
                             <Paragraph>
-                                <Paragraph strong>What has happened?</Paragraph>
-                                <Paragraph>Program error has just occurred</Paragraph>
+                                <Paragraph strong>{i18n.t('whatHappened')}</Paragraph>
+                                <Paragraph>{i18n.t('programErrorOccurred')}</Paragraph>
                                 <Collapse
                                     accordion
                                     defaultActiveKey={['errorMessage']}
                                     items={[{
                                         key: 'errorMessage',
-                                        label: 'Exception details',
+                                        label: i18n.t('exceptionDetails'),
                                         children: (
                                             <Text type='danger'>
                                                 <TextArea
@@ -133,25 +134,33 @@ class GlobalErrorBoundary extends React.PureComponent<Props, State> {
                             </Paragraph>
 
                             <Paragraph>
-                                <Text strong>What should I do?</Text>
+                                <Text strong>{i18n.t('whatShouldIDo')}</Text>
                             </Paragraph>
                             <ul>
                                 <li>
-                                    Notify an administrator or submit the issue directly on
+                                    {i18n.t('notifyAdminOrSubmitIssue')}
                                     <a href={config.GITHUB_URL}> GitHub. </a>
-                                    Please, provide also:
+                                    {i18n.t('provideFollowingDetails')}
                                     <ul>
-                                        <li>Full error message above</li>
-                                        <li>Steps to reproduce the issue</li>
-                                        <li>Your operating system and browser version</li>
-                                        <li>CVAT version</li>
+                                        <li>{i18n.t('fullErrorMessageAbove')}</li>
+                                        <li>{i18n.t('stepsToReproduce')}</li>
+                                        <li>{i18n.t('osAndBrowserVersion')}</li>
+                                        <li>{i18n.t('cvatVersion')}</li>
                                         <ul>
                                             <li>
-                                                <Text strong>Server: </Text>
+                                                <Text strong>
+                                                    {i18n.t('server')}
+:
+                                                    {' '}
+                                                </Text>
                                                 {serverVersion}
                                             </li>
                                             <li>
-                                                <Text strong>UI: </Text>
+                                                <Text strong>
+                                                    {i18n.t('ui')}
+:
+                                                    {' '}
+                                                </Text>
                                                 {uiVersion}
                                             </li>
                                         </ul>
@@ -159,19 +168,19 @@ class GlobalErrorBoundary extends React.PureComponent<Props, State> {
                                 </li>
                                 {job ? (
                                     <li>
-                                        Press
+                                        {i18n.t('press')}
                                         {/* eslint-disable-next-line */}
-                                        <a onClick={restoreGlobalState}> here </a>
-                                        if you wish CVAT tried to restore your annotation progress or
+                                        <a onClick={restoreGlobalState}> {i18n.t('here')} </a>
+                                        {i18n.t('restoreAnnotationProgressOr')}
                                         {/* eslint-disable-next-line */}
-                                        <a onClick={() => window.location.reload()}> update </a>
-                                        the page
+                                        <a onClick={() => window.location.reload()}> {i18n.t('update')} </a>
+                                        {i18n.t('thePage')}
                                     </li>
                                 ) : (
                                     <li>
                                         {/* eslint-disable-next-line */}
-                                        <a onClick={() => window.location.reload()}>Update </a>
-                                        the page
+                                        <a onClick={() => window.location.reload()}>{i18n.t('update')} </a>
+                                        {i18n.t('thePage')}
                                     </li>
                                 )}
                             </ul>

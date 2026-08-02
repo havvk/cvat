@@ -17,6 +17,7 @@ import { withTranslation, WithTranslation } from 'react-i18next';
 import { Task, RQStatus, Request } from 'cvat-core-wrapper';
 import Preview from 'components/common/preview';
 import { ActiveInference, PluginComponent } from 'reducers';
+import { getMomentLocale } from 'i18n';
 import StatusMessage from 'components/requests-page/request-status';
 import AutomaticAnnotationProgress from './automatic-annotation-progress';
 import TaskActionsComponent from './actions-menu';
@@ -129,8 +130,8 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
         const { taskInstance, t, i18n } = this.props;
         const { id } = taskInstance;
         const owner = taskInstance.owner ? taskInstance.owner.username : null;
-        const updated = moment(taskInstance.updatedDate).locale(i18n.language).fromNow();
-        const created = moment(taskInstance.createdDate).format('L');
+        const updated = moment(taskInstance.updatedDate).locale(getMomentLocale(i18n.language)).fromNow();
+        const created = moment(taskInstance.createdDate).locale(getMomentLocale(i18n.language)).format('L');
 
         return (
             <Col span={10} className='cvat-task-item-description'>
@@ -153,7 +154,9 @@ class TaskItemComponent extends React.PureComponent<TaskItemProps & RouteCompone
     }
 
     private renderProgress(): JSX.Element {
-        const { taskInstance, activeInference, cancelAutoAnnotation, t } = this.props;
+        const {
+            taskInstance, activeInference, cancelAutoAnnotation, t,
+        } = this.props;
         const { importingState } = this.state;
 
         if (importingState) {

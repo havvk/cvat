@@ -147,7 +147,7 @@
           "refId": "A"
         }
       ],
-      "title": "Overall Activity",
+      "title": "总体活动",
       "type": "timeseries"
     },
     {
@@ -295,7 +295,7 @@
           "refId": "A"
         }
       ],
-      "title": "All events",
+      "title": "全部事件",
       "type": "table"
     },
     {
@@ -401,7 +401,7 @@
           "refId": "A"
         }
       ],
-      "title": "Browser",
+      "title": "浏览器",
       "type": "barchart"
     },
     {
@@ -507,7 +507,7 @@
           "refId": "A"
         }
       ],
-      "title": "OS",
+      "title": "操作系统",
       "type": "barchart"
     }
   ],
@@ -535,7 +535,7 @@
         "definition": "SELECT DISTINCT scope\nFROM events\nWHERE $__timeFilter(timestamp)",
         "hide": 0,
         "includeAll": true,
-        "label": "Scope",
+        "label": "范围",
         "multi": true,
         "name": "scopes",
         "options": [],
@@ -564,7 +564,7 @@
         "definition": "SELECT DISTINCT source\nFROM events\nWHERE $__timeFilter(timestamp)",
         "hide": 0,
         "includeAll": true,
-        "label": "Source",
+        "label": "来源",
         "multi": true,
         "name": "sources",
         "options": [],
@@ -593,7 +593,7 @@
         "definition": "SELECT DISTINCT user_id\nFROM events\nWHERE $__timeFilter(timestamp)\n  AND user_id IS NOT NULL",
         "hide": 0,
         "includeAll": true,
-        "label": "User",
+        "label": "用户",
         "multi": true,
         "name": "users",
         "options": [],
@@ -618,7 +618,7 @@
         "definition": "SELECT DISTINCT user_name\nFROM events\nWHERE $__timeFilter(timestamp)",
         "hide": 0,
         "includeAll": true,
-        "label": "Username",
+        "label": "用户名",
         "multi": true,
         "name": "usernames",
         "options": [],
@@ -647,7 +647,7 @@
         "definition": "SELECT DISTINCT project_id\nFROM events\nWHERE  $__timeFilter(timestamp)\n  AND project_id IS NOT NULL",
         "hide": 0,
         "includeAll": true,
-        "label": "Project",
+        "label": "项目",
         "multi": true,
         "name": "projects",
         "options": [],
@@ -676,7 +676,7 @@
         "definition": "SELECT DISTINCT task_id\nFROM events\nWHERE $__timeFilter(timestamp) \n  AND task_id IS NOT NULL",
         "hide": 0,
         "includeAll": true,
-        "label": "Task",
+        "label": "任务",
         "multi": true,
         "name": "tasks",
         "options": [],
@@ -705,7 +705,7 @@
         "definition": "SELECT DISTINCT job_id\nFROM events\nWHERE $__timeFilter(timestamp)\n  AND job_id IS NOT NULL",
         "hide": 0,
         "includeAll": true,
-        "label": "Job",
+        "label": "作业",
         "multi": true,
         "name": "jobs",
         "options": [],
@@ -734,7 +734,7 @@
         "definition": "SELECT DISTINCT org_id\nFROM events\nWHERE $__timeFilter(timestamp)\nAND org_id IS NOT NULL",
         "hide": 0,
         "includeAll": true,
-        "label": "Organization",
+        "label": "组织",
         "multi": true,
         "name": "organizations",
         "options": [],
@@ -753,7 +753,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "All events",
+  "title": "全部事件",
   "uid": "EIGSTDAVz",
   "version": 1,
   "weekStart": ""

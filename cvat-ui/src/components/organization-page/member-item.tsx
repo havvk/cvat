@@ -4,10 +4,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import Text from 'antd/lib/typography/Text';
 import { Row, Col } from 'antd/lib/grid';
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import { CombinedState } from 'reducers';
 import { Membership } from 'cvat-core-wrapper';
 import { MoreOutlined } from '@ant-design/icons';
@@ -24,6 +26,8 @@ export interface Props {
 }
 
 function MemberItem(props: Readonly<Props>): JSX.Element {
+    const { t, i18n } = useTranslation();
+    const momentLocale = getMomentLocale(i18n.language);
     const {
         membershipInstance, selected, onClick, fetchMembers,
     } = props;
@@ -58,10 +62,23 @@ function MemberItem(props: Readonly<Props>): JSX.Element {
             async (m) => {
                 await dispatch(updateOrganizationMemberAsync(organizationInstance, m, newRole));
             },
-            (m, idx, total) => `Updating role for ${m.user.username} (${idx + 1}/${total})`,
+            (m, idx, total) => t('updatingMemberRole', {
+                username: m.user.username, current: idx + 1, total,
+            }),
             fetchMembers,
         ));
     };
+
+    let membershipStatus = <Text type='danger'>{t('invitationRevoked')}</Text>;
+    if (joinedDate) {
+        membershipStatus = (
+            <Text type='secondary'>
+                {t('joinedAgo', { date: moment(joinedDate).locale(momentLocale).fromNow() })}
+            </Text>
+        );
+    } else if (invitation) {
+        membershipStatus = <Text type='secondary'>{t('invitationPending')}</Text>;
+    }
 
     return (
         <MemberActionsMenu
@@ -85,17 +102,13 @@ function MemberItem(props: Readonly<Props>): JSX.Element {
                     <Col span={8} className='cvat-organization-member-item-dates'>
                         {invitation ? (
                             <Text type='secondary'>
-                                {`Invited ${moment(invitation.createdDate).fromNow()}`}
-                                {invitation.owner && ` by ${invitation.owner.username}`}
+                                {t('invitedAgo', {
+                                    date: moment(invitation.createdDate).locale(momentLocale).fromNow(),
+                                })}
+                                {invitation.owner && t('byOwner', { owner: invitation.owner.username })}
                             </Text>
                         ) : null}
-                                                                        {joinedDate ? (
-                            <Text type='secondary'>{`Joined ${moment(joinedDate).fromNow()}`}</Text>
-                        ) : invitation ? (
-                            <Text type='secondary'>Invitation pending</Text>
-                        ) : (
-                            <Text type='danger'>Invitation revoked</Text>
-                        )}
+                        {membershipStatus}
                     </Col>
                     <Col span={3} className='cvat-organization-member-item-role'>
                         <MemberRoleSelector

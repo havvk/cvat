@@ -105,7 +105,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                     project.assignee = assignee;
                     await dispatch(updateProjectAsync(project));
                 },
-                (project, idx, total) => t('Updating assignee for project #{{projectId}} ({{current}}/{{total}})', {
+                (project, idx, total) => t('updatingProjectAssignee', {
                     projectId: project.id,
                     current: idx + 1,
                     total,
@@ -132,7 +132,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                     project.organizationId = newOrganization?.id ?? null;
                     await dispatch(updateProjectAsync(project, ResourceUpdateTypes.UPDATE_ORGANIZATION));
                 },
-                (project, idx, total) => t('Updating organization for project #{{projectId}} ({{current}}/{{total}})', {
+                (project, idx, total) => t('updatingProjectOrgProgress', {
                     projectId: project.id,
                     current: idx + 1,
                     total,
@@ -172,11 +172,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
         const projectsToDelete = currentProjects.filter((project) => selectedIds.includes(project.id));
         Modal.confirm({
             title: isBulkMode ?
-                t('Delete {{count}} selected projects', { count: projectsToDelete.length }) :
-                t('The project {{projectId}} will be deleted', { projectId: projectInstance.id }),
+                t('deleteSelectedProjectsCount', { count: projectsToDelete.length }) :
+                t('projectWillBeDeletedConfirm', { projectId: projectInstance.id }),
             content: isBulkMode ?
-                t('All related data (images, annotations) for all selected projects will be lost. Continue?') :
-                t('All related data (images, annotations) will be lost. Continue?'),
+                t('confirmDeleteProjects') :
+                t('confirmDeleteAllProjectData'),
             className: 'cvat-modal-confirm-remove-project',
             onOk: () => {
                 setTimeout(() => {
@@ -185,7 +185,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                         async (project) => {
                             await dispatch(deleteProjectAsync(project));
                         },
-                        (project, idx, total) => t('Deleting project #{{projectId}} ({{current}}/{{total}})', {
+                        (project, idx, total) => t('deletingProjectProgress', {
                             projectId: project.id,
                             current: idx + 1,
                             total,
@@ -197,7 +197,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? t('Delete selected') : t('Delete'),
+            okText: isBulkMode ? t('deleteSelected') : t('Delete'),
         });
     }, [projectInstance, currentProjects, selectedIds, isBulkMode]);
     let menuItems;

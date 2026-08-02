@@ -37,8 +37,12 @@ function EmptyListComponent(props: Props): JSX.Element {
                         <Row justify='center' align='middle'>
                             <Col>
                                 <Link to='/tasks/create'>{t('createANewTask')}</Link>
-                                <Text type='secondary'> {t('orTryTo')} </Text>
-                                <Link to='/projects/create'>{t('create a new project')}</Link>
+                                <Text type='secondary'>
+                                    {' '}
+                                    {t('orTryTo')}
+                                    {' '}
+                                </Text>
+                                <Link to='/projects/create'>{t('createANewProject')}</Link>
                             </Col>
                         </Row>
                     </>

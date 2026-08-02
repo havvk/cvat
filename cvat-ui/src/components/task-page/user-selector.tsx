@@ -159,7 +159,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
         <Autocomplete
             ref={autocompleteRef}
             value={searchPhrase}
-            placeholder={t('Select a user')}
+            placeholder={t('selectAUser')}
             onSearch={setSearchPhrase}
             onSelect={handleSelect}
             onBlur={onBlur}
@@ -169,7 +169,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
             options={[
                 ...(!searchPhrase || 'reset assignee'.includes(searchPhrase.toLowerCase()) ? [{
                     value: 'RESET_ASSIGNEE',
-                    label: t('Reset assignee'),
+                    label: t('resetAssignee'),
                 }] : []),
                 ...users.map((user) => ({
                     value: user.id.toString(),

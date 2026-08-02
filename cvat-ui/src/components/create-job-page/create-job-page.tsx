@@ -5,6 +5,7 @@
 import './styles.scss';
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
@@ -18,6 +19,7 @@ import JobForm from './job-form';
 const core = getCore();
 
 function CreateJobPage(): JSX.Element {
+    const { t } = useTranslation();
     const [fetchingTask, setFetchingTask] = useState(true);
     const [taskInstance, setTaskInstance] = useState<Task | null>(null);
     const isMounted = useIsMounted();
@@ -33,7 +35,7 @@ function CreateJobPage(): JSX.Element {
                 }).catch((error: Error) => {
                     if (isMounted()) {
                         notification.error({
-                            message: 'Could not fetch requested task from the server',
+                            message: t('couldNotFetchRequestedTask'),
                             description: error.toString(),
                         });
                     }
@@ -44,12 +46,12 @@ function CreateJobPage(): JSX.Element {
                 });
         } else {
             notification.error({
-                message: 'Could not receive the requested task from the server',
-                description: `Requested task id "${id}" is not valid`,
+                message: t('couldNotReceiveRequestedTask'),
+                description: t('requestedTaskIdInvalid', { id }),
             });
             setFetchingTask(false);
         }
-    }, []);
+    }, [id, isMounted, t]);
 
     if (fetchingTask) {
         return <Spin size='large' className='cvat-spinner' />;
@@ -63,7 +65,7 @@ function CreateJobPage(): JSX.Element {
         <div className='cvat-create-job-page'>
             <Row justify='center' align='middle'>
                 <Col>
-                    <Text className='cvat-title'>Add a new job</Text>
+                    <Text className='cvat-title'>{t('addNewJob')}</Text>
                 </Col>
             </Row>
             <Row justify='center' align='top'>

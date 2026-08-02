@@ -12,8 +12,8 @@ export const JobNotFoundComponent = React.memo((): JSX.Element => {
         <Result
             className='cvat-not-found'
             status='404'
-            title={t('Sorry, but this job was not found')}
-            subTitle={t('Please, be sure information you tried to get exist and you have access')}
+            title={t('jobNotFound')}
+            subTitle={t('checkInfoExistsAndAccess')}
         />
     );
 });
@@ -24,8 +24,8 @@ export const TaskNotFoundComponent = React.memo((): JSX.Element => {
         <Result
             className='cvat-not-found'
             status='404'
-            title={t('There was something wrong during getting the task')}
-            subTitle={t('Please, be sure, that information you tried to get exist and you are eligible to access it')}
+            title={t('errorGettingTask')}
+            subTitle={t('checkInfoExistsAndAccessible')}
         />
     );
 });
@@ -36,8 +36,8 @@ export const ProjectNotFoundComponent = React.memo((): JSX.Element => {
         <Result
             className='cvat-not-found'
             status='404'
-            title={t('There was something wrong during getting the project')}
-            subTitle={t('Please, be sure, that information you tried to get exist and you are eligible to access it')}
+            title={t('errorGettingProject')}
+            subTitle={t('checkInfoExistsAndAccessible')}
         />
     );
 });
@@ -48,8 +48,8 @@ export const CloudStorageNotFoundComponent = React.memo((): JSX.Element => {
         <Result
             className='cvat-not-found'
             status='404'
-            title={t('Sorry, but the requested cloud storage was not found')}
-            subTitle={t('Please, be sure id you requested exists and you have appropriate permissions')}
+            title={t('cloudStorageNotFound')}
+            subTitle={t('checkIdExistsAndPermissions')}
         />
     );
 });

@@ -7,6 +7,7 @@ import './styles.scss';
 import React, {
     useCallback, useEffect, useState, useReducer,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
@@ -105,6 +106,7 @@ const reducer = (state: State, action: ActionUnion<typeof reducerActions>): Stat
 
 const supportedTabs = Object.values(TabName);
 function ConsensusManagementPage(): JSX.Element {
+    const { t } = useTranslation();
     const [state, dispatch] = useReducer(reducer, {
         fetching: true,
         reportRefreshingStatus: null,
@@ -139,7 +141,9 @@ function ConsensusManagementPage(): JSX.Element {
         }
     };
 
-    const onSaveConsensusSettings = useCallback(async (values) => {
+    const onSaveConsensusSettings = useCallback(async (
+        values: { quorum: number; iouThreshold: number },
+    ): Promise<ConsensusSettings | false | null> => {
         try {
             const { settings } = state.consensusSettings;
             if (settings) {
@@ -150,10 +154,10 @@ function ConsensusManagementPage(): JSX.Element {
                     dispatch(reducerActions.setConsensusSettingsFetching(true));
                     const responseSettings = await settings.save();
                     dispatch(reducerActions.setConsensusSettings(responseSettings));
-                    notification.info({ message: 'Settings have been updated' });
+                    notification.info({ message: t('settingsUpdated') });
                 } catch (error: unknown) {
                     notification.error({
-                        message: 'Could not save consensus settings',
+                        message: t('couldNotSaveConsensusSettings'),
                         description: typeof Error === 'object' ? (error as object).toString() : '',
                     });
                     throw error;
@@ -210,7 +214,7 @@ function ConsensusManagementPage(): JSX.Element {
                 <div className='cvat-consensus-management-page-error'>
                     <Result
                         status='error'
-                        title='Could not open the page'
+                        title={t('couldNotOpenPage')}
                         subTitle={error.message}
                         extra={backNavigation}
                     />

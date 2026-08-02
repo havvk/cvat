@@ -13,6 +13,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import Text from 'antd/lib/typography/Text';
 import Modal from 'antd/lib/modal';
 import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import { useTranslation } from 'react-i18next';
 
 import { CloudStorage, CombinedState } from 'reducers';
@@ -31,7 +32,7 @@ interface Props {
 export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.Element {
     const history = useHistory();
     const dispatch = useDispatch();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const { cloudStorage, selected = false, onClick = () => {} } = props;
     const {
@@ -113,18 +114,31 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
                         description={(
                             <>
                                 <Paragraph>
-                                    <Text type='secondary'>{t('Provider:')} </Text>
+                                    <Text type='secondary'>
+                                        {t('Provider:')}
+                                        {' '}
+                                    </Text>
                                     <Text>{providerType}</Text>
                                 </Paragraph>
                                 <Paragraph>
-                                    <Text type='secondary'>{t('Created')} </Text>
-                                    {owner ? <Text type='secondary'>{t('by {{owner}}', { owner: owner.username })}</Text> : null}
+                                    <Text type='secondary'>
+                                        {t('Created')}
+                                        {' '}
+                                    </Text>
+                                    {owner ? <Text type='secondary'>{t('byOwner', { owner: owner.username })}</Text> : null}
                                     <Text type='secondary'>{t('onDate')}</Text>
-                                    <Text type='secondary'>{moment(createdDate).format('MMMM Do YYYY')}</Text>
+                                    <Text type='secondary'>
+                                        {moment(createdDate).locale(getMomentLocale(i18n.language)).format('LL')}
+                                    </Text>
                                 </Paragraph>
                                 <Paragraph>
-                                    <Text type='secondary'>{t('lastUpdated')} </Text>
-                                    <Text type='secondary'>{moment(updatedDate).fromNow()}</Text>
+                                    <Text type='secondary'>
+                                        {t('lastUpdated')}
+                                        {' '}
+                                    </Text>
+                                    <Text type='secondary'>
+                                        {moment(updatedDate).locale(getMomentLocale(i18n.language)).fromNow()}
+                                    </Text>
                                 </Paragraph>
                                 <Status cloudStorage={cloudStorage} />
                                 <CloudStorageActionsMenu
