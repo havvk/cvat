@@ -10,6 +10,7 @@ import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import Form from 'antd/lib/form';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 import Tooltip from 'antd/lib/tooltip';
 
 const { Option } = Select;
@@ -18,7 +19,7 @@ interface Props {
     onSelectRegion: any;
     internalCommonProps: any;
 
-    label: 'Location' | 'Region';
+    label: string;
     name: 'location' | 'region';
     values: string[][];
     href: string;
@@ -32,6 +33,7 @@ export default function Location(props: Props): JSX.Element {
     const {
         selectedRegion, onSelectRegion, internalCommonProps, name, values, href, label,
     } = props;
+    const { t } = useTranslation();
     const [locations, setLocations] = useState<Locations>(() => Object.fromEntries(values));
     const [newRegionKey, setNewRegionKey] = useState<string>('');
     const [newRegionName, setNewRegionName] = useState<string>('');
@@ -39,12 +41,12 @@ export default function Location(props: Props): JSX.Element {
     const handleAddingRegion = (): void => {
         if (!newRegionKey || !newRegionName) {
             notification.warning({
-                message: 'Incorrect region',
+                message: t('incorrectRegion'),
                 className: 'cvat-incorrect-add-region-notification',
             });
         } else if (locations[newRegionKey]) {
             notification.warning({
-                message: 'This region already exists',
+                message: t('regionAlreadyExists'),
                 className: 'cvat-incorrect-add-region-notification',
             });
         } else {
@@ -62,7 +64,7 @@ export default function Location(props: Props): JSX.Element {
             label={(
                 <>
                     {label}
-                    <Tooltip title='More information'>
+                    <Tooltip title={t('moreInformation')}>
                         <Button
                             className='cvat-cloud-storage-help-button'
                             type='link'
@@ -89,19 +91,19 @@ export default function Location(props: Props): JSX.Element {
                                 value={newRegionKey}
                                 onChange={(event: any) => setNewRegionKey(event.target.value)}
                                 maxLength={14}
-                                placeholder='key'
+                                placeholder={t('keyPlaceholder')}
                             />
                             <Input
                                 value={newRegionName}
                                 onChange={(event: any) => setNewRegionName(event.target.value)}
-                                placeholder='name'
+                                placeholder={t('namePlaceholder')}
                             />
                             <Button
                                 className='cvat-cloud-storage-region-add-button'
                                 type='link'
                                 onClick={handleAddingRegion}
                             >
-                                Add region
+                                {t('addRegion')}
                                 <PlusCircleOutlined />
                             </Button>
                         </div>

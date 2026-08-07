@@ -1,0 +1,2506 @@
+{
+  "_comment": {
+    "description": "此文件用于跟踪不同UI组件的国际化（i18n）改造进度。",
+    "structure": {
+      "ComponentName": {
+        "status": "组件国际化改造的整体状态 (例如, 'completed', 'in_progress', 'todo')",
+        "notes": "关于此组件状态的任何相关备注或详细信息",
+        "completed_files": "已完成此组件改造的文件路径列表",
+        "todo_files": "待办文件列表"
+      }
+    }
+  },
+  "Text": {
+    "status": "completed",
+    "notes": "所有来自原始 i18n_progress.txt 的文件",
+    "completed_files": [
+      "cvat-ui/src/components/annotation-page/annotations-actions/annotations-actions-modal.tsx",
+      "cvat-ui/src/components/annotation-page/appearance-block.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-annotation-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-editor.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/object-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-hints.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/gamma-filter.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/image-setups-content.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/context-image/context-image-selector.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/context-image/context-image.tsx",
+      "cvat-ui/src/components/annotation-page/review/issue-dialog.tsx",
+      "cvat-ui/src/components/annotation-page/single-shape-workspace/single-shape-sidebar/single-shape-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/approximation-accuracy.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/draw-shape-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/interactor-tooltips.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/opencv-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/setup-tag-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/label-item.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/labels-list.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-attribute.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-details.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-element.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/objects-list-header.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/objects-list.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/states-ordering-selector.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/propagate-confirm.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/remove-confirm.tsx",
+      "cvat-ui/src/components/annotation-page/tag-annotation-workspace/tag-annotation-sidebar/shortcuts-select.tsx",
+      "cvat-ui/src/components/annotation-page/tag-annotation-workspace/tag-annotation-sidebar/tag-annotation-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/annotation-menu.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/left-group.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/player-navigation.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/search-modal.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/statistics-modal.tsx",
+      "cvat-ui/src/components/cloud-storages-page/cloud-storage-item.tsx",
+      "cvat-ui/src/components/cloud-storages-page/cloud-storage-status.tsx",
+      "cvat-ui/src/components/cloud-storages-page/empty-list.tsx",
+      "cvat-ui/src/components/common/cvat-card.tsx",
+      "cvat-ui/src/components/common/cvat-menu-edit-label.tsx",
+      "cvat-ui/src/components/common/cvat-table.tsx",
+      "cvat-ui/src/components/common/go-back-button.tsx",
+      "cvat-ui/src/components/consensus-management-page/consensus-settings-tab.tsx",
+      "cvat-ui/src/components/consensus-management-page/task-consensus/consensus-settings-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/create-cloud-storage-page.tsx",
+      "cvat-ui/src/components/create-job-page/create-job-page.tsx",
+      "cvat-ui/src/components/create-organization-page/create-organization-page.tsx",
+      "cvat-ui/src/components/create-project-page/create-project-content.tsx",
+      "cvat-ui/src/components/create-project-page/create-project-page.tsx",
+      "cvat-ui/src/components/create-task-page/advanced-configuration-form.tsx",
+      "cvat-ui/src/components/create-task-page/basic-configuration-form.tsx",
+      "cvat-ui/src/components/create-task-page/create-task-content.tsx",
+      "cvat-ui/src/components/create-task-page/create-task-page.tsx",
+      "cvat-ui/src/components/create-task-page/multi-task-progress.tsx",
+      "cvat-ui/src/components/cvat-app.tsx",
+      "cvat-ui/src/components/export-backup/export-backup-modal.tsx",
+      "cvat-ui/src/components/export-dataset/export-dataset-modal.tsx",
+      "cvat-ui/src/components/file-manager/local-files.tsx",
+      "cvat-ui/src/components/file-manager/remote-browser.tsx",
+      "cvat-ui/src/components/global-error-boundary/global-error-boundary.tsx",
+      "cvat-ui/src/components/header/header.tsx",
+      "cvat-ui/src/components/header/settings-modal/player-settings.tsx",
+      "cvat-ui/src/components/header/settings-modal/settings-modal.tsx",
+      "cvat-ui/src/components/header/settings-modal/workspace-settings.tsx",
+      "cvat-ui/src/components/import-backup/import-backup-modal.tsx",
+      "cvat-ui/src/components/import-dataset/import-dataset-modal.tsx",
+      "cvat-ui/src/components/invitations-page/empty-list.tsx",
+      "cvat-ui/src/components/invitations-page/invitation-item.tsx",
+      "cvat-ui/src/components/job-item/job-item.tsx",
+      "cvat-ui/src/components/jobs-page/empty-list.tsx",
+      "cvat-ui/src/components/labels-editor/constructor-viewer-item.tsx",
+      "cvat-ui/src/components/labels-editor/labels-editor.tsx",
+      "cvat-ui/src/components/labels-editor/pick-from-model.tsx",
+      "cvat-ui/src/components/login-page/login-form.tsx",
+      "cvat-ui/src/components/md-guide/md-guide-control.tsx",
+      "cvat-ui/src/components/model-runner-modal/detector-runner.tsx",
+      "cvat-ui/src/components/models-page/deployed-model-item.tsx",
+      "cvat-ui/src/components/models-page/empty-list.tsx",
+      "cvat-ui/src/components/organization-page/empty-list.tsx",
+      "cvat-ui/src/components/organization-page/invitation-modal.tsx",
+      "cvat-ui/src/components/organization-page/member-item.tsx",
+      "cvat-ui/src/components/organization-page/top-bar.tsx",
+      "cvat-ui/src/components/paid-feature-placeholder/paid-feature-placeholder.tsx",
+      "cvat-ui/src/components/project-page/details.tsx",
+      "cvat-ui/src/components/project-page/top-bar.tsx",
+      "cvat-ui/src/components/projects-page/empty-list.tsx",
+      "cvat-ui/src/components/projects-page/project-item.tsx",
+      "cvat-ui/src/components/quality-control/quality-settings-tab.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/quality-magement-tab.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx",
+      "cvat-ui/src/components/requests-page/empty-list.tsx",
+      "cvat-ui/src/components/requests-page/request-card.tsx",
+      "cvat-ui/src/components/requests-page/request-status.tsx",
+      "cvat-ui/src/components/reset-password-page/reset-password-form.tsx",
+      "cvat-ui/src/components/setup-webhook-pages/setup-webhook-content.tsx",
+      "cvat-ui/src/components/signing-common/cvat-signing-input.tsx",
+      "cvat-ui/src/components/storage/storage-with-switch-field.tsx",
+      "cvat-ui/src/components/task-page/bug-tracker-editor.tsx",
+      "cvat-ui/src/components/task-page/cloud-storage-editor.tsx",
+      "cvat-ui/src/components/task-page/details.tsx",
+      "cvat-ui/src/components/task-page/job-list.tsx",
+      "cvat-ui/src/components/task-page/top-bar.tsx",
+      "cvat-ui/src/components/tasks-page/automatic-annotation-progress.tsx",
+      "cvat-ui/src/components/tasks-page/empty-list.tsx",
+      "cvat-ui/src/components/tasks-page/task-item.tsx",
+      "cvat-ui/src/components/update-cloud-storage-page/update-cloud-storage-page.tsx",
+      "cvat-ui/src/components/webhooks-page/empty-list.tsx",
+      "cvat-ui/src/components/webhooks-page/webhook-item.tsx"
+    ],
+    "todo_files": [],
+    "verification_errors": [],
+    "verification_status": "passed"
+  },
+  "Tooltip": {
+    "status": "completed",
+    "notes": "处理了高级配置中的硬编码 tooltips。本次修复了 create-task-page/advanced-configuration-form.tsx 中不规范的key以及硬编码的storage descriptions。",
+    "completed_files": [
+      "cvat-ui/src/components/create-task-page/advanced-configuration-form.tsx",
+      "cvat-ui/src/components/storage/storage-with-switch-field.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/object-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/grid-layout/canvas-layout.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/brush-tools.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-point-context-menu.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-wrapper.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas3d/canvas-wrapper3D.tsx",
+      "cvat-ui/src/components/annotation-page/review-workspace/controls-side-bar/issue-control.tsx",
+      "cvat-ui/src/components/annotation-page/review/conflict-label.tsx",
+      "cvat-ui/src/components/annotation-page/review/hidden-issue-label.tsx",
+      "cvat-ui/src/components/annotation-page/review/issue-dialog.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/cursor-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/draw-shape-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/fit-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/group-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/join-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/merge-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/move-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/opencv-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/resize-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/rotate-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/setup-tag-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/slice-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/split-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-basics.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/label-item.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/issues-list.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-buttons.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-menu.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/objects-list-header.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/annotation-menu.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/left-group.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/player-buttons.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/player-navigation.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/save-annotations-button.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/search-modal.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/statistics-modal.tsx",
+      "cvat-ui/src/components/cloud-storages-page/cloud-storage-item.tsx",
+      "cvat-ui/src/components/common/cvat-card.tsx",
+      "cvat-ui/src/components/common/cvat-table.tsx",
+      "cvat-ui/src/components/common/cvat-tooltip.tsx",
+      "cvat-ui/src/components/consensus-management-page/task-consensus/consensus-settings-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/cloud-storage-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/location.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/manifests-manager.tsx",
+      "cvat-ui/src/components/create-job-page/job-form.tsx",
+      "cvat-ui/src/components/create-task-page/basic-configuration-form.tsx",
+      "cvat-ui/src/components/export-backup/export-backup-modal.tsx",
+      "cvat-ui/src/components/export-dataset/export-dataset-modal.tsx",
+      "cvat-ui/src/components/file-manager/remote-browser.tsx",
+      "cvat-ui/src/components/header/header.tsx",
+      "cvat-ui/src/components/header/settings-modal/player-settings.tsx",
+      "cvat-ui/src/components/header/settings-modal/settings-modal.tsx",
+      "cvat-ui/src/components/header/settings-modal/shortcut-settings.tsx",
+      "cvat-ui/src/components/invitations-page/invitation-item.tsx",
+      "cvat-ui/src/components/labels-editor/constructor-viewer-item.tsx",
+      "cvat-ui/src/components/labels-editor/label-form.tsx",
+      "cvat-ui/src/components/labels-editor/raw-viewer.tsx",
+      "cvat-ui/src/components/labels-editor/skeleton-configurator.tsx",
+      "cvat-ui/src/components/model-runner-modal/detector-runner.tsx",
+      "cvat-ui/src/components/model-runner-modal/object-mapper.tsx",
+      "cvat-ui/src/components/move-task-modal/label-mapper-item.tsx",
+      "cvat-ui/src/components/move-task-modal/move-task-modal.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/allocation-table.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/quality-settings-form.tsx",
+      "cvat-ui/src/components/resource-sorting-filtering/sorting.tsx",
+      "cvat-ui/src/components/tasks-page/automatic-annotation-progress.tsx",
+      "cvat-ui/src/components/update-linked-cs-modal/select-cs-updating-scheme-modal.tsx",
+      "cvat-ui/src/components/webhooks-page/webhook-item.tsx"
+    ],
+    "todo_files": [],
+    "verification_errors": [],
+    "verification_status": "passed"
+  },
+  "Button": {
+    "status": "todo",
+    "notes": "",
+    "todo_files": [],
+    "completed_files": [
+      "cvat-ui/src/components/analytics-report/analytics-page-header.tsx",
+      "cvat-ui/src/components/annotation-page/annotation-page.tsx",
+      "cvat-ui/src/components/annotation-page/annotations-actions/annotations-actions-modal.tsx",
+      "cvat-ui/src/components/annotation-page/appearance-block.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/attribute-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/attribute-annotation-workspace/attribute-annotation-sidebar/object-switcher.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/brush-tools.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-hints.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/canvas-point-context-menu.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas2d/image-setups-content.tsx",
+      "cvat-ui/src/components/annotation-page/canvas/views/canvas3d/canvas-wrapper3D.tsx",
+      "cvat-ui/src/components/annotation-page/review/create-issue-dialog.tsx",
+      "cvat-ui/src/components/annotation-page/review/issue-dialog.tsx",
+      "cvat-ui/src/components/annotation-page/single-shape-workspace/single-shape-sidebar/single-shape-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/draw-shape-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/opencv-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/setup-tag-popover.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/controls-side-bar/tools-control.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/color-picker.tsx",
+      "cvat-ui/src/components/annotation-page/standard-workspace/objects-side-bar/object-item-menu.tsx",
+      "cvat-ui/src/components/annotation-page/tag-annotation-workspace/tag-annotation-sidebar/tag-annotation-sidebar.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/annotation-menu.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/filters-modal.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/left-group.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/right-group.tsx",
+      "cvat-ui/src/components/annotation-page/top-bar/save-annotations-button.tsx",
+      "cvat-ui/src/components/bulk-progress.tsx",
+      "cvat-ui/src/components/change-password-modal/change-password-form.tsx",
+      "cvat-ui/src/components/cloud-storages-page/cloud-storage-actions-menu.tsx",
+      "cvat-ui/src/components/cloud-storages-page/top-bar.tsx",
+      "cvat-ui/src/components/common/cvat-markdown.tsx",
+      "cvat-ui/src/components/common/cvat-table.tsx",
+      "cvat-ui/src/components/common/go-back-button.tsx",
+      "cvat-ui/src/components/consensus-management-page/task-consensus/consensus-settings-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/cloud-storage-form.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/location.tsx",
+      "cvat-ui/src/components/create-cloud-storage-page/manifests-manager.tsx",
+      "cvat-ui/src/components/create-job-page/job-form.tsx",
+      "cvat-ui/src/components/create-organization-page/create-organization-form.tsx",
+      "cvat-ui/src/components/create-project-page/create-project-content.tsx",
+      "cvat-ui/src/components/create-task-page/create-task-content.tsx",
+      "cvat-ui/src/components/create-task-page/multi-task-progress.tsx",
+      "cvat-ui/src/components/email-confirmation-pages/email-verification-sent.tsx",
+      "cvat-ui/src/components/email-confirmation-pages/incorrect-email-confirmation.tsx",
+      "cvat-ui/src/components/file-manager/remote-browser.tsx",
+      "cvat-ui/src/components/header/header.tsx",
+      "cvat-ui/src/components/header/settings-modal/player-settings.tsx",
+      "cvat-ui/src/components/header/settings-modal/settings-modal.tsx",
+      "cvat-ui/src/components/header/settings-modal/shortcut-settings.tsx",
+      "cvat-ui/src/components/invitations-page/invitation-item.tsx",
+      "cvat-ui/src/components/labels-editor/constructor-viewer.tsx",
+      "cvat-ui/src/components/labels-editor/label-form.tsx",
+      "cvat-ui/src/components/labels-editor/pick-from-model.tsx",
+      "cvat-ui/src/components/labels-editor/raw-viewer.tsx",
+      "cvat-ui/src/components/labels-editor/skeleton-configurator.tsx",
+      "cvat-ui/src/components/labels-editor/skeleton-element-context-menu.tsx",
+      "cvat-ui/src/components/login-page/login-form.tsx",
+      "cvat-ui/src/components/md-guide/annotation-guide-page.tsx",
+      "cvat-ui/src/components/md-guide/md-guide-control.tsx",
+      "cvat-ui/src/components/model-runner-modal/detector-runner.tsx",
+      "cvat-ui/src/components/models-page/deployed-model-item.tsx",
+      "cvat-ui/src/components/organization-page/invitation-modal.tsx",
+      "cvat-ui/src/components/organization-page/top-bar.tsx",
+      "cvat-ui/src/components/paid-feature-placeholder/paid-feature-placeholder.tsx",
+      "cvat-ui/src/components/project-page/project-page.tsx",
+      "cvat-ui/src/components/project-page/top-bar.tsx",
+      "cvat-ui/src/components/projects-page/project-item.tsx",
+      "cvat-ui/src/components/projects-page/top-bar.tsx",
+      "cvat-ui/src/components/quality-control/quality-settings-tab.tsx",
+      "cvat-ui/src/components/quality-control/task-quality/allocation-table.tsx",
+      "cvat-ui/src/components/register-page/register-form.tsx",
+      "cvat-ui/src/components/requests-page/request-card.tsx",
+      "cvat-ui/src/components/reset-password-confirm-page/reset-password-confirm-form.tsx",
+      "cvat-ui/src/components/reset-password-page/reset-password-form.tsx",
+      "cvat-ui/src/components/resource-sorting-filtering/filtering.tsx",
+      "cvat-ui/src/components/resource-sorting-filtering/resource-selection-info.tsx",
+      "cvat-ui/src/components/resource-sorting-filtering/sorting.tsx",
+      "cvat-ui/src/components/setup-webhook-pages/create-webhook-page.tsx",
+      "cvat-ui/src/components/setup-webhook-pages/setup-webhook-content.tsx",
+      "cvat-ui/src/components/setup-webhook-pages/update-webhook-page.tsx",
+      "cvat-ui/src/components/task-page/bug-tracker-editor.tsx",
+      "cvat-ui/src/components/task-page/job-list.tsx",
+      "cvat-ui/src/components/task-page/top-bar.tsx",
+      "cvat-ui/src/components/tasks-page/task-item.tsx",
+      "cvat-ui/src/components/tasks-page/top-bar.tsx",
+      "cvat-ui/src/components/update-linked-cs-modal/select-cs-updating-scheme-modal.tsx",
+      "cvat-ui/src/components/webhooks-page/top-bar.tsx",
+      "cvat-ui/src/components/webhooks-page/webhook-item.tsx",
+      "cvat-ui/src/components/webhooks-page/webhooks-page.tsx"
+    ]
+  },
+  "CamelCaseKeys": {
+    "status": "in_progress",
+    "notes": "Fixing keys with spaces to camelCase.",
+    "pending_keys": [],
+    "completed_keys": [
+      [
+        "Projects",
+        "Projects"
+      ],
+      [
+        "Tasks",
+        "Tasks"
+      ],
+      [
+        "Jobs",
+        "Jobs"
+      ],
+      [
+        "Cloud Storages",
+        "cloudStorages"
+      ],
+      [
+        "Requests",
+        "Requests"
+      ],
+      [
+        "Models",
+        "Models"
+      ],
+      [
+        "More information",
+        "moreInformation"
+      ],
+      [
+        "Analytics",
+        "Analytics"
+      ],
+      [
+        "Admin page",
+        "adminPage"
+      ],
+      [
+        "Organization",
+        "organization"
+      ],
+      [
+        "Settings",
+        "Settings"
+      ],
+      [
+        "Invitations",
+        "Invitations"
+      ],
+      [
+        "Create",
+        "Create"
+      ],
+      [
+        "About",
+        "About"
+      ],
+      [
+        "Logout",
+        "Logout"
+      ],
+      [
+        "Password",
+        "Password"
+      ],
+      [
+        "Next",
+        "Next"
+      ],
+      [
+        "Example:",
+        "Example:"
+      ],
+      [
+        "First name",
+        "First name"
+      ],
+      [
+        "Email",
+        "Email"
+      ],
+      [
+        "Username",
+        "Username"
+      ],
+      [
+        "Submit",
+        "Submit"
+      ],
+      [
+        "Select",
+        "Select"
+      ],
+      [
+        "Radio",
+        "Radio"
+      ],
+      [
+        "Checkbox",
+        "Checkbox"
+      ],
+      [
+        "Text",
+        "Text"
+      ],
+      [
+        "Number",
+        "Number"
+      ],
+      [
+        "ID",
+        "ID"
+      ],
+      [
+        "Assignee",
+        "assignee"
+      ],
+      [
+        "Owner",
+        "Owner"
+      ],
+      [
+        "Status",
+        "Status"
+      ],
+      [
+        "Name",
+        "Name"
+      ],
+      [
+        "Deselect",
+        "Deselect"
+      ],
+      [
+        "actionsOnFilteredAnnotations",
+        "actionsOnFilteredAnnotations"
+      ],
+      [
+        "Created",
+        "Created"
+      ],
+      [
+        "Last updated",
+        "lastUpdated"
+      ],
+      [
+        "Delete",
+        "Delete"
+      ],
+      [
+        "Subset",
+        "Subset"
+      ],
+      [
+        "Mode",
+        "Mode"
+      ],
+      [
+        "Dimension",
+        "Dimension"
+      ],
+      [
+        "Open",
+        "Open"
+      ],
+      [
+        "Actions",
+        "Actions"
+      ],
+      [
+        "Merge",
+        "Merge"
+      ],
+      [
+        "Deleting task #{{taskId}} ({{current}}/{{total}})",
+        "Deleting task #{{taskId}} ({{current}}/{{total}})"
+      ],
+      [
+        "Open the task",
+        "openTheTask"
+      ],
+      [
+        "Project:",
+        "Project:"
+      ],
+      [
+        "Show",
+        "Show"
+      ],
+      [
+        "Hide",
+        "Hide"
+      ],
+      [
+        "Checkbox:",
+        "Checkbox:"
+      ],
+      [
+        "Values:",
+        "Values:"
+      ],
+      [
+        "Number:",
+        "Number:"
+      ],
+      [
+        "Text:",
+        "Text:"
+      ],
+      [
+        "From:",
+        "From:"
+      ],
+      [
+        "To:",
+        "To:"
+      ],
+      [
+        "Step:",
+        "Step:"
+      ],
+      [
+        "Convert masks to polygons",
+        "convertMasksToPolygons"
+      ],
+      [
+        "Annotate",
+        "Annotate"
+      ],
+      [
+        "Stage",
+        "Stage"
+      ],
+      [
+        "State",
+        "State"
+      ],
+      [
+        "Gamma",
+        "Gamma"
+      ],
+      [
+        "Size",
+        "Size"
+      ],
+      [
+        "Resize",
+        "resize"
+      ],
+      [
+        "Color",
+        "Color"
+      ],
+      [
+        "Opacity",
+        "Opacity"
+      ],
+      [
+        "Brightness",
+        "Brightness"
+      ],
+      [
+        "Contrast",
+        "Contrast"
+      ],
+      [
+        "Saturation",
+        "Saturation"
+      ],
+      [
+        "Consensus",
+        "Consensus"
+      ],
+      [
+        "Frames",
+        "frames"
+      ],
+      [
+        "Deleting job #{{jobId}} ({{current}}/{{total}})",
+        "Deleting job #{{jobId}} ({{current}}/{{total}})"
+      ],
+      [
+        "Updating job #{{jobId}} ({{current}}/{{total}})",
+        "Updating job #{{jobId}} ({{current}}/{{total}})"
+      ],
+      [
+        "Resource",
+        "Resource"
+      ],
+      [
+        "Region",
+        "region"
+      ],
+      [
+        "Description",
+        "Description"
+      ],
+      [
+        "Provider:",
+        "Provider:"
+      ],
+      [
+        "Update",
+        "Update"
+      ],
+      [
+        "Raw",
+        "Raw"
+      ],
+      [
+        "Constructor",
+        "Constructor"
+      ],
+      [
+        "Done",
+        "Done"
+      ],
+      [
+        "No deployed models found",
+        "noDeployedModelsFound"
+      ],
+      [
+        "Cancel",
+        "Cancel"
+      ],
+      [
+        "Labels not found in the specified model",
+        "labelsNotFoundInTheSpecifiedModel"
+      ],
+      [
+        "False",
+        "False"
+      ],
+      [
+        "True",
+        "True"
+      ],
+      [
+        "min;max;step",
+        "min;max;step"
+      ],
+      [
+        "Mutable",
+        "Mutable"
+      ],
+      [
+        "Skeleton",
+        "Skeleton"
+      ],
+      [
+        "Continue",
+        "Continue"
+      ],
+      [
+        "Descending sort",
+        "descendingSort"
+      ],
+      [
+        "Ascending sort",
+        "ascendingSort"
+      ],
+      [
+        "Recent",
+        "Recent"
+      ],
+      [
+        "Reset",
+        "Reset"
+      ],
+      [
+        "Apply",
+        "Apply"
+      ],
+      [
+        "Filter",
+        "Filter"
+      ],
+      [
+        "Type",
+        "Type"
+      ],
+      [
+        "Model",
+        "Model"
+      ],
+      [
+        "Labels:",
+        "Labels:"
+      ],
+      [
+        "Provider",
+        "Provider"
+      ],
+      [
+        "Edit",
+        "Edit"
+      ],
+      [
+        "Player",
+        "Player"
+      ],
+      [
+        "Workspace",
+        "Workspace"
+      ],
+      [
+        "Shortcuts",
+        "Shortcuts"
+      ],
+      [
+        "or",
+        "or"
+      ],
+      [
+        "Fastest",
+        "Fastest"
+      ],
+      [
+        "Fast",
+        "Fast"
+      ],
+      [
+        "Usual",
+        "Usual"
+      ],
+      [
+        "Slow",
+        "Slow"
+      ],
+      [
+        "Slower",
+        "Slower"
+      ],
+      [
+        "Slowest",
+        "Slowest"
+      ],
+      [
+        "minutes",
+        "minutes"
+      ],
+      [
+        "Label",
+        "label"
+      ],
+      [
+        "Attributes",
+        "Attributes"
+      ],
+      [
+        "Source",
+        "Source"
+      ],
+      [
+        "Descriptions",
+        "Descriptions"
+      ],
+      [
+        "Dimensions",
+        "Dimensions"
+      ],
+      [
+        "Auto",
+        "Auto"
+      ],
+      [
+        "Center",
+        "Center"
+      ],
+      [
+        "Yes",
+        "Yes"
+      ],
+      [
+        "Using cache to store data.",
+        "usingCacheTooltip"
+      ],
+      [
+        "Specify source storage for import resources like annotation, backups",
+        "sourceStorageDescription"
+      ],
+      [
+        "Specify target storage for export resources like annotation, backups",
+        "targetStorageDescription"
+      ],
+      [
+        "No",
+        "No"
+      ],
+      [
+        "Skip",
+        "Skip"
+      ],
+      [
+        "clickSkipHelpText",
+        "clickSkipHelpText"
+      ],
+      [
+        "clickSubmitHelpText",
+        "clickSubmitHelpText"
+      ],
+      [
+        "holdAltToAvoidDragHelpText",
+        "holdAltToAvoidDragHelpText"
+      ],
+      [
+        "pressToUndoHelpText",
+        "pressToUndoHelpText"
+      ],
+      [
+        "pressToResetDrawHelpText",
+        "pressToResetDrawHelpText"
+      ],
+      [
+        "pressToFinishDrawHelpText",
+        "pressToFinishDrawHelpText"
+      ],
+      [
+        "pressToDeleteHelpText",
+        "pressToDeleteHelpText"
+      ],
+      [
+        "Run",
+        "Run"
+      ],
+      [
+        "preventSsrHelpText",
+        "preventSsrHelpText"
+      ],
+      [
+        "No available trackers found",
+        "noAvailableTrackersFound"
+      ],
+      [
+        "Tracker",
+        "tracker"
+      ],
+      [
+        "Track",
+        "track"
+      ],
+      [
+        "OpenCV",
+        "OpenCV"
+      ],
+      [
+        "Drawing",
+        "Drawing"
+      ],
+      [
+        "Image",
+        "Image"
+      ],
+      [
+        "Tracking",
+        "Tracking"
+      ],
+      [
+        "Start with a bounding box",
+        "startWithABoundingBox"
+      ],
+      [
+        "Waiting for a server response..",
+        "waitingForAServerResponse"
+      ],
+      [
+        "Interactor",
+        "interactor"
+      ],
+      [
+        "Interact",
+        "interact"
+      ],
+      [
+        "No available interactors found",
+        "noAvailableInteractorsFound"
+      ],
+      [
+        "No available detectors found",
+        "noAvailableDetectorsFound"
+      ],
+      [
+        "AI Tools",
+        "aiTools"
+      ],
+      [
+        "Interactors",
+        "interactors"
+      ],
+      [
+        "Detectors",
+        "detectors"
+      ],
+      [
+        "Trackers",
+        "trackers"
+      ],
+      [
+        "Making a server request",
+        "makingAServerRequest"
+      ],
+      [
+        "Items: {{count}}",
+        "Items: {{count}}"
+      ],
+      [
+        "FROM",
+        "FROM"
+      ],
+      [
+        "TO",
+        "TO"
+      ],
+      [
+        "Undo",
+        "Undo"
+      ],
+      [
+        "Redo",
+        "Redo"
+      ],
+      [
+        "Block",
+        "Block"
+      ],
+      [
+        "Menu",
+        "Menu"
+      ],
+      [
+        "Backup",
+        "Backup"
+      ],
+      [
+        "ZIP chunks have better quality, but they require more disk space and time to download. Relevant for video only",
+        "zipChunksTooltip"
+      ],
+      [
+        "Defines images compression level",
+        "imageQualityTooltip"
+      ],
+      [
+        "Defines a number of intersected frames between different segments",
+        "overlapSizeTooltip"
+      ],
+      [
+        "Defines a number of frames grouped together as a segment (e.g., a segment is a batch of frames processed together; for example, if set to 50, each segment contains 50 frames).",
+        "segmentSizeTooltip"
+      ],
+      [
+        "Attach issue tracker where the task is described",
+        "issueTrackerExtra"
+      ],
+      [
+        "Defines a number of frames to be packed in a chunk when send from client to server. Server defines automatically if empty.<br/>Recommended values:<br/>1080p or less: 36<br/>2k or less: 8 - 16<br/>4k or less: 4 - 8<br/>More: 1 - 4",
+        "chunkSizeTooltip"
+      ],
+      [
+        "If you have a low data transfer rate over the network you can copy data into CVAT to speed up work",
+        "copyDataHelpText"
+      ],
+      [
+        "Specify how to sort images. It is not relevant for videos.",
+        "sortingMethodHelpText"
+      ],
+      [
+        "Previous attribute {{shortcut}}",
+        "previousAttributeTooltip"
+      ],
+      [
+        "Next attribute {{shortcut}}",
+        "nextAttributeTooltip"
+      ],
+      [
+        "Previous object {{shortcut}}",
+        "previousObjectTooltip"
+      ],
+      [
+        "Next object {{shortcut}}",
+        "nextObjectTooltip"
+      ],
+      [
+        "Fit views",
+        "fitViewsTooltip"
+      ],
+      [
+        "Add context image",
+        "addContextImageTooltip"
+      ],
+      [
+        "Reload layout",
+        "reloadLayoutTooltip"
+      ],
+      [
+        "Finish {{shortcut}}",
+        "finishBrushTooltip"
+      ],
+      [
+        "Continue {{shortcut}}",
+        "continueBrushTooltip"
+      ],
+      [
+        "Brush tool {{shortcut}}",
+        "brushToolTooltip"
+      ],
+      [
+        "Eraser tool {{shortcut}}",
+        "eraserToolTooltip"
+      ],
+      [
+        "Polygon tool {{shortcut}}",
+        "polygonToolTooltip"
+      ],
+      [
+        "Polygon remove tool {{shortcut}}",
+        "polygonRemoveToolTooltip"
+      ],
+      [
+        "Brush size [Hold Alt + Right Mouse Click + Drag Left/Right]",
+        "brushSizeTooltip"
+      ],
+      [
+        "Hide mask {{shortcut}}",
+        "hideMaskTooltip"
+      ],
+      [
+        "Delete point [Alt + dblclick]",
+        "deletePointTooltip"
+      ],
+      [
+        "Add new layer {{layer}} and switch to it",
+        "addNewLayerTooltip"
+      ],
+      [
+        "Camera Roll Angle Up {{shortcut}}",
+        "tiltUpTooltip"
+      ],
+      [
+        "Camera Roll Angle Down {{shortcut}}",
+        "tiltDownTooltip"
+      ],
+      [
+        "Camera Pitch Angle Left {{shortcut}}",
+        "rotateLeftTooltip"
+      ],
+      [
+        "Camera Pitch Angle Right {{shortcut}}",
+        "rotateRightTooltip"
+      ],
+      [
+        "Camera Move Up {{shortcut}}",
+        "moveUpTooltip"
+      ],
+      [
+        "Camera Move Down {{shortcut}}",
+        "moveDownTooltip"
+      ],
+      [
+        "Camera Move Left {{shortcut}}",
+        "moveLeftTooltip"
+      ],
+      [
+        "Camera Move Right {{shortcut}}",
+        "moveRightTooltip"
+      ],
+      [
+        "Camera Zoom In {{shortcut}}",
+        "zoomInTooltip"
+      ],
+      [
+        "Camera Zoom Out {{shortcut}}",
+        "zoomOutTooltip"
+      ],
+      [
+        "Open an issue",
+        "openAnIssueTooltip"
+      ],
+      [
+        "No comments found",
+        "noCommentsFoundTooltip"
+      ],
+      [
+        "Collapse the chat",
+        "collapseTheChatTooltip"
+      ],
+      [
+        "Cursor {{shortcut}}",
+        "cursorTooltip"
+      ],
+      [
+        "Press {{shortcut}} to draw again",
+        "pressToDrawAgainTooltip"
+      ],
+      [
+        "Fit the image [Double Click]",
+        "fitTheImageTooltip"
+      ],
+      [
+        "Group shapes {{shortcut}}",
+        "groupShapesTooltip"
+      ],
+      [
+        "Select and press {{shortcut}} to reset a group.",
+        "resetGroupTooltip"
+      ],
+      [
+        "Group shapes/tracks {{shortcut}}",
+        "groupShapesTracksTooltip"
+      ],
+      [
+        "Join masks {{shortcut}}",
+        "joinMasksTooltip"
+      ],
+      [
+        "Merge shapes/tracks {{shortcut}}",
+        "mergeShapesTracksTooltip"
+      ],
+      [
+        "Move the image",
+        "moveTheImageTooltip"
+      ],
+      [
+        "Select a region of interest",
+        "selectARegionOfInterestTooltip"
+      ],
+      [
+        "Rotate the image anticlockwise {{shortcut}}",
+        "rotateAnticlockwiseTooltip"
+      ],
+      [
+        "Rotate the image clockwise {{shortcut}}",
+        "rotateClockwiseTooltip"
+      ],
+      [
+        "Press {{shortcut}} to add a tag again",
+        "pressToAddTagAgainTooltip"
+      ],
+      [
+        "Slice a mask/polygon shape {{shortcut}}",
+        "sliceTooltip"
+      ],
+      [
+        "Split a track {{shortcut}}",
+        "splitATrackTooltip"
+      ],
+      [
+        "Disable tracking",
+        "disableTracking"
+      ],
+      [
+        "Enable tracking using {{trackerName}}",
+        "enableTrackingUsing"
+      ],
+      [
+        "OpenCV client initialization..",
+        "openCVClientInitialization"
+      ],
+      [
+        "Could not initialize OpenCV",
+        "couldNotInitializeOpenCV"
+      ],
+      [
+        "{{trackerName}}: states are being initialized for {{count}} object(s) ..",
+        "statesAreBeingInitializedForObjects"
+      ],
+      [
+        "Tracker initialization error",
+        "trackerInitializationError"
+      ],
+      [
+        "{{trackerName}}: {{count}} object(s) is/are being tracked..",
+        "objectsAreBeingTracked"
+      ],
+      [
+        "Tracking error",
+        "trackingError"
+      ],
+      [
+        "Tracking error occurred",
+        "trackingErrorOccurred"
+      ],
+      [
+        "Waiting for a response from {{interactorName}}",
+        "waitingForAResponseFrom"
+      ],
+      [
+        "Interaction error occurred",
+        "interactionErrorOccurred"
+      ],
+      [
+        "Interactor API is outdated",
+        "interactorAPIIsOutdated"
+      ],
+      [
+        "Probably, you should consider updating the serverless function",
+        "probablyYouShouldConsiderUpdatingTheServerlessFunction"
+      ],
+      [
+        "Detection error occurred",
+        "detectionErrorOccurred"
+      ],
+      [
+        "Close",
+        "Close"
+      ],
+      [
+        "Ok",
+        "Ok"
+      ],
+      [
+        "Change current label",
+        "changeCurrentLabel"
+      ],
+      [
+        "Lock all states",
+        "lockAllStates"
+      ],
+      [
+        "Unlock all states",
+        "unlockAllStates"
+      ],
+      [
+        "Hide all states",
+        "hideAllStates"
+      ],
+      [
+        "Show all states",
+        "showAllStates"
+      ],
+      [
+        "Items: {{count}}",
+        "itemsCount"
+      ],
+      [
+        "Find the previous frame with issues",
+        "findPreviousFrameWithIssues"
+      ],
+      [
+        "Find the next frame with issues",
+        "findNextFrameWithIssues"
+      ],
+      [
+        "Show/hide resolved issues",
+        "showHideResolvedIssues"
+      ],
+      [
+        "Show Ground truth annotations and conflicts",
+        "showGroundTruthAndConflicts"
+      ],
+      [
+        "#{{id}} • Issue",
+        "issueIdTag"
+      ],
+      [
+        "created {{time}}",
+        "createdTimeAgo"
+      ],
+      [
+        "#{{id}} • Warning",
+        "warningIdTag"
+      ],
+      [
+        "#{{id}} • Conflict",
+        "conflictIdTag"
+      ],
+      [
+        "Go to previous keyframe {{shortcut}}",
+        "goToPreviousKeyframe"
+      ],
+      [
+        "Go to next keyframe {{shortcut}}",
+        "goToNextKeyframe"
+      ],
+      [
+        "Switch lock property {{shortcut}}",
+        "switchLockProperty"
+      ],
+      [
+        "Switch occluded property {{shortcut}}",
+        "switchOccludedProperty"
+      ],
+      [
+        "Switch pinned property {{shortcut}}",
+        "switchPinnedProperty"
+      ],
+      [
+        "Switch hidden property {{shortcut}}",
+        "switchHiddenProperty"
+      ],
+      [
+        "Switch outside property {{shortcut}}",
+        "switchOutsideProperty"
+      ],
+      [
+        "Switch keyframe property {{shortcut}}",
+        "switchKeyframeProperty"
+      ],
+      [
+        "Go to the first keyframe",
+        "goToFirstKeyframe"
+      ],
+      [
+        "Go to the last keyframe",
+        "goToLastKeyframe"
+      ],
+      [
+        "Create object URL",
+        "createObjectUrl"
+      ],
+      [
+        "{{copyShortcut}} and {{pasteShortcut}}",
+        "copyPasteShortcut"
+      ],
+      [
+        "Make a copy",
+        "makeACopy"
+      ],
+      [
+        "Shift + Double click",
+        "editMaskShortcut"
+      ],
+      [
+        "Edit",
+        "edit"
+      ],
+      [
+        "Cut the shape into two parts {{sliceShortcut}}",
+        "sliceShapeHelpText"
+      ],
+      [
+        "Slice",
+        "slice"
+      ],
+      [
+        "Propagate",
+        "propagate"
+      ],
+      [
+        "Switch orientation",
+        "switchOrientation"
+      ],
+      [
+        "Reset perspective",
+        "resetPerspective"
+      ],
+      [
+        "To background",
+        "toBackground"
+      ],
+      [
+        "To foreground",
+        "toForeground"
+      ],
+      [
+        "Change {{colorBy}} color",
+        "changeColorBy"
+      ],
+      [
+        "Remove",
+        "remove"
+      ],
+      [
+        "Run annotation action",
+        "runAnnotationAction"
+      ],
+      [
+        "Switch lock property for all {{shortcut}}",
+        "switchLockAll"
+      ],
+      [
+        "Switch hidden property for all {{shortcut}}",
+        "switchHiddenAll"
+      ],
+      [
+        "You tagged the job as completed",
+        "jobFinishedSuccess"
+      ],
+      [
+        "Job state updated",
+        "jobStateUpdated"
+      ],
+      [
+        "Would you like to update current job state?",
+        "updateJobStateTitle"
+      ],
+      [
+        "Job state will be switched to \"{{state}}\"",
+        "updateJobStateContent"
+      ],
+      [
+        "Remove Annotations",
+        "removeAnnotationsTitle"
+      ],
+      [
+        "You are going to remove the annotations from the client. It will stay on the server till you save the job. Continue?",
+        "removeAnnotationsContent"
+      ],
+      [
+        "Select Range",
+        "selectRange"
+      ],
+      [
+        "Delete only keyframes for tracks",
+        "deleteOnlyKeyframes"
+      ],
+      [
+        "Would you like to finish the job?",
+        "finishJobTitle"
+      ],
+      [
+        "It will save annotations and set the job state to \"completed\"",
+        "finishJobContent"
+      ],
+      [
+        "Export job dataset",
+        "exportJobDataset"
+      ],
+      [
+        "Run actions",
+        "runActions"
+      ],
+      [
+        "Change job state",
+        "changeJobState"
+      ],
+      [
+        "Finish the job",
+        "finishTheJob"
+      ],
+      [
+        "CVAT is saving your annotations, please wait",
+        "savingAnnotations"
+      ],
+      [
+        "Undo: {{undoAction}} {{undoShortcut}}",
+        "undoActionTooltip"
+      ],
+      [
+        "Redo: {{redoAction}} {{redoShortcut}}",
+        "redoActionTooltip"
+      ],
+      [
+        "Press \"{{drawShortcut}}\" to finish",
+        "finishDrawingTooltip"
+      ],
+      [
+        "Press \"{{switchToolsBlockerShortcut}}\" to postpone running the algorithm",
+        "switchToolsBlockerTooltip"
+      ],
+      [
+        "Go to the first frame",
+        "goToFirstFrame"
+      ],
+      [
+        "Go to the last frame",
+        "goToLastFrame"
+      ],
+      [
+        "Go back with a step {{shortcut}}",
+        "goBackWithStep"
+      ],
+      [
+        "Go next with a step {{shortcut}}",
+        "goNextWithStep"
+      ],
+      [
+        "Go back",
+        "goBack"
+      ],
+      [
+        "Go back with a filter",
+        "goBackWithFilter"
+      ],
+      [
+        "Go back to an empty frame",
+        "goBackToEmptyFrame"
+      ],
+      [
+        "Go next",
+        "goNext"
+      ],
+      [
+        "Go next with a filter",
+        "goNextWithFilter"
+      ],
+      [
+        "Go next to an empty frame",
+        "goNextToEmptyFrame"
+      ],
+      [
+        "Play {{shortcut}}",
+        "play"
+      ],
+      [
+        "Pause {{shortcut}}",
+        "pause"
+      ],
+      [
+        "Do you want to delete frame #{{frameNumber}}?",
+        "deleteFrameTitle"
+      ],
+      [
+        "The frame will not be visible in navigation and exported datasets, but it still can be restored with all the annotations.",
+        "deleteFrameContent"
+      ],
+      [
+        "Delete the frame {{shortcut}}",
+        "deleteFrame"
+      ],
+      [
+        "Restore the frame",
+        "restoreFrame"
+      ],
+      [
+        "Copy frame filename",
+        "copyFrameFilename"
+      ],
+      [
+        "Create frame URL",
+        "createFrameUrl"
+      ],
+      [
+        "Press {{shortcut}} to focus here",
+        "focusFrameInput"
+      ],
+      [
+        "Search frame by name {{shortcut}}",
+        "searchFrameByName"
+      ],
+      [
+        "Save current changes {{shortcut}}",
+        "saveChangesTooltip"
+      ],
+      [
+        "Saving...",
+        "saving"
+      ],
+      [
+        "Save",
+        "save"
+      ],
+      [
+        "Type to search",
+        "typeToSearch"
+      ],
+      [
+        "No frames found",
+        "noFramesFound"
+      ],
+      [
+        "Shapes / Tracks",
+        "shapesTracks"
+      ],
+      [
+        "Rectangle",
+        "rectangle"
+      ],
+      [
+        "Polygon",
+        "polygon"
+      ],
+      [
+        "Polyline",
+        "polyline"
+      ],
+      [
+        "Ellipse",
+        "ellipse"
+      ],
+      [
+        "Cuboid",
+        "cuboid"
+      ],
+      [
+        "Cuboids",
+        "cuboids"
+      ],
+      [
+        "Skeleton",
+        "skeleton"
+      ],
+      [
+        "Mask",
+        "mask"
+      ],
+      [
+        "Tag",
+        "tag"
+      ],
+      [
+        "Manually",
+        "manually"
+      ],
+      [
+        "Interpolated",
+        "interpolated"
+      ],
+      [
+        "Total",
+        "total"
+      ],
+      [
+        "Overview",
+        "overview"
+      ],
+      [
+        "Start frame",
+        "startFrame"
+      ],
+      [
+        "Stop frame",
+        "stopFrame"
+      ],
+      [
+        "Bug tracker",
+        "bugTracker"
+      ],
+      [
+        "Annotations statistics",
+        "annotationsStatistics"
+      ],
+      [
+        "Search across fields: {{fields}}",
+        "searchAcrossFields"
+      ],
+      [
+        "Quorum",
+        "quorum"
+      ],
+      [
+        "Min overlap threshold (IoU)",
+        "minOverlapThresholdIoU"
+      ],
+      [
+        "Quorum (%)",
+        "quorumPercentage"
+      ],
+      [
+        "Min Overlap (%)",
+        "minOverlapPercentage"
+      ],
+      [
+        "General",
+        "general"
+      ],
+      [
+        "Shape comparison",
+        "shapeComparison"
+      ],
+      [
+        "This field is required",
+        "thisFieldIsRequired"
+      ],
+      [
+        "You can upload a key file. If you leave this field blank, the environment variable GOOGLE_APPLICATION_CREDENTIALS will be used.",
+        "keyFileUploadHelpText"
+      ],
+      [
+        "Prefix is used to filter bucket content",
+        "prefixHelpText"
+      ],
+      [
+        "Key",
+        "keyPlaceholder"
+      ],
+      [
+        "Name",
+        "namePlaceholder"
+      ],
+      [
+        "Add region",
+        "addRegion"
+      ],
+      [
+        "Incorrect region",
+        "incorrectRegion"
+      ],
+      [
+        "This region already exists",
+        "regionAlreadyExists"
+      ],
+      [
+        "Manifests",
+        "manifests"
+      ],
+      [
+        "Please specify a manifest name",
+        "pleaseSpecifyManifestName"
+      ],
+      [
+        "Manifest file must have .jsonl extension",
+        "manifestFileExtensionError"
+      ],
+      [
+        "manifest.jsonl",
+        "manifestPlaceholder"
+      ],
+      [
+        "Add manifest",
+        "addManifest"
+      ],
+      [
+        "We highly recommend attaching a manifest file to reduce the number of requests to the bucket",
+        "attachManifestRecommendation"
+      ],
+      [
+        "A representative set, 5-15% of randomly chosen frames is recommended",
+        "jobCreationTooltip"
+      ],
+      [
+        "Quantity",
+        "quantity"
+      ],
+      [
+        "Quantity per job",
+        "quantityPerJob"
+      ],
+      [
+        "Frame count",
+        "frameCount"
+      ],
+      [
+        "Seed",
+        "seed"
+      ],
+      [
+        "{{index}} - index file in set",
+        "indexFileInSet"
+      ],
+      [
+        "{{file_name}} - name of file",
+        "nameOfFile"
+      ],
+      [
+        "Example:",
+        "example"
+      ],
+      [
+        "When forming the name, a template is used.",
+        "whenFormingTheName"
+      ],
+      [
+        "Use lightweight backup whenever possible",
+        "useLightweightBackup"
+      ],
+      [
+        "Custom name for a backup file",
+        "customNameForBackup"
+      ],
+      [
+        "Name template",
+        "nameTemplate"
+      ],
+      [
+        "Export {{count}} {{instanceType}}s",
+        "exportInstances"
+      ],
+      [
+        "Export {{instanceType}} #{{instanceId}}",
+        "exportInstance"
+      ],
+      [
+        "Export {{count}} {{instanceType}}s as datasets",
+        "exportInstancesAsDatasets"
+      ],
+      [
+        "Export {{instanceType}} as a dataset",
+        "exportInstanceAsDataset"
+      ],
+      [
+        "Custom name for a dataset",
+        "customNameForDataset"
+      ],
+      [
+        "Specify target storage for export dataset",
+        "specifyTargetStorageForExport"
+      ],
+      [
+        "Default prefix \"{{prefix}}\" is used",
+        "defaultPrefixUsed"
+      ],
+      [
+        "Refresh",
+        "refresh"
+      ],
+      [
+        "Search by prefix",
+        "searchByPrefix"
+      ],
+      [
+        "There is no intersection between the specified prefix and the default one",
+        "noIntersectionWithDefaultPrefix"
+      ],
+      [
+        "Name",
+        "name"
+      ],
+      [
+        "Storage content fetching failed",
+        "storageContentFetchingFailed"
+      ],
+      [
+        " on ",
+        "onDate"
+      ],
+      [
+        "Click to open repository",
+        "clickToOpenRepository"
+      ],
+      [
+        "Press {{switchSettingsShortcut}} to switch",
+        "pressToSwitch"
+      ],
+      [
+        "Labels will be imported from dataset",
+        "labelsImportedFromDataset"
+      ],
+      [
+        "Labels from project will be used",
+        "labelsFromProjectUsed"
+      ],
+      [
+        "The option is relevant for formats that work with masks only",
+        "optionRelevantForMasksOnly"
+      ],
+      [
+        "Import from {{storageType}} storage{{storageId}}",
+        "importFromStorage"
+      ],
+      [
+        "You do not have permissions",
+        "noPermissions"
+      ],
+      [
+        "Could not fetch, check console output",
+        "couldNotFetchCheckConsole"
+      ],
+      [
+        "Loading..",
+        "loading"
+      ],
+      [
+        "Unsolved issues",
+        "unsolvedIssues"
+      ],
+      [
+        "Resolved issues",
+        "resolvedIssues"
+      ],
+      [
+        "Update attributes",
+        "updateAttributes"
+      ],
+      [
+        "Delete label",
+        "deleteLabel"
+      ],
+      [
+        "An HTML element representing the attribute",
+        "anHTMLElementRepresentingTheAttribute"
+      ],
+      [
+        "Press enter to add a new value",
+        "pressEnterToAddAValue"
+      ],
+      [
+        "This value is default",
+        "thisIsDefaultValue"
+      ],
+      [
+        "Can this attribute be changed frame to frame?",
+        "canThisAttributeBeChangedFrameToFrame"
+      ],
+      [
+        "Save the label and return",
+        "saveLabelAndReturn"
+      ],
+      [
+        "Save the label and create one more",
+        "saveLabelAndCreateMore"
+      ],
+      [
+        "Do not save the label and return",
+        "doNotSaveAndReturn"
+      ],
+      [
+        "Change color of the label",
+        "changeLabelColor"
+      ],
+      [
+        "Save labels",
+        "saveLabels"
+      ],
+      [
+        "Reset all changes",
+        "resetAllChanges"
+      ],
+      [
+        "You are going to remove existing labels/attributes",
+        "youAreGoingToRemoveExistingLabelsAttributes"
+      ],
+      [
+        "Following labels are going to be removed:",
+        "followingLabelsAreGoingToBeRemoved"
+      ],
+      [
+        "Following attributes are going to be removed:",
+        "followingAttributesAreGoingToBeRemoved"
+      ],
+      [
+        "All related annotations will be destroyed. Continue?",
+        "allRelatedAnnotationsWillBeDestroyedContinue"
+      ],
+      [
+        "Delete existing data",
+        "deleteExistingData"
+      ],
+      [
+        "Upload a background image",
+        "uploadBackgroundImage"
+      ],
+      [
+        "Click the canvas to add a point",
+        "clickCanvasToAddPoint"
+      ],
+      [
+        "Click and drag points",
+        "clickAndDragPoints"
+      ],
+      [
+        "Click two points to setup an edge",
+        "clickTwoPointsToSetupEdge"
+      ],
+      [
+        "Click an element to remove it",
+        "clickElementToRemove"
+      ],
+      [
+        "Download skeleton as SVG",
+        "downloadSkeletonAsSVG"
+      ],
+      [
+        "Upload a skeleton from SVG",
+        "uploadSkeletonFromSVG"
+      ],
+      [
+        "File must be a JPEG or PNG image. Detected mime type is \"{{fileType}}\"",
+        "fileMustBeJpegOrPng"
+      ],
+      [
+        "Wrong skeleton structure",
+        "wrongSkeletonStructure"
+      ],
+      [
+        "Specify a model threshold",
+        "specifyAModelThreshold"
+      ],
+      [
+        "Minimum confidence threshold for detections. Leave empty to use the default value specified in the model settings",
+        "minimumConfidenceThresholdForDetections"
+      ],
+      [
+        "Minimum similarity value for shapes that can be merged",
+        "minimumSimilarityValueForShapesThatCanBeMerged"
+      ],
+      [
+        "Maximum distance between shapes that can be merged",
+        "maximumDistanceBetweenShapesThatCanBeMerged"
+      ],
+      [
+        "Threshold",
+        "threshold"
+      ],
+      [
+        "Remove mapped label",
+        "removeMappedLabel"
+      ],
+      [
+        "Specify mapping between labels",
+        "specifyMappingBetweenLabels"
+      ],
+      [
+        "Remove mapped attribute",
+        "removeMappedAttribute"
+      ],
+      [
+        "Specify mapping between label attributes",
+        "specifyMappingBetweenLabelAttributes"
+      ],
+      [
+        "Specify mapping between skeleton sublabels",
+        "specifyMappingBetweenSkeletonSublabels"
+      ],
+      [
+        "Specify mapping between sublabel attributes",
+        "specifyMappingBetweenSublabelAttributes"
+      ],
+      [
+        "When moving a task, you need to map the labels from the task to the labels in the target project. Existing annotations will be updated according to the new mapping.",
+        "moveTaskModalDescription"
+      ],
+      [
+        "Active",
+        "active"
+      ],
+      [
+        "Excluded",
+        "excluded"
+      ],
+      [
+        "Target metric",
+        "targetMetric"
+      ],
+      [
+        "Target metric threshold",
+        "targetMetricThreshold"
+      ],
+      [
+        "Compare attributes",
+        "compareAttributes"
+      ],
+      [
+        "Empty frames are annotated",
+        "emptyFramesAreAnnotated"
+      ],
+      [
+        "Job selection filter",
+        "jobSelectionFilter"
+      ],
+      [
+        "Max validations per job",
+        "maxValidationsPerJob"
+      ],
+      [
+        "Low overlap threshold",
+        "lowOverlapThreshold"
+      ],
+      [
+        "Object Keypoint Similarity (OKS)",
+        "objectKeypointSimilarityOKS"
+      ],
+      [
+        "Point size base",
+        "pointSizeBase"
+      ],
+      [
+        "Line thickness",
+        "lineThickness"
+      ],
+      [
+        "Check orientation",
+        "checkOrientation"
+      ],
+      [
+        "Min similarity gain",
+        "minSimilarityGain"
+      ],
+      [
+        "Compare groups",
+        "compareGroups"
+      ],
+      [
+        "Min group match threshold",
+        "minGroupMatchThreshold"
+      ],
+      [
+        "Check object visibility",
+        "checkObjectVisibility"
+      ],
+      [
+        "Min visibility threshold",
+        "minVisibilityThreshold"
+      ],
+      [
+        "Match only visible parts",
+        "matchOnlyVisibleParts"
+      ],
+      [
+        "Min overlap threshold (%)",
+        "minOverlapThresholdPercentage"
+      ],
+      [
+        "Low overlap threshold (%)",
+        "lowOverlapThresholdPercentage"
+      ],
+      [
+        "OKS sigma (bbox side %)",
+        "oksSigmaBboxSidePercentage"
+      ],
+      [
+        "Relative thickness (frame side %)",
+        "relativeThicknessFrameSidePercentage"
+      ],
+      [
+        "Min similarity gain (%)",
+        "minSimilarityGainPercentage"
+      ],
+      [
+        "Min group match threshold (%)",
+        "minGroupMatchThresholdPercentage"
+      ],
+      [
+        "Min visibility threshold (area %)",
+        "minVisibilityThresholdAreaPercentage"
+      ],
+      [
+        "Image size",
+        "imageSize"
+      ],
+      [
+        "Group bbox size",
+        "groupBboxSize"
+      ],
+      [
+        "Job validation",
+        "jobValidation"
+      ],
+      [
+        "Keypoint Comparison",
+        "keypointComparison"
+      ],
+      [
+        "Point Comparison",
+        "pointComparison"
+      ],
+      [
+        "Line Comparison",
+        "lineComparison"
+      ],
+      [
+        "Group Comparison",
+        "groupComparison"
+      ],
+      [
+        "Segmentation Comparison",
+        "segmentationComparison"
+      ],
+      [
+        "Accuracy",
+        "accuracy"
+      ],
+      [
+        "Precision",
+        "precision"
+      ],
+      [
+        "Recall",
+        "recall"
+      ],
+      [
+        "Cancel automatic annotation",
+        "cancelAutomaticAnnotation"
+      ],
+      [
+        "You are going to cancel automatic annotation?",
+        "cancelAutomaticAnnotationConfirmTitle"
+      ],
+      [
+        "Reached progress will be lost. Continue?",
+        "cancelAutomaticAnnotationConfirmContent"
+      ],
+      [
+        "Automatic annotation request queued",
+        "automaticAnnotationRequestQueued"
+      ],
+      [
+        "Automatic annotation is in progress",
+        "automaticAnnotationInProgress"
+      ],
+      [
+        "Automatic annotation failed",
+        "automaticAnnotationFailed"
+      ],
+      [
+        "Unknown status received",
+        "unknownStatusReceived"
+      ],
+      [
+        "Automatic annotation accomplished",
+        "automaticAnnotationAccomplished"
+      ],
+      [
+        "<strong>Move & Detach</strong>: Transfer and unlink from a cloud storage.",
+        "moveAndDetachHelpText"
+      ],
+      [
+        "<strong>Move & Auto Match</strong>: Transfer and attempt to auto-link with a similar cloud storage in the target workspace. A similar cloud storage is defined by comparing the whole cloud storage configuration except credentials and owner.",
+        "moveAndAutoMatchHelpText"
+      ],
+      [
+        "Data-linked storage will only be reset during the transfer and must be updated manually afterward",
+        "dataLinkedStorageManualUpdateWarning"
+      ],
+      [
+        "Some resources are linked to a cloud storage",
+        "someResourcesLinkedToCloudStorage"
+      ],
+      [
+        "{{instanceType}} #{{instanceId}} is linked to a cloud storage",
+        "instanceLinkedToCloudStorage"
+      ],
+      [
+        "Move & detach",
+        "moveAndDetach"
+      ],
+      [
+        "Move & Auto match",
+        "moveAndAutoMatch"
+      ],
+      [
+        "Please choose how you would like the transfer to be done.",
+        "chooseTransferType"
+      ],
+      [
+        "Last delivery was successful. Response: {{status}}",
+        "lastDeliverySuccessful"
+      ],
+      [
+        "Last delivery was not successful. Response: {{status}}",
+        "lastDeliveryFailed"
+      ],
+      [
+        "Response: {{status}}",
+        "responseStatusCode"
+      ],
+      [
+        "Created by {{username}} on {{created}}",
+        "createdByOn"
+      ],
+      [
+        "URL:",
+        "url"
+      ],
+      [
+        "Events:",
+        "events"
+      ],
+      [
+        "Ping",
+        "ping"
+      ],
+      [
+        "No consensus settings found",
+        "noConsensusSettingsFound"
+      ],
+      [
+        "Could not save consensus settings",
+        "couldNotSaveConsensusSettings"
+      ],
+      [
+        " has invited you to join the ",
+        "hasInvitedYouToJoinThe"
+      ],
+      [
+        "Expired",
+        "expired"
+      ],
+      [
+        "Accept",
+        "accept"
+      ],
+      [
+        "Would you like to decline the invitation to the ",
+        "declineInvitationToThe"
+      ],
+      [
+        "Decline",
+        "decline"
+      ],
+      [
+        "Created: ",
+        "created:"
+      ],
+      [
+        "Updated: ",
+        "updated:"
+      ],
+      [
+        "Duration: ",
+        "duration:"
+      ],
+      [
+        "Frame count: ",
+        "frameCount:"
+      ],
+      [
+        "Frame range: ",
+        "frameRange:"
+      ],
+      [
+        "{{count}} Replicas",
+        "replicas"
+      ],
+      [
+        "Invite CVAT users to collaborate",
+        "inviteCvatUsersToCollaborate"
+      ],
+      [
+        "If the email address is registered on CVAT, the user will be added to the organization",
+        "invitationNote"
+      ],
+      [
+        "The input is not a valid email",
+        "theInputIsNotAValidEmail"
+      ],
+      [
+        "Enter an email address",
+        "enterAnEmailAddress"
+      ],
+      [
+        "Worker",
+        "worker"
+      ],
+      [
+        "Supervisor",
+        "supervisor"
+      ],
+      [
+        "Maintainer",
+        "maintainer"
+      ],
+      [
+        "Invite more",
+        "inviteMore"
+      ],
+      [
+        "Organization: {{slug}}",
+        "organizationSlug"
+      ],
+      [
+        "Remove organization",
+        "removeOrganization"
+      ],
+      [
+        "Add description",
+        "addDescription"
+      ],
+      [
+        "Add phone number",
+        "addPhoneNumber"
+      ],
+      [
+        "Add email",
+        "addEmail"
+      ],
+      [
+        "Add location",
+        "addLocation"
+      ],
+      [
+        "Created {{date}}",
+        "createdOn"
+      ],
+      [
+        "Updated {{date}}",
+        "updatedOn"
+      ],
+      [
+        "Leave organization",
+        "leaveOrganization"
+      ],
+      [
+        "Please, confirm leaving the organization",
+        "confirmLeavingOrganization"
+      ],
+      [
+        ". You will not have access to the organization data anymore",
+        "noAccessToOrganizationData"
+      ],
+      [
+        "Leave",
+        "leave"
+      ],
+      [
+        "Invite members",
+        "inviteMembers"
+      ],
+      [
+        "User",
+        "user"
+      ],
+      [
+        "Role",
+        "role"
+      ],
+      [
+        "Use",
+        "use"
+      ],
+      [
+        "project settings",
+        "projectSettings"
+      ],
+      [
+        "Own settings are used in {{count}} tasks",
+        "ownSettingsAreUsedInTasks"
+      ],
+      [
+        "Force project settings",
+        "forceProjectSettings"
+      ],
+      [
+        "Are you sure you want to force project settings?",
+        "forceProjectSettingsConfirmationTitle"
+      ],
+      [
+        "This action will override own settings in all tasks.",
+        "forceProjectSettingsConfirmationContent"
+      ],
+      [
+        "Let's create a new one",
+        "letsCreateANewOne"
+      ],
+      [
+        "We will send link to your email",
+        "weWillSendLinkToYourEmail"
+      ],
+      [
+        "Send",
+        "send"
+      ],
+      [
+        "Webhook has been successfully updated",
+        "webhookUpdatedSuccessfully"
+      ],
+      [
+        "Webhook has been successfully added",
+        "webhookAddedSuccessfully"
+      ],
+      [
+        "Setup a webhook",
+        "setupAWebhook"
+      ],
+      [
+        "Target URL cannot be empty",
+        "targetUrlCannotBeEmpty"
+      ],
+      [
+        "https://example.com/postreceive",
+        "targetUrlPlaceholder"
+      ],
+      [
+        "Project",
+        "project"
+      ],
+      [
+        "Content type",
+        "contentType"
+      ],
+      [
+        "Select an option and change input text above",
+        "selectAnOptionAndChangeInput"
+      ],
+      [
+        "Secret",
+        "secret"
+      ],
+      [
+        "Verify SSL certificates when delivering payloads",
+        "verifySslHelpText"
+      ],
+      [
+        "Enable SSL",
+        "enableSsl"
+      ],
+      [
+        "CVAT will deliver events for active webhooks only",
+        "activeWebhookHelpText"
+      ],
+      [
+        "The field is required",
+        "theFieldIsRequired"
+      ],
+      [
+        "everything",
+        "everything"
+      ],
+      [
+        "Select individual events",
+        "selectIndividualEvents"
+      ],
+      [
+        "No webhooks created yet ...",
+        "noWebhooksCreatedYet"
+      ]
+    ],
+    "todo_keys": [],
+    "failed_keys": []
+  }
+}

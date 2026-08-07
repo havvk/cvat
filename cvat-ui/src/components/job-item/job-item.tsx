@@ -4,12 +4,11 @@
 
 import './styles.scss';
 
-import React, {
-    useEffect, useState,
-} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import dayjs, { Dayjs } from 'dayjs';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Col, Row } from 'antd/lib/grid';
 import Card from 'antd/lib/card';
 import Text from 'antd/lib/typography/Text';
@@ -22,28 +21,34 @@ import { DurationIcon, FramesIcon } from 'icons';
 import {
     Job, JobStage, JobState, JobType, Task, User,
 } from 'cvat-core-wrapper';
-import { useIsMounted, useContextMenuClick } from 'utils/hooks';
+import { useIsMounted } from 'utils/hooks';
+import { useTranslation } from 'react-i18next';
+import { getMomentLocale } from 'i18n';
 import UserSelector from 'components/task-page/user-selector';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { CombinedState } from 'reducers';
+import Collapse from 'antd/lib/collapse';
 import CVATTag, { TagType } from 'components/common/cvat-tag';
 import JobActionsComponent from 'components/jobs-page/actions-menu';
 import { JobStageSelector, JobStateSelector } from './job-selectors';
 
-function formatDate(value: Dayjs): string {
-    return value.format('MMM Do YYYY HH:mm');
+function formatDate(value: moment.Moment): string {
+    return value.format('lll');
 }
 
 interface Props {
     job: Job;
     task: Task;
     onJobUpdate: (job: Job, fields: Parameters<Job['save']>[0]) => void;
+    childJobs?: Job[];
+    defaultCollapsed?: boolean;
+    onCollapseChange?: (jobID: number, collapsed: boolean) => void;
     selected?: boolean;
     onClick?: (event?: React.MouseEvent) => void;
-    onApplyFilter?: (filter: string | null) => void;
 }
 
 function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>): JSX.Element {
+    const { t } = useTranslation();
     const [summary, setSummary] = useState<Record<string, any> | null>(null);
     const [error, setError] = useState<any>(null);
     const isMounted = useIsMounted();
@@ -72,15 +77,15 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
     if (!summary) {
         if (error) {
             if (error.toString().includes('403')) {
-                return <p>You do not have permissions</p>;
+                return <p>{t('noPermissions')}</p>;
             }
 
-            return <p>Could not fetch, check console output</p>;
+            return <p>{t('couldNotFetchCheckConsole')}</p>;
         }
 
         return (
             <>
-                <p>Loading.. </p>
+                <p>{t('loading')}</p>
                 <LoadingOutlined />
             </>
         );
@@ -91,13 +96,13 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
             <tbody>
                 <tr>
                     <td>
-                        <Text strong>Unsolved issues</Text>
+                        <Text strong>{t('unsolvedIssues')}</Text>
                     </td>
                     <td>{summary.issues_unsolved}</td>
                 </tr>
                 <tr>
                     <td>
-                        <Text strong>Resolved issues</Text>
+                        <Text strong>{t('resolvedIssues')}</Text>
                     </td>
                     <td>{summary.issues_resolved}</td>
                 </tr>
@@ -107,18 +112,19 @@ function ReviewSummaryComponent({ jobInstance }: Readonly<{ jobInstance: Job }>)
 }
 
 function JobItem(props: Readonly<Props>): JSX.Element {
+    const { t, i18n } = useTranslation();
     const {
-        job, task, onJobUpdate, selected, onClick, onApplyFilter,
+        job, task, onJobUpdate, childJobs, defaultCollapsed, onCollapseChange, selected, onClick,
     } = props;
 
     const deletes = useSelector((state: CombinedState) => state.jobs.activities.deletes);
     const deleted = job.id in deletes ? deletes[job.id] === true : false;
-    const { itemRef, handleContextMenuClick, handleContextMenuCapture } = useContextMenuClick<HTMLDivElement>();
 
     const { stage, state } = job;
-    const created = dayjs(job.createdDate);
-    const updated = dayjs(job.updatedDate);
-    const now = dayjs();
+    const momentLocale = getMomentLocale(i18n.language);
+    const created = moment(job.createdDate).locale(momentLocale);
+    const updated = moment(job.updatedDate).locale(momentLocale);
+    const now = moment(moment.now()).locale(momentLocale);
 
     const style = {};
     if (deleted) {
@@ -127,7 +133,15 @@ function JobItem(props: Readonly<Props>): JSX.Element {
     }
     const frameCountPercent = ((job.frameCount / (task.size || 1)) * 100).toFixed(0);
     const frameCountPercentRepresentation = frameCountPercent === '0' ? '<1' : frameCountPercent;
-    const jobName = `Job #${job.id}`;
+    const jobName = t('jobNumber', { id: job.id });
+
+    let childJobViews: React.JSX.Element[] = [];
+    if (childJobs && childJobs.length > 0) {
+        const sortedChildJobs = [...childJobs].sort((a, b) => a.id - b.id);
+        childJobViews = sortedChildJobs.map((eachJob: Job) => (
+            <JobItem key={eachJob.id} job={eachJob} task={task} onJobUpdate={onJobUpdate} selected={selected} />
+        ));
+    }
 
     let tag = null;
     if (job.type === JobType.GROUND_TRUTH) {
@@ -136,29 +150,26 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                 <CVATTag type={TagType.GROUND_TRUTH} />
             </Col>
         );
-    } else if (job.replicasCount > 0) {
+    } else if (job.consensusReplicas) {
         tag = (
             <Col offset={1}>
-                <CVATTag type={TagType.PARENT} />
-            </Col>
-        );
-    } else if (job.parentJobId !== null) {
-        tag = (
-            <Col offset={1}>
-                <CVATTag type={TagType.REPLICA} />
+                <CVATTag type={TagType.CONSENSUS} />
             </Col>
         );
     }
 
-    /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+    const onCollapse = useCallback((keys: string | string[]) => {
+        if (onCollapseChange) {
+            onCollapseChange(job.id, Array.isArray(keys) ? keys.length === 0 : keys === '');
+        }
+    }, [onCollapseChange]);
+
     const card = (
         <Card
-            ref={itemRef}
             className={`cvat-job-item${selected ? ' cvat-item-selected' : ''}`}
             style={{ ...style }}
             data-row-id={job.id}
             onClick={onClick}
-            onContextMenuCapture={handleContextMenuCapture}
         >
             <Row align='middle'>
                 <Col span={6}>
@@ -177,13 +188,13 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                     </Row>
                     <Row className='cvat-job-item-dates-info'>
                         <Col>
-                            <Text>Created: </Text>
+                            <Text>{t('created:')}</Text>
                             <Text type='secondary'>{`${formatDate(created)}`}</Text>
                         </Col>
                     </Row>
                     <Row>
                         <Col>
-                            <Text>Updated: </Text>
+                            <Text>{t('updated:')}</Text>
                             <Text type='secondary'>{`${formatDate(updated)}`}</Text>
                         </Col>
                     </Row>
@@ -194,7 +205,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col className='cvat-job-item-select'>
                                     <Row>
-                                        <Text>Assignee:</Text>
+                                        <Text>
+                                            {t('assignee')}
+:
+                                        </Text>
                                     </Row>
                                     <UserSelector
                                         className='cvat-job-assignee-selector'
@@ -208,7 +222,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Col className='cvat-job-item-select'>
                                     <Row justify='space-between' align='middle'>
                                         <Col>
-                                            <Text>Stage:</Text>
+                                            <Text>
+                                                {t('Stage')}
+:
+                                            </Text>
                                         </Col>
                                     </Row>
                                     <JobStageSelector
@@ -221,7 +238,10 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Col className='cvat-job-item-select'>
                                     <Row justify='space-between' align='middle'>
                                         <Col>
-                                            <Text>State:</Text>
+                                            <Text>
+                                                {t('State')}
+:
+                                            </Text>
                                         </Col>
                                     </Row>
                                     <JobStateSelector
@@ -241,10 +261,11 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col>
                                     <Icon component={DurationIcon} />
-                                    <Text>Duration: </Text>
+                                    <Text>{t('duration:')}</Text>
                                     <Text type='secondary'>
-                                        {`${dayjs
+                                        {`${moment
                                             .duration(now.diff(created))
+                                            .locale(momentLocale)
                                             .humanize()}`}
                                     </Text>
                                 </Col>
@@ -252,7 +273,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                             <Row>
                                 <Col>
                                     <BorderOutlined />
-                                    <Text>Frame count: </Text>
+                                    <Text>{t('frameCount:')}</Text>
                                     <Text type='secondary' className='cvat-job-item-frames'>
                                         {`${job.frameCount} (${frameCountPercentRepresentation}%)`}
                                     </Text>
@@ -262,7 +283,7 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                                 <Row>
                                     <Col>
                                         <Icon component={FramesIcon} />
-                                        <Text>Frame range: </Text>
+                                        <Text>{t('frameRange:')}</Text>
                                         <Text type='secondary' className='cvat-job-item-frame-range'>
                                             {`${job.startFrame}-${job.stopFrame}`}
                                         </Text>
@@ -273,25 +294,52 @@ function JobItem(props: Readonly<Props>): JSX.Element {
                     </Row>
                 </Col>
             </Row>
-            <div
-                onClick={handleContextMenuClick}
-                className='cvat-job-item-more-button cvat-actions-menu-button'
-            >
-                <MoreOutlined className='cvat-menu-icon' />
-            </div>
+            <JobActionsComponent
+                jobInstance={job}
+                consensusJobsPresent={(childJobs as Job[]).length > 0}
+                triggerElement={
+                    <MoreOutlined className='cvat-job-item-more-button cvat-actions-menu-button' />
+                }
+            />
+            {childJobViews.length > 0 && (
+                <Collapse
+                    className='cvat-consensus-job-collapse'
+                    defaultActiveKey={defaultCollapsed ? [] : ['1']}
+                    onChange={onCollapse}
+                    items={[
+                        {
+                            key: '1',
+                            label: <Text>{t('replicas', { count: childJobViews.length })}</Text>,
+                            children: childJobViews,
+                        },
+                    ]}
+                />
+            )}
         </Card>
     );
 
     return (
         <Col span={24}>
-            <JobActionsComponent
-                jobInstance={job}
-                dropdownTrigger={['contextMenu']}
-                triggerElement={card}
-                onApplyFilter={onApplyFilter}
-            />
+            {
+                job.parentJobId === null ? (
+                    <JobActionsComponent
+                        jobInstance={job}
+                        consensusJobsPresent={(childJobs as Job[]).length > 0}
+                        dropdownTrigger={['contextMenu']}
+                        triggerElement={card}
+                    />
+                ) : card
+            }
         </Col>
     );
 }
+
+JobItem.defaultProps = {
+    childJobs: [],
+};
+
+JobItem.propTypes = {
+    childJobs: PropTypes.arrayOf(PropTypes.instanceOf(Job)),
+};
 
 export default React.memo(JobItem);

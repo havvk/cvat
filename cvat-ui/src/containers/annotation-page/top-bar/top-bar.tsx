@@ -10,30 +10,33 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import {
     changeFrameAsync,
-    changeWorkspaceAsync,
-    setHoveredChapter as setHoveredChapterAction,
+    changeWorkspace as changeWorkspaceAction,
     collectStatisticsAsync,
-    deleteFrameAsync,
     redoActionAsync,
-    restoreFrameAsync,
     saveAnnotationsAsync,
     searchAnnotationsAsync,
-    searchChaptersAsync,
     setForceExitAnnotationFlag as setForceExitAnnotationFlagAction,
-    setNavigationType as setNavigationTypeAction,
     showFilters as showFiltersAction,
     showStatistics as showStatisticsAction,
-    switchNavigationBlocked as switchNavigationBlockedAction,
     switchPlay,
-    switchShowSearchFramesModal as switchShowSearchFramesModalAction,
     undoActionAsync,
+    deleteFrameAsync,
+    restoreFrameAsync,
+    switchNavigationBlocked as switchNavigationBlockedAction,
+    setNavigationType as setNavigationTypeAction,
+    switchShowSearchFramesModal as switchShowSearchFramesModalAction,
 } from 'actions/annotation-actions';
 import AnnotationTopBarComponent from 'components/annotation-page/top-bar/top-bar';
 import { Canvas } from 'cvat-canvas-wrapper';
 import { Canvas3d } from 'cvat-canvas3d-wrapper';
 import { FramesMetaData, Job } from 'cvat-core-wrapper';
 import {
-    ActiveControl, CombinedState, FrameSpeed, NavigationType, ToolsBlockerState, Workspace,
+    CombinedState,
+    FrameSpeed,
+    Workspace,
+    ActiveControl,
+    ToolsBlockerState,
+    NavigationType,
 } from 'reducers';
 import isAbleToChangeFrame from 'utils/is-able-to-change-frame';
 import { KeyMap } from 'utils/mousetrap-react';
@@ -41,11 +44,8 @@ import { switchToolsBlockerState } from 'actions/settings-actions';
 import { writeLatestFrame } from 'utils/remember-latest-frame';
 import { finishDraw } from 'utils/drawing';
 import { toClipboard } from 'utils/to-clipboard';
-import { Chapter } from 'cvat-core/src/frames';
 
 interface StateToProps {
-    chapters: Chapter[];
-    hoveredChapter: number | null;
     jobInstance: Job;
     frameIsDeleted: boolean;
     frameNumber: number;
@@ -93,14 +93,8 @@ interface DispatchToProps {
             isEmptyFrame: boolean;
         },
     ): void;
-    searchChapters(
-        sessionInstance: Job,
-        frameFrom: number,
-        frameTo: number,
-    ): void;
     setForceExitAnnotationFlag(forceExit: boolean): void;
     changeWorkspace(workspace: Workspace): void;
-    setHoveredChapter(id: number | null): void;
     onSwitchToolsBlockerState(toolsBlockerState: ToolsBlockerState): void;
     deleteFrame(frame: number): void;
     restoreFrame(frame: number): void;
@@ -122,7 +116,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
                     fetching: frameFetching,
                 },
                 navigationType,
-                hoveredChapter,
             },
             annotations: {
                 saving: { uploading: saving, forceExit },
@@ -152,10 +145,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         );
     }
 
-    const chapters = meta?.chapters ?? [];
-
     return {
-        chapters,
         frameIsDeleted,
         frameStep,
         frameSpeed,
@@ -163,7 +153,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
         frameFetching,
         playing,
         canvasIsReady,
-        hoveredChapter,
         saving,
         frameNumber,
         frameFilename,
@@ -225,18 +214,8 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         ): void {
             dispatch(searchAnnotationsAsync(sessionInstance, frameFrom, frameTo, generalFilters));
         },
-        searchChapters(
-            sessionInstance: Job,
-            frameFrom: number,
-            frameTo: number,
-        ) {
-            dispatch(searchChaptersAsync(sessionInstance, frameFrom, frameTo));
-        },
         changeWorkspace(workspace: Workspace): void {
-            dispatch(changeWorkspaceAsync(workspace));
-        },
-        setHoveredChapter(id: number | null) {
-            dispatch(setHoveredChapterAction(id));
+            dispatch(changeWorkspaceAction(workspace));
         },
         setForceExitAnnotationFlag(forceExit: boolean): void {
             dispatch(setForceExitAnnotationFlagAction(forceExit));
@@ -440,7 +419,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
     private onPrevFrame = async (): Promise<void> => {
         const {
             frameNumber, jobInstance, playing, searchAnnotations,
-            onSwitchPlay, showDeletedFrames, navigationType, searchChapters,
+            onSwitchPlay, showDeletedFrames, navigationType,
         } = this.props;
         const { startFrame } = jobInstance;
 
@@ -460,8 +439,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
                 this.changeFrame(newFrame);
             } else if (navigationType === NavigationType.FILTERED) {
                 searchAnnotations(jobInstance, newFrame, startFrame);
-            } else if (navigationType === NavigationType.CHAPTER) {
-                searchChapters(jobInstance, newFrame, startFrame);
             } else {
                 searchAnnotations(jobInstance, newFrame, startFrame, { isEmptyFrame: true });
             }
@@ -470,7 +447,7 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
 
     private onNextFrame = async (): Promise<void> => {
         const {
-            frameNumber, jobInstance, playing, searchAnnotations, searchChapters,
+            frameNumber, jobInstance, playing, searchAnnotations,
             onSwitchPlay, showDeletedFrames, navigationType,
         } = this.props;
         const { stopFrame } = jobInstance;
@@ -490,8 +467,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
                 this.changeFrame(newFrame);
             } else if (navigationType === NavigationType.FILTERED) {
                 searchAnnotations(jobInstance, newFrame, stopFrame);
-            } else if (navigationType === NavigationType.CHAPTER) {
-                searchChapters(jobInstance, newFrame, stopFrame);
             } else {
                 searchAnnotations(jobInstance, newFrame, stopFrame, { isEmptyFrame: true });
             }
@@ -546,36 +521,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
             } else if (direction === 'backward' && frameNumber - 1 >= startFrame) {
                 searchAnnotations(jobInstance, frameNumber - 1, startFrame);
             }
-        }
-    };
-
-    private readonly searchChapters = (direction: 'forward' | 'backward'): void => {
-        const {
-            frameNumber, jobInstance, searchChapters,
-        } = this.props;
-        const { startFrame, stopFrame } = jobInstance;
-
-        if (isAbleToChangeFrame()) {
-            if (direction === 'forward' && frameNumber + 1 <= stopFrame) {
-                searchChapters(jobInstance, frameNumber + 1, stopFrame);
-            } else if (direction === 'backward' && frameNumber - 1 >= startFrame) {
-                searchChapters(jobInstance, frameNumber - 1, startFrame);
-            }
-        }
-    };
-
-    private readonly selectChapter = async (id: number): Promise<void> => {
-        const {
-            chapters, playing, onSwitchPlay,
-        } = this.props;
-
-        const selectedChapter = chapters.find((chapter: Chapter) => chapter.id === id) ?? null;
-
-        if (selectedChapter !== null) {
-            if (playing) {
-                onSwitchPlay(false);
-            }
-            this.changeFrame(selectedChapter.start);
         }
     };
 
@@ -658,11 +603,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
         }
     };
 
-    private readonly setHoveredChapter = (id: number | null): void => {
-        const { setHoveredChapter } = this.props;
-        setHoveredChapter(id);
-    };
-
     private beforeUnloadCallback = (event: BeforeUnloadEvent): string | undefined => {
         const { jobInstance, forceExit, setForceExitAnnotationFlag } = this.props;
         const { frameNumber } = this.props;
@@ -700,8 +640,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
         const {
             playing,
             saving,
-            chapters,
-            hoveredChapter,
             jobInstance,
             jobInstance: { startFrame, stopFrame },
             frameNumber,
@@ -736,9 +674,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
                 onFirstFrame={this.onFirstFrame}
                 onLastFrame={this.onLastFrame}
                 onSearchAnnotations={this.searchAnnotations}
-                onSearchChapters={this.searchChapters}
-                onSelectChapter={this.selectChapter}
-                setHoveredChapter={this.setHoveredChapter}
                 setNavigationType={setNavigationType}
                 onSliderChange={this.onChangePlayerSliderValue}
                 onInputChange={this.onChangePlayerInputValue}
@@ -753,8 +688,6 @@ class AnnotationTopBarContainer extends React.PureComponent<Props> {
                 keyMap={keyMap}
                 workspace={workspace}
                 playing={playing}
-                chapters={chapters}
-                hoveredChapter={hoveredChapter}
                 saving={saving}
                 ranges={ranges}
                 startFrame={startFrame}

@@ -6,6 +6,7 @@
 import React, {
     useState, ReactPortal, useRef, useEffect,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
 import Form from 'antd/lib/form';
@@ -31,6 +32,7 @@ interface FormProps {
 }
 
 function MessageForm(props: Readonly<FormProps>): JSX.Element {
+    const { t } = useTranslation();
     const {
         top, left, angle, scale, fetching, submit, cancel, clientCoordinates, canvasRect,
     } = props;
@@ -75,9 +77,9 @@ function MessageForm(props: Readonly<FormProps>): JSX.Element {
             >
                 <Form.Item
                     name='issue_description'
-                    rules={[{ required: true, message: 'Please, fill out the field' }]}
+                    rules={[{ required: true, message: t('pleaseFillField') }]}
                 >
-                    <Input ref={inputRef} autoComplete='off' placeholder='Please, describe the issue' />
+                    <Input ref={inputRef} autoComplete='off' placeholder={t('describeIssue')} />
                 </Form.Item>
                 <Row justify='space-between'>
                     <Col>
@@ -86,7 +88,7 @@ function MessageForm(props: Readonly<FormProps>): JSX.Element {
                             disabled={fetching}
                             className='cvat-create-issue-dialog-cancel-button'
                         >
-                            Cancel
+                            {t('cancel')}
                         </Button>
                     </Col>
                     <Col>
@@ -97,7 +99,7 @@ function MessageForm(props: Readonly<FormProps>): JSX.Element {
                             htmlType='submit'
                             className='cvat-create-issue-dialog-submit-button'
                         >
-                            Submit
+                            {t('submit')}
                         </Button>
                     </Col>
                 </Row>

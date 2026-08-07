@@ -1,0 +1,51 @@
+# 1. 使用与原始配置相同的 Ubuntu 基础镜像
+FROM ubuntu:22.04
+
+# 2. 设置环境变量，避免安装过程中的交互式提示
+ENV DEBIAN_FRONTEND=noninteractive
+ENV NVIDIA_VISIBLE_DEVICES=all
+
+# 3. 设置代理环境变量 (关键！)
+# 在运行 docker build 时，通过 --build-arg 传入
+# 将代理地址换成 host.docker.internal，以便容器访问主机
+ARG HTTP_PROXY="http://host.docker.internal:8118"
+ARG HTTPS_PROXY="http://host.docker.internal:8118"
+ENV http_proxy=${HTTP_PROXY}
+ENV https_proxy=${HTTPS_PROXY}
+
+# 4. 安装系统级依赖
+#    合并多个 RUN 指令，并最后清理缓存，以减小镜像体积
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    python3 \
+    python3-pip \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 5. 设置工作目录
+WORKDIR /opt/nuclio/sam2
+
+# 6. 安装核心 Python 依赖 (使用国内镜像源加速)
+#    --no-cache-dir 减小镜像体积
+RUN pip3 install --no-cache-dir \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    torch torchvision torchaudio pycocotools matplotlib onnxruntime onnx msgpack
+
+# 7. 安装 sam2 源码
+RUN pip3 install --no-cache-dir \
+    -i https://pypi.tuna.tsinghua.edu.cn/simple \
+    git+https://github.com/facebookresearch/sam2.git@c2ec8e14a185632b0a5d8b161928ceb50197eddc
+
+# 8. 下载 sam2 权重模型
+RUN curl -L -O https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_large.pt
+
+# 9. 创建符号链接，方便调用
+RUN ln -s /usr/bin/pip3 /usr/local/bin/pip && \
+    ln -s /usr/bin/python3 /usr/bin/python
+
+# 10. 将 PYTHONPATH 也设置好，与 function.yaml 保持一致
+ENV PYTHONPATH /opt/nuclio/sam2

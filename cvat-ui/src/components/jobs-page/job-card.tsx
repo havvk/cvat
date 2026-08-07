@@ -9,9 +9,10 @@ import { useHistory } from 'react-router';
 import Card from 'antd/lib/card';
 import Descriptions from 'antd/lib/descriptions';
 import { MoreOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { Job, JobType } from 'cvat-core-wrapper';
-import { useCardHeightHOC, useContextMenuClick } from 'utils/hooks';
+import { useCardHeightHOC } from 'utils/hooks';
 import Preview from 'components/common/preview';
 import { CombinedState } from 'reducers';
 import JobActionsComponent from './actions-menu';
@@ -28,20 +29,17 @@ interface Props {
     job: Job;
     selected: boolean;
     onClick: (event: React.MouseEvent) => boolean;
-    onApplyFilter?: (filter: string | null) => void;
 }
 
 function JobCardComponent(props: Readonly<Props>): JSX.Element {
-    const {
-        job, selected, onClick, onApplyFilter,
-    } = props;
+    const { job, selected, onClick } = props;
+    const { t } = useTranslation();
 
     const deletes = useSelector((state: CombinedState) => state.jobs.activities.deletes);
     const deleted = job.id in deletes ? deletes[job.id] === true : false;
 
     const history = useHistory();
     const height = useCardHeight();
-    const { itemRef, handleContextMenuClick, handleContextMenuCapture } = useContextMenuClick<HTMLDivElement>();
     const handleCardClick = useCallback((event: React.MouseEvent): void => {
         const cancel = onClick(event);
         if (!cancel) {
@@ -62,67 +60,62 @@ function JobCardComponent(props: Readonly<Props>): JSX.Element {
 
     let tag = null;
     if (job.type === JobType.GROUND_TRUTH) {
-        tag = 'Ground truth';
-    } else if (job.replicasCount > 0) {
-        tag = 'Parent';
-    } else if (job.parentJobId !== null) {
-        tag = 'Replica';
+        tag = t('groundTruth');
+    } else if (job.type === JobType.ANNOTATION && job.consensusReplicas > 0) {
+        tag = t('Consensus');
     }
 
     const cardClassName = `cvat-job-page-list-item${selected ? ' cvat-item-selected' : ''}`;
 
-    /* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
-    const card = (
-        <Card
-            ref={itemRef}
-            style={{ ...style, height }}
-            className={cardClassName}
-            cover={(
-                <>
-                    <Preview
-                        job={job}
-                        onClick={handleCardClick}
-                        loadingClassName='cvat-job-item-loading-preview'
-                        emptyPreviewClassName='cvat-job-item-empty-preview'
-                        previewWrapperClassName='cvat-jobs-page-job-item-card-preview-wrapper'
-                        previewClassName='cvat-jobs-page-job-item-card-preview'
-                    />
-                    <div className='cvat-job-page-list-item-id'>
-                        ID:
-                        {` ${job.id}`}
-                    </div>
-                    {tag && <div className='cvat-job-page-list-item-type'>{tag}</div>}
-                    <div className='cvat-job-page-list-item-dimension'>{job.dimension.toUpperCase()}</div>
-                </>
-            )}
-            hoverable
-            onClick={onClick}
-            onContextMenuCapture={handleContextMenuCapture}
-        >
-            <Descriptions column={1} size='small'>
-                <Descriptions.Item label='Stage and state'>{`${job.stage} ${job.state}`}</Descriptions.Item>
-                <Descriptions.Item label='Frames'>{job.stopFrame - job.startFrame + 1}</Descriptions.Item>
-                {job.assignee ? (
-                    <Descriptions.Item label='Assignee'>{job.assignee.username}</Descriptions.Item>
-                ) : (
-                    <Descriptions.Item label='Assignee'> </Descriptions.Item>
-                )}
-            </Descriptions>
-            <div
-                onClick={handleContextMenuClick}
-                className='cvat-job-card-more-button cvat-actions-menu-button'
-            >
-                <MoreOutlined className='cvat-menu-icon' />
-            </div>
-        </Card>
-    );
-
     return (
         <JobActionsComponent
             jobInstance={job}
+            consensusJobsPresent={false}
             dropdownTrigger={['contextMenu']}
-            triggerElement={card}
-            onApplyFilter={onApplyFilter}
+            triggerElement={(
+                <Card
+                    style={{ ...style, height }}
+                    className={cardClassName}
+                    cover={(
+                        <>
+                            <Preview
+                                job={job}
+                                onClick={handleCardClick}
+                                loadingClassName='cvat-job-item-loading-preview'
+                                emptyPreviewClassName='cvat-job-item-empty-preview'
+                                previewWrapperClassName='cvat-jobs-page-job-item-card-preview-wrapper'
+                                previewClassName='cvat-jobs-page-job-item-card-preview'
+                            />
+                            <div className='cvat-job-page-list-item-id'>
+                                {`${t('ID')}: ${job.id}`}
+                            </div>
+                            {tag && <div className='cvat-job-page-list-item-type'>{tag}</div>}
+                            <div className='cvat-job-page-list-item-dimension'>{job.dimension.toUpperCase()}</div>
+                        </>
+                    )}
+                    hoverable
+                    onClick={onClick}
+                >
+                    <Descriptions column={1} size='small'>
+                        <Descriptions.Item label={t('stageAndState')}>
+                            {`${t(job.stage)} ${t(job.state)}`}
+                        </Descriptions.Item>
+                        <Descriptions.Item label={t('frames')}>{job.stopFrame - job.startFrame + 1}</Descriptions.Item>
+                        {job.assignee ? (
+                            <Descriptions.Item label={t('assignee')}>{job.assignee.username}</Descriptions.Item>
+                        ) : (
+                            <Descriptions.Item label={t('assignee')}> </Descriptions.Item>
+                        )}
+                    </Descriptions>
+                    <JobActionsComponent
+                        jobInstance={job}
+                        consensusJobsPresent={false} // consensus merging is not allowed from jobs page
+                        triggerElement={
+                            <MoreOutlined className='cvat-job-card-more-button cvat-actions-menu-button' />
+                        }
+                    />
+                </Card>
+            )}
         />
     );
 }

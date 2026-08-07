@@ -5,6 +5,8 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import CVATTooltip from 'components/common/cvat-tooltip';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { PolygonIcon } from 'icons';
@@ -21,6 +23,7 @@ export interface Props {
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-polygon');
 function DrawPolygonControl(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -38,7 +41,9 @@ function DrawPolygonControl(props: Props): JSX.Element {
     };
 
     return disabled ? (
-        <Icon className='cvat-draw-polygon-control cvat-disabled-canvas-control' component={PolygonIcon} />
+        <CVATTooltip title={t('tooltipDrawPolygon')} placement='right'>
+            <Icon className='cvat-draw-polygon-control cvat-disabled-canvas-control' component={PolygonIcon} />
+        </CVATTooltip>
     ) : (
         <CustomPopover
             {...dynamicPopoverProps}
@@ -46,7 +51,9 @@ function DrawPolygonControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.POLYGON} />}
         >
-            <Icon {...dynamicIconProps} component={PolygonIcon} />
+            <CVATTooltip title={t('tooltipDrawPolygon')} placement='right'>
+                <Icon {...dynamicIconProps} component={PolygonIcon} />
+            </CVATTooltip>
         </CustomPopover>
     );
 }

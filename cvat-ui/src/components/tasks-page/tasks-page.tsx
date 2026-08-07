@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router';
 import Spin from 'antd/lib/spin';
@@ -18,9 +18,23 @@ import { getTasksAsync } from 'actions/tasks-actions';
 import { anySearch } from 'utils/any-search';
 import { useResourceQuery } from 'utils/hooks';
 import { selectionActions } from 'actions/selection-actions';
+import { createSelector } from 'reselect';
 
 import TopBar from './top-bar';
 import EmptyListComponent from './empty-list';
+
+const selectTasksCurrent = (state: CombinedState) => state.tasks.current;
+const selectDeletedTasks = (state: CombinedState) => state.tasks.activities.deletes;
+
+const selectAllTaskIds = createSelector(
+    [selectTasksCurrent],
+    (current) => current.map((t) => t.id),
+);
+
+const selectSelectableTaskIds = createSelector(
+    [selectAllTaskIds, selectDeletedTasks],
+    (allTaskIds, deletedTasks) => allTaskIds.filter((id) => !deletedTasks[id]),
+);
 
 interface Props {
     fetching: boolean;
@@ -39,18 +53,11 @@ function TasksPageComponent(props: Readonly<Props>): JSX.Element {
     const history = useHistory();
     const [isMounted, setIsMounted] = useState(false);
 
-    const { currentTasks, deletedTasks, selectedCount } = useSelector((state: CombinedState) => ({
-        currentTasks: state.tasks.current,
-        deletedTasks: state.tasks.activities.deletes,
-        selectedCount: state.tasks.selected.length,
-    }), shallowEqual);
-
+    const selectableTaskIds = useSelector(selectSelectableTaskIds);
+    const selectedCount = useSelector((state: CombinedState) => state.tasks.selected.length);
     const onSelectAll = useCallback(() => {
-        dispatch(selectionActions.selectResources(
-            currentTasks.map((t) => t.id).filter((id) => !deletedTasks[id]),
-            SelectedResourceType.TASKS,
-        ));
-    }, [currentTasks, deletedTasks]);
+        dispatch(selectionActions.selectResources(selectableTaskIds, SelectedResourceType.TASKS));
+    }, [dispatch, selectableTaskIds]);
 
     const updatedQuery = useResourceQuery<TasksQuery>(query);
 

@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Icon from '@ant-design/icons';
 import Button from 'antd/lib/button';
 
@@ -28,6 +29,7 @@ const componentShortcuts = {
 registerComponentShortcuts(componentShortcuts);
 
 function SaveAnnotationsButton() {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const { isSaving, keyMap, normKeyMap } = useSelector((state: CombinedState) => ({
         isSaving: state.annotation.annotations.saving.uploading,
@@ -47,7 +49,7 @@ function SaveAnnotationsButton() {
     return (
         <>
             <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
-            <CVATTooltip overlay={`Save current changes ${normKeyMap.SAVE_JOB}`}>
+            <CVATTooltip overlay={t('saveChangesTooltip', { shortcut: normKeyMap.SAVE_JOB })}>
                 <Button
                     type='link'
                     onClick={isSaving ? undefined : () => dispatch(saveAnnotationsAsync())}
@@ -55,7 +57,7 @@ function SaveAnnotationsButton() {
                         'cvat-annotation-header-save-button cvat-annotation-header-button'}
                 >
                     <Icon component={SaveIcon} />
-                    {isSaving ? 'Saving...' : 'Save'}
+                    {isSaving ? t('saving') : t('save')}
                 </Button>
             </CVATTooltip>
         </>

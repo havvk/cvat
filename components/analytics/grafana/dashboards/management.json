@@ -185,7 +185,7 @@
           "refId": "A"
         }
       ],
-      "title": "User Activity",
+      "title": "用户活动",
       "transformations": [],
       "type": "timeseries"
     },
@@ -293,7 +293,7 @@
           "refId": "A"
         }
       ],
-      "title": "Overall Activity",
+      "title": "总体活动",
       "type": "timeseries"
     },
     {
@@ -371,7 +371,7 @@
           "refId": "A"
         }
       ],
-      "title": "Working time",
+      "title": "工作时长",
       "type": "table"
     }
   ],
@@ -399,7 +399,7 @@
         "definition": "SELECT DISTINCT user_id\nFROM events\nWHERE $__timeFilter(timestamp)\n  AND source = 'client'",
         "hide": 0,
         "includeAll": true,
-        "label": "User",
+        "label": "用户",
         "multi": true,
         "name": "users",
         "options": [],
@@ -424,7 +424,7 @@
         "definition": "SELECT DISTINCT user_name\nFROM events\nWHERE $__timeFilter(timestamp)",
         "hide": 0,
         "includeAll": true,
-        "label": "Username",
+        "label": "用户名",
         "multi": true,
         "name": "usernames",
         "options": [],
@@ -453,7 +453,7 @@
         "definition": "SELECT DISTINCT project_id\nFROM events\nWHERE  $__timeFilter(timestamp)\n  AND project_id IS NOT NULL\n  AND source = 'client'",
         "hide": 0,
         "includeAll": true,
-        "label": "Project",
+        "label": "项目",
         "multi": true,
         "name": "projects",
         "options": [],
@@ -478,7 +478,7 @@
         "description": "",
         "hide": 0,
         "includeAll": true,
-        "label": "Task",
+        "label": "任务",
         "multi": true,
         "name": "tasks",
         "options": [],
@@ -506,7 +506,7 @@
         "definition": "SELECT DISTINCT job_id\nFROM events\nWHERE $__timeFilter(timestamp)\n  AND job_id IS NOT NULL\n  AND source = 'client'\n  AND task_id in (${tasks})",
         "hide": 0,
         "includeAll": true,
-        "label": "Job",
+        "label": "作业",
         "multi": true,
         "name": "jobs",
         "options": [],
@@ -525,7 +525,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Management",
+  "title": "管理",
   "uid": "w0if6WAVz",
   "version": 2,
   "weekStart": ""

@@ -13,10 +13,11 @@ import { SketchPicker } from 'react-color';
 
 import { getCore } from 'cvat-core-wrapper';
 import CVATTooltip from 'components/common/cvat-tooltip';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 const core = getCore();
 
-interface Props {
+interface Props extends WithTranslation {
     children: React.ReactNode;
     value?: string;
     visible?: boolean;
@@ -40,7 +41,7 @@ interface Props {
 
 function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
     const {
-        children, value, visible, resetVisible, onChange, onVisibleChange, placement,
+        children, value, visible, resetVisible, onChange, onVisibleChange, placement, t,
     } = props;
 
     const [colorState, setColorState] = useState(value);
@@ -77,7 +78,7 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
                                         changeVisible(false);
                                     }}
                                 >
-                                    Reset
+                                    {t('Reset')}
                                 </Button>
                             )}
                         </Col>
@@ -88,7 +89,7 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
                                     changeVisible(false);
                                 }}
                             >
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                         </Col>
                         <Col span={6}>
@@ -100,7 +101,7 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
                                     changeVisible(false);
                                 }}
                             >
-                                Ok
+                                {t('Ok')}
                             </Button>
                         </Col>
                     </Row>
@@ -109,10 +110,10 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
             title={(
                 <Row justify='space-between' align='middle'>
                     <Col span={12}>
-                        <Text strong>Select color</Text>
+                        <Text strong>{t('selectColor')}</Text>
                     </Col>
                     <Col span={4}>
-                        <CVATTooltip title='Close'>
+                        <CVATTooltip title={t('Close')}>
                             <Button
                                 className='cvat-color-picker-close-button'
                                 type='link'
@@ -137,4 +138,4 @@ function ColorPicker(props: Props, ref: React.Ref<any>): JSX.Element {
     );
 }
 
-export default React.forwardRef(ColorPicker);
+export default withTranslation()(React.forwardRef(ColorPicker));

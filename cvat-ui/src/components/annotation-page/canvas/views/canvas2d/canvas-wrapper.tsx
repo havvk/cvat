@@ -7,6 +7,7 @@ import './styles.scss';
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import Slider from 'antd/lib/slider';
 import Spin from 'antd/lib/spin';
 import Popover from 'antd/lib/popover';
@@ -46,7 +47,6 @@ import {
     getDataFailed,
     canvasErrorOccurred,
     updateEditedStateAsync,
-    collapseObjectItems,
 } from 'actions/annotation-actions';
 import {
     switchGrid,
@@ -99,7 +99,7 @@ interface StateToProps {
     saturationLevel: number;
     resetZoom: boolean;
     smoothImage: boolean;
-    focusedObjectPadding: number;
+    aamZoomMargin: number;
     showObjectsTextAlways: boolean;
     textFontSize: number;
     controlPointsSize: number;
@@ -136,7 +136,6 @@ interface DispatchToProps {
     onJoinAnnotations(states: ObjectState[], points: number[]): void;
     onSliceAnnotations(state: ObjectState, results: number[][]): void;
     onActivateObject: (activatedStateID: number | null, activatedElementID: number | null) => void;
-    onExpandObject(objectState: ObjectState): void;
     onAddZLayer(): void;
     onSwitchZLayer(cur: number): void;
     onChangeBrightnessLevel(level: number): void;
@@ -188,7 +187,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
                 smoothImage,
             },
             workspace: {
-                focusedObjectPadding,
+                aamZoomMargin,
                 showObjectsTextAlways,
                 showAllInterpolationTracks,
                 showTagsOnFrame,
@@ -238,7 +237,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         saturationLevel: saturationLevel / 100,
         resetZoom,
         smoothImage,
-        focusedObjectPadding,
+        aamZoomMargin,
         showObjectsTextAlways,
         textFontSize,
         controlPointsSize,
@@ -274,18 +273,6 @@ const componentShortcuts = {
         description: 'Switch automatic bordering for polygons and polylines during drawing/editing',
         sequences: ['ctrl+a'],
         scope: ShortcutScope.STANDARD_WORKSPACE,
-    },
-    NEXT_OBJECT: {
-        name: 'Next object',
-        description: 'Go to the next object and center it on the canvas',
-        sequences: ['tab'],
-        scope: ShortcutScope.ANNOTATION_PAGE,
-    },
-    PREVIOUS_OBJECT: {
-        name: 'Previous object',
-        description: 'Go to the previous object and center it on the canvas',
-        sequences: ['shift+tab'],
-        scope: ShortcutScope.ANNOTATION_PAGE,
     },
 };
 
@@ -329,9 +316,6 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
             }
 
             dispatch(activateObject(activatedStateID, activatedElementID, null));
-        },
-        onExpandObject(objectState: ObjectState): void {
-            dispatch(collapseObjectItems([objectState], false));
         },
         onAddZLayer(): void {
             dispatch(addZLayer());
@@ -378,7 +362,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
     };
 }
 
-type Props = StateToProps & DispatchToProps;
+type Props = StateToProps & DispatchToProps & WithTranslation;
 
 class CanvasWrapperComponent extends React.PureComponent<Props> {
     private debouncedUpdate = debounce(this.updateCanvas.bind(this), 250, { leading: true });
@@ -390,6 +374,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             adaptiveZoom,
             intelligentPolygonCrop,
             showObjectsTextAlways,
+            workspace,
             showProjections,
             selectedOpacity,
             opacity,
@@ -403,7 +388,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             outlineColor,
             showGroundTruth,
             resetZoom,
-            focusedObjectPadding,
         } = this.props;
         const { canvasInstance } = this.props as { canvasInstance: Canvas };
 
@@ -413,6 +397,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
         wrapper.appendChild(canvasInstance.html());
 
         canvasInstance.configure({
+            forceDisableEditing: workspace === Workspace.REVIEW,
             undefinedAttrValue: config.UNDEFINED_ATTRIBUTE_VALUE,
             displayAllText: showObjectsTextAlways,
             autoborders: automaticBordering,
@@ -430,7 +415,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             textPosition,
             textContent,
             resetZoom,
-            focusedObjectPadding,
         });
 
         this.initialSetup();
@@ -458,6 +442,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             brightnessLevel,
             contrastLevel,
             saturationLevel,
+            workspace,
             showObjectsTextAlways,
             textFontSize,
             controlPointsSize,
@@ -473,7 +458,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             showGroundTruth,
             highlightedConflict,
             imageFilters,
-            focusedObjectPadding,
         } = this.props;
         const { canvasInstance } = this.props as { canvasInstance: Canvas };
 
@@ -494,8 +478,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             prevProps.outlineColor !== outlineColor ||
             prevProps.outlined !== outlined ||
             prevProps.showGroundTruth !== showGroundTruth ||
-            prevProps.resetZoom !== resetZoom ||
-            prevProps.focusedObjectPadding !== focusedObjectPadding
+            prevProps.resetZoom !== resetZoom
         ) {
             canvasInstance.configure({
                 undefinedAttrValue: config.UNDEFINED_ATTRIBUTE_VALUE,
@@ -515,7 +498,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
                 textContent,
                 showConflicts: showGroundTruth,
                 resetZoom,
-                focusedObjectPadding,
             });
         }
 
@@ -597,6 +579,18 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             if (prevProps.frameData === frameData) {
                 // explicitly rotated, not a new frame
                 canvasInstance.fit();
+            }
+        }
+
+        if (prevProps.workspace !== workspace) {
+            if (workspace === Workspace.REVIEW) {
+                canvasInstance.configure({
+                    forceDisableEditing: true,
+                });
+            } else if (prevProps.workspace === Workspace.REVIEW) {
+                canvasInstance.configure({
+                    forceDisableEditing: false,
+                });
             }
         }
 
@@ -807,7 +801,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
     };
 
     private onCanvasShapeClicked = (e: any): void => {
-        const { onExpandObject } = this.props;
         const { clientID, parentID } = e.detail.state;
         let sidebarItem = null;
         if (Number.isInteger(parentID)) {
@@ -819,7 +812,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
         if (sidebarItem) {
             sidebarItem.scrollIntoView();
         }
-        onExpandObject(e.detail.state);
     };
 
     private onCanvasShapeDeactivated = (e: any): void => {
@@ -885,9 +877,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
 
     private onCanvasSliceDone = (event: any): void => {
         const { jobInstance, updateActiveControl, onSliceAnnotations } = this.props;
-        const { canvasInstance } = this.props as { canvasInstance: Canvas };
         const { state, results, duration } = event.detail;
-        canvasInstance.slice({ enabled: false });
         updateActiveControl(ActiveControl.CURSOR);
         jobInstance.logger.log(EventScope.sliceObject, {
             count: 1,
@@ -948,6 +938,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
         const {
             activatedStateID,
             activatedAttributeID,
+            aamZoomMargin,
             workspace,
             annotations,
         } = this.props;
@@ -957,7 +948,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             const [activatedState] = annotations.filter((state: any): boolean => state.clientID === activatedStateID);
             if (activatedState && workspace === Workspace.ATTRIBUTES) {
                 if (activatedState.objectType !== ObjectType.TAG) {
-                    canvasInstance.focus(activatedStateID);
+                    canvasInstance.focus(activatedStateID, aamZoomMargin);
                 } else {
                     canvasInstance.fit();
                 }
@@ -998,7 +989,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
 
                                     const offscreen = new OffscreenCanvas(renderWidth, renderHeight);
                                     const ctx = offscreen.getContext('2d') as OffscreenCanvasRenderingContext2D;
-                                    ctx.drawImage(imageBitmap, 0, 0, renderWidth, renderHeight);
+                                    ctx.drawImage(imageBitmap, 0, 0);
                                     const imageData = ctx.getImageData(0, 0, renderWidth, renderHeight);
 
                                     const newImageData = imageFilters
@@ -1115,49 +1106,15 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
             automaticBordering,
             showTagsOnFrame,
             canvasIsReady,
-            annotations,
-            activatedStateID,
-            focusedObjectPadding,
             onSwitchAutomaticBordering,
             onSwitchZLayer,
             onAddZLayer,
-            onActivateObject,
-            onExpandObject,
+            t,
         } = this.props;
-        const { canvasInstance } = this.props as { canvasInstance: Canvas };
 
         const preventDefault = (event: KeyboardEvent | undefined): void => {
             if (event) {
                 event.preventDefault();
-            }
-        };
-
-        const navigateObject = (step: number): void => {
-            const filteredStates = annotations.filter(
-                (state) => !state.outside && !state.hidden && state.zOrder <= curZLayer,
-            );
-            if (filteredStates.length) {
-                const currentIndex = filteredStates.findIndex((state) => state.clientID === activatedStateID);
-                let nextIndex = currentIndex + step;
-                if (nextIndex > filteredStates.length - 1) {
-                    nextIndex = 0;
-                } else if (nextIndex < 0) {
-                    nextIndex = filteredStates.length - 1;
-                }
-                const nextState = filteredStates[nextIndex];
-                if (nextState && nextState.clientID !== null && nextState.clientID !== activatedStateID) {
-                    onActivateObject(nextState.clientID, null);
-                    if (nextState.objectType !== ObjectType.TAG && canvasInstance) {
-                        canvasInstance.focus(nextState.clientID, focusedObjectPadding);
-                    }
-                    const sidebarItem = window.document.getElementById(
-                        `cvat-objects-sidebar-state-item-${nextState.clientID}`,
-                    );
-                    if (sidebarItem) {
-                        sidebarItem.scrollIntoView();
-                    }
-                    onExpandObject(nextState);
-                }
             }
         };
 
@@ -1167,14 +1124,6 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
                     preventDefault(event);
                     onSwitchAutomaticBordering(!automaticBordering);
                 }
-            },
-            NEXT_OBJECT: (event: KeyboardEvent | undefined) => {
-                preventDefault(event);
-                navigateObject(1);
-            },
-            PREVIOUS_OBJECT: (event: KeyboardEvent | undefined) => {
-                preventDefault(event);
-                navigateObject(-1);
             },
         };
 
@@ -1225,7 +1174,7 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
                         defaultValue={0}
                         onChange={(value: number): void => onSwitchZLayer(value as number)}
                     />
-                    <CVATTooltip title={`Add new layer ${maxZLayer + 1} and switch to it`}>
+                    <CVATTooltip title={t('addNewLayerTooltip', { layer: maxZLayer + 1 })}>
                         <PlusCircleOutlined onClick={onAddZLayer} />
                     </CVATTooltip>
                 </div>
@@ -1240,4 +1189,4 @@ class CanvasWrapperComponent extends React.PureComponent<Props> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CanvasWrapperComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(CanvasWrapperComponent));

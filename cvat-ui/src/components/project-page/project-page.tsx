@@ -20,6 +20,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import Empty from 'antd/lib/empty';
 import Input from 'antd/lib/input';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 
 import { getCore, Project, Task } from 'cvat-core-wrapper';
 import { CombinedState, TasksQuery, SelectedResourceType } from 'reducers';
@@ -59,6 +60,10 @@ export default function ProjectPageComponent(): JSX.Element {
     const id = +useParams<ParamType>().id;
     const dispatch = useDispatch();
     const history = useHistory();
+    const { t } = useTranslation();
+    const selectedCount = useSelector((state: CombinedState) => state.tasks.selected.length);
+    const bulkFetching = useSelector((state: CombinedState) => state.bulkActions.fetching);
+
     const [projectInstance, setProjectInstance] = useState<Project | null>(null);
     const [fechingProject, setFetchingProject] = useState(true);
     const mounted = useRef(false);
@@ -71,8 +76,6 @@ export default function ProjectPageComponent(): JSX.Element {
         tasksQuery,
         tasksFetching,
         deletedTasks,
-        selectedCount,
-        bulkFetching,
     } = useSelector((state: CombinedState) => ({
         deletes: state.projects.activities.deletes,
         updates: state.projects.activities.updates,
@@ -81,8 +84,6 @@ export default function ProjectPageComponent(): JSX.Element {
         tasksQuery: state.projects.tasksGettingQuery,
         tasksFetching: state.tasks.fetching,
         deletedTasks: state.tasks.activities.deletes,
-        selectedCount: state.tasks.selected.length,
-        bulkFetching: state.bulkActions.fetching,
     }), shallowEqual);
     const [visibility, setVisibility] = useState(defaultVisibility);
 
@@ -101,7 +102,7 @@ export default function ProjectPageComponent(): JSX.Element {
                 }).catch((error: Error) => {
                     if (mounted.current) {
                         notification.error({
-                            message: 'Could not receive the requested project from the server',
+                            message: t('couldNotFetchProject'),
                             description: error.toString(),
                         });
                     }
@@ -112,8 +113,8 @@ export default function ProjectPageComponent(): JSX.Element {
                 });
         } else {
             notification.error({
-                message: 'Could not receive the requested project from the server',
-                description: `Requested project id "${id}" is not valid`,
+                message: t('couldNotFetchProject'),
+                description: t('invalidProjectId', { id }),
             });
             setFetchingProject(false);
         }
@@ -136,12 +137,11 @@ export default function ProjectPageComponent(): JSX.Element {
         }
     }, [deletes]);
 
+    const allTaskIds = tasks.map((task) => task.id);
+    const selectableTaskIds = allTaskIds.filter((taskId) => !deletedTasks[taskId]);
     const onSelectAll = useCallback(() => {
-        dispatch(selectionActions.selectResources(
-            tasks.map((t) => t.id).filter((taskId) => !deletedTasks[taskId]),
-            SelectedResourceType.TASKS,
-        ));
-    }, [tasks, deletedTasks]);
+        dispatch(selectionActions.selectResources(selectableTaskIds, SelectedResourceType.TASKS));
+    }, [selectableTaskIds]);
 
     const onUpdateProject = useCallback((project: Project) => {
         const promise = dispatch(updateProjectAsync(project));
@@ -237,7 +237,7 @@ export default function ProjectPageComponent(): JSX.Element {
             )}
         </BulkWrapper>
     ) : (
-        <Empty description='No tasks found' />
+        <Empty description={t('noTasksFound')} />
     );
 
     return (
@@ -274,7 +274,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                     }}
                                     defaultValue={tasksQuery.search ?? ''}
                                     className='cvat-project-page-tasks-search-bar'
-                                    placeholder='Search ...'
+                                    placeholder={t('search')}
                                 />
                                 <ResourceSelectionInfo
                                     selectedCount={selectedCount}
@@ -288,7 +288,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         setVisibility({ ...defaultVisibility, sorting: visible })
                                     )}
                                     defaultFields={tasksQuery.sort?.split(',') || ['-ID']}
-                                    sortingFields={['ID', 'Owner', 'Status', 'Assignee', 'Updated date', 'Subset', 'Mode', 'Dimension', 'Name']}
+                                    sortingFields={['ID', 'Owner', 'Status', 'Assignee', 'Updated date', 'Subset', 'Mode', 'Dimension', 'Name'].map((field) => t(field))}
                                     onApplySorting={(sorting: string | null) => {
                                         dispatch(getProjectTasksAsync({
                                             ...tasksQuery,
@@ -339,7 +339,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-task-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}`)}
                                     >
-                                        Create a new task
+                                        {t('createNewTask')}
                                     </Button>
                                     <Button
                                         type='primary'
@@ -347,7 +347,7 @@ export default function ProjectPageComponent(): JSX.Element {
                                         className='cvat-create-multi-tasks-button'
                                         onClick={() => history.push(`/tasks/create?projectId=${id}&many=true`)}
                                     >
-                                        Create multi tasks
+                                        {t('createMultiTasks')}
                                     </Button>
                                 </CvatDropdownMenuPaper>
                             )}

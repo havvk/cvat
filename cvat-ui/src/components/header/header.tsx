@@ -12,6 +12,7 @@ import { MenuProps } from 'antd/lib/menu';
 import {
     SettingOutlined,
     InfoCircleOutlined,
+    EditOutlined,
     LoadingOutlined,
     LogoutOutlined,
     GithubOutlined,
@@ -22,20 +23,23 @@ import {
     TeamOutlined,
     PlusOutlined,
     MailOutlined,
+    GlobalOutlined,
 } from '@ant-design/icons';
 import Layout from 'antd/lib/layout';
 import Button from 'antd/lib/button';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
 
 import config from 'config';
 
 import { Organization } from 'cvat-core-wrapper';
+import ChangePasswordDialog from 'components/change-password-modal/change-password-modal';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import CVATLogo from 'components/common/cvat-logo';
 import { switchSettingsModalVisible as switchSettingsModalVisibleAction } from 'actions/settings-actions';
-import { logoutAsync } from 'actions/auth-actions';
+import { logoutAsync, authActions } from 'actions/auth-actions';
 import { shortcutsActions, registerComponentShortcuts } from 'actions/shortcuts-actions';
 import { getOrganizationsAsync, organizationActions } from 'actions/organization-actions';
 import { AboutState, CombinedState } from 'reducers';
@@ -53,7 +57,9 @@ interface StateToProps {
     settingsModalVisible: boolean;
     shortcutsModalVisible: boolean;
     changePasswordDialogShown: boolean;
+    changePasswordFetching: boolean;
     logoutFetching: boolean;
+    renderChangePasswordItem: boolean;
     isAnalyticsPluginActive: boolean;
     isModelsPluginActive: boolean;
     organizationFetching: boolean;
@@ -68,6 +74,7 @@ interface DispatchToProps {
     onLogout: () => void;
     switchSettingsModalVisible: (visible: boolean) => void;
     switchShortcutsModalVisible: (visible: boolean) => void;
+    switchChangePasswordModalVisible: (visible: boolean) => void;
     fetchOrganizations: () => void;
     openSelectOrganizationModal: (onSelectOrgCallback: (org: Organization | null) => void) => void;
 }
@@ -94,6 +101,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
         auth: {
             user,
             fetching: logoutFetching,
+            fetching: changePasswordFetching,
             showChangePasswordDialog: changePasswordDialogShown,
         },
         plugins: { list },
@@ -110,6 +118,11 @@ function mapStateToProps(state: CombinedState): StateToProps {
                 page: organizationsListPage,
             },
         },
+        serverAPI: {
+            configuration: {
+                isPasswordChangeEnabled: renderChangePasswordItem,
+            },
+        },
     } = state;
 
     return {
@@ -120,7 +133,9 @@ function mapStateToProps(state: CombinedState): StateToProps {
         settingsModalVisible,
         shortcutsModalVisible,
         changePasswordDialogShown,
+        changePasswordFetching,
         logoutFetching,
+        renderChangePasswordItem,
         isAnalyticsPluginActive: list.ANALYTICS,
         isModelsPluginActive: list.MODELS,
         organizationFetching,
@@ -141,6 +156,9 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         switchSettingsModalVisible: (visible: boolean): void => dispatch(
             switchSettingsModalVisibleAction(visible),
         ),
+        switchChangePasswordModalVisible: (visible: boolean): void => dispatch(
+            authActions.switchChangePasswordModalVisible(visible),
+        ),
         fetchOrganizations: (): void => dispatch(
             getOrganizationsAsync({}),
         ),
@@ -160,9 +178,11 @@ function HeaderComponent(props: Props): JSX.Element {
         about,
         keyMap,
         logoutFetching,
+        changePasswordFetching,
         settingsModalVisible,
         shortcutsModalVisible,
         switchSettingsShortcut,
+        renderChangePasswordItem,
         isAnalyticsPluginActive,
         isModelsPluginActive,
         organizationFetching,
@@ -173,10 +193,12 @@ function HeaderComponent(props: Props): JSX.Element {
         organizationsListPage,
         switchSettingsModalVisible,
         switchShortcutsModalVisible,
+        switchChangePasswordModalVisible,
         fetchOrganizations,
         openSelectOrganizationModal,
     } = props;
 
+    const { t, i18n } = useTranslation();
     const {
         CHANGELOG_URL, LICENSE_URL, GITHUB_URL, GUIDE_URL, DISCORD_URL,
     } = config;
@@ -209,27 +231,9 @@ function HeaderComponent(props: Props): JSX.Element {
 
     const aboutPlugins = usePlugins((state: CombinedState) => state.plugins.components.about.links.items, props);
     const aboutLinks: [JSX.Element, number][] = [];
-    aboutLinks.push([(
-        <Col key='changelog'>
-            <a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>
-                What&apos;s new?
-            </a>
-        </Col>
-    ), 0]);
-    aboutLinks.push([(
-        <Col key='license'>
-            <a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>
-                MIT License
-            </a>
-        </Col>
-    ), 10]);
-    aboutLinks.push([(
-        <Col key='discord'>
-            <a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>
-                Find us on Discord
-            </a>
-        </Col>
-    ), 20]);
+    aboutLinks.push([(<Col key='changelog'><a href={CHANGELOG_URL} target='_blank' rel='noopener noreferrer'>{t('whatsNew')}</a></Col>), 0]);
+    aboutLinks.push([(<Col key='license'><a href={LICENSE_URL} target='_blank' rel='noopener noreferrer'>{t('mitLicense')}</a></Col>), 10]);
+    aboutLinks.push([(<Col key='discord'><a href={DISCORD_URL} target='_blank' rel='noopener noreferrer'>{t('findUsOnDiscord')}</a></Col>), 20]);
 
     aboutLinks.push(...aboutPlugins.map(({ component: Component, weight }, index: number) => (
         [<Component key={index} targetProps={props} />, weight] as [JSX.Element, number]
@@ -242,11 +246,17 @@ function HeaderComponent(props: Props): JSX.Element {
                 <div>
                     <p>{`${about.server.description}`}</p>
                     <p>
-                        <Text strong>Server version:</Text>
+                        <Text strong>
+                            {t('serverVersion')}
+:
+                        </Text>
                         <Text type='secondary'>{` ${about.server.version}`}</Text>
                     </p>
                     <p>
-                        <Text strong>UI version:</Text>
+                        <Text strong>
+                            {t('uiVersion')}
+:
+                        </Text>
                         <Text type='secondary'>{` ${about.packageVersion.ui}`}</Text>
                     </p>
                     <Row justify='space-around'>
@@ -262,7 +272,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 },
             },
         });
-    }, [about]);
+    }, [about, t]);
 
     const closeSettings = useCallback(() => {
         switchSettingsModalVisible(false);
@@ -301,49 +311,40 @@ function HeaderComponent(props: Props): JSX.Element {
             onClick: (): void => {
                 window.open('/admin', '_blank');
             },
-            label: 'Admin page',
+            label: t('adminPage'),
         }, 0]);
     }
-
-    menuItems.push([{
-        key: 'profile',
-        icon: <UserOutlined />,
-        onClick: (): void => {
-            history.push('/profile');
-        },
-        label: 'Profile',
-    }, 10]);
 
     const viewType: 'menu' | 'list' = (organizationsList?.length || 0) > 5 ? 'list' : 'menu';
 
     menuItems.push([{
         key: 'organization',
         icon: organizationFetching || organizationsListFetching ? <LoadingOutlined /> : <TeamOutlined />,
-        label: 'Organization',
+        label: t('organization'),
         disabled: organizationFetching || organizationsListFetching,
         children: [
             ...(currentOrganization ? [{
                 key: 'open_organization',
                 icon: <SettingOutlined />,
-                label: 'Settings',
+                label: t('Settings'),
                 className: 'cvat-header-menu-open-organization',
                 onClick: () => history.push('/organization'),
             }] : []), {
                 key: 'invitations',
                 icon: <MailOutlined />,
-                label: 'Invitations',
+                label: t('Invitations'),
                 className: 'cvat-header-menu-organization-invitations-item',
                 onClick: () => history.push('/invitations'),
             }, {
                 key: 'create_organization',
                 icon: <PlusOutlined />,
-                label: 'Create',
+                label: t('Create'),
                 className: 'cvat-header-menu-create-organization',
                 onClick: () => history.push('/organizations/create'),
             },
             ...(!!organizationsList && viewType === 'list' ? [{
                 key: 'switch_organization',
-                label: 'Switch organization',
+                label: t('switchOrganization'),
                 onClick: () => {
                     openSelectOrganizationModal(setNewOrganization);
                 },
@@ -352,7 +353,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 type: 'divider' as const,
             }, {
                 key: '$personal',
-                label: 'Personal workspace',
+                label: t('personalWorkspace'),
                 className: !currentOrganization ? 'cvat-header-menu-active-organization-item' : 'cvat-header-menu-organization-item',
                 onClick: resetOrganization,
             }, ...organizationsList.map((organization: Organization) => ({
@@ -362,34 +363,55 @@ function HeaderComponent(props: Props): JSX.Element {
                 label: organization.slug,
             }))] : []),
         ],
-    }, 20]);
+    }, 10]);
 
     menuItems.push([{
         key: 'settings',
         icon: <SettingOutlined />,
         onClick: () => switchSettingsModalVisible(true),
-        title: `Press ${switchSettingsShortcut} to switch`,
-        label: 'Settings',
-    }, 30]);
+        title: t('pressToSwitch', { switchSettingsShortcut }),
+        label: t('Settings'),
+    }, 20]);
 
     menuItems.push([{
         key: 'about',
         icon: <InfoCircleOutlined />,
         onClick: () => showAboutModal(),
-        label: 'About',
-    }, 40]);
+        label: t('About'),
+    }, 30]);
+
+    if (renderChangePasswordItem) {
+        menuItems.push([{
+            key: 'change_password',
+            icon: changePasswordFetching ? <LoadingOutlined /> : <EditOutlined />,
+            className: 'cvat-header-menu-change-password',
+            onClick: () => switchChangePasswordModalVisible(true),
+            label: t('changePassword'),
+            disabled: changePasswordFetching,
+        }, 40]);
+    }
 
     menuItems.push([{
         key: 'logout',
         icon: logoutFetching ? <LoadingOutlined /> : <LogoutOutlined />,
         onClick: () => history.push('/auth/logout'),
-        label: 'Logout',
+        label: t('Logout'),
         disabled: logoutFetching,
     }, 50]);
 
     menuItems.push(...plugins
         .map(({ component, weight }): typeof menuItems[0] => [component({ targetProps: props }), weight]),
     );
+
+    const languageMenu: MenuProps = {
+        items: [
+            { key: 'en-US', label: t('language.english') },
+            { key: 'zh', label: t('language.simplifiedChinese') },
+        ],
+        onClick: (item) => {
+            i18n.changeLanguage(item.key);
+        },
+    };
 
     const getButtonClassName = (value: string, highlightable = true): string => {
         // eslint-disable-next-line security/detect-non-literal-regexp
@@ -414,7 +436,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/projects');
                     }}
                 >
-                    Projects
+                    {t('Projects')}
                 </Button>
                 <Button
                     className={getButtonClassName('tasks')}
@@ -426,7 +448,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/tasks');
                     }}
                 >
-                    Tasks
+                    {t('Tasks')}
                 </Button>
                 <Button
                     className={getButtonClassName('jobs')}
@@ -438,7 +460,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/jobs');
                     }}
                 >
-                    Jobs
+                    {t('Jobs')}
                 </Button>
                 <Button
                     className={getButtonClassName('cloudstorages')}
@@ -450,7 +472,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/cloudstorages');
                     }}
                 >
-                    Cloud Storages
+                    {t('cloudStorages')}
                 </Button>
                 <Button
                     className={getButtonClassName('requests')}
@@ -462,7 +484,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         history.push('/requests');
                     }}
                 >
-                    Requests
+                    {t('Requests')}
                 </Button>
                 {isModelsPluginActive ? (
                     <Button
@@ -475,7 +497,7 @@ function HeaderComponent(props: Props): JSX.Element {
                             history.push('/models');
                         }}
                     >
-                        Models
+                        {t('Models')}
                     </Button>
                 ) : null}
                 {isAnalyticsPluginActive && user.hasAnalyticsAccess ? (
@@ -488,12 +510,17 @@ function HeaderComponent(props: Props): JSX.Element {
                             window.open('/analytics', '_blank');
                         }}
                     >
-                        Analytics
+                        {t('Analytics')}
                     </Button>
                 ) : null}
             </div>
             <div className='cvat-right-header'>
-                <CVATTooltip overlay='Click to open repository'>
+                <Dropdown menu={languageMenu} trigger={['click']}>
+                    <Button type='link' className='cvat-header-button'>
+                        <GlobalOutlined />
+                    </Button>
+                </Dropdown>
+                <CVATTooltip overlay={t('clickToOpenRepository')}>
                     <Button
                         icon={<GithubOutlined />}
                         size='large'
@@ -506,7 +533,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip overlay='Click to open guide'>
+                <CVATTooltip overlay={t('clickToOpenGuide')}>
                     <Button
                         icon={<QuestionCircleOutlined />}
                         size='large'
@@ -557,6 +584,9 @@ function HeaderComponent(props: Props): JSX.Element {
                 </Dropdown>
             </div>
             <SettingsModal visible={settingsModalVisible} onClose={closeSettings} />
+            {renderChangePasswordItem && (
+                <ChangePasswordDialog onClose={() => switchChangePasswordModalVisible(false)} />
+            )}
         </Layout.Header>
     );
 }

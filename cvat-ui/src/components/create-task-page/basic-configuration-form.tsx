@@ -3,7 +3,14 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React, { RefObject } from 'react';
+import React, {
+    RefObject,
+    useRef,
+    useImperativeHandle,
+    forwardRef,
+    useEffect,
+} from 'react';
+import { useTranslation } from 'react-i18next';
 import Input from 'antd/lib/input';
 import Text from 'antd/lib/typography/Text';
 import Tooltip from 'antd/lib/tooltip';
@@ -20,113 +27,100 @@ interface Props {
     exampleMultiTaskName?: string;
 }
 
-export default class BasicConfigurationForm extends React.PureComponent<Props> {
-    private formRef: RefObject<FormInstance>;
-    private inputRef: RefObject<Input>;
-    private initialName: string;
+// Use forwardRef to receive the ref passed by the parent component.
+const BasicConfigurationForm = forwardRef((props: Props, ref: RefObject<any>) => {
+    const { many, exampleMultiTaskName, onChange } = props;
+    const { t } = useTranslation();
+    const formRef = useRef<FormInstance>(null);
+    const inputRef = useRef<Input>(null);
 
-    public constructor(props: Props) {
-        super(props);
-        this.formRef = React.createRef<FormInstance>();
-        this.inputRef = React.createRef<Input>();
+    const initialName = many ? '{{file_name}}' : '';
 
-        const { many } = this.props;
-        this.initialName = many ? '{{file_name}}' : '';
-    }
+    // Expose the component methods through the parent ref.
+    useImperativeHandle(ref, () => ({
+        submit(): Promise<void> {
+            if (formRef.current) {
+                return formRef.current.validateFields();
+            }
+            return Promise.reject(new Error('Form ref is empty'));
+        },
+        resetFields(): void {
+            if (formRef.current) {
+                formRef.current.resetFields();
+            }
+        },
+        focus(): void {
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        },
+    }));
 
-    componentDidMount(): void {
-        const { onChange } = this.props;
+    // Run the initialization logic after mounting.
+    useEffect(() => {
         onChange({
-            name: this.initialName,
+            name: initialName,
         });
-    }
+    }, []);
 
-    private handleChangeName(e: React.ChangeEvent<HTMLInputElement>): void {
-        const { onChange } = this.props;
+    const handleChangeName = (e: React.ChangeEvent<HTMLInputElement>): void => {
         onChange({
             name: e.target.value,
         });
-    }
+    };
 
-    public submit(): Promise<void> {
-        if (this.formRef.current) {
-            return this.formRef.current.validateFields();
-        }
+    return (
+        <Form ref={formRef} layout='vertical'>
+            <Form.Item
+                className={many ? 'cvat-task-name-field-has-tooltip' : ''}
+                hasFeedback
+                name='name'
+                label={<span>{t('name')}</span>}
+                rules={[
+                    {
+                        required: true,
+                        message: t('taskNameCannotBeEmpty'),
+                    },
+                ]}
+                initialValue={initialName}
+            >
+                <Input
+                    ref={inputRef}
+                    onChange={handleChangeName}
+                />
+            </Form.Item>
+            {many ? (
+                <Text type='secondary'>
+                    <Tooltip title={() => (
+                        <>
+                            {t('youCanUseInTheTemplate')}
+                            <ul>
+                                <li>
+                                    {t('someTextAnyText')}
+                                </li>
+                                <li>
+                                    {t('indexFileInSet')}
+                                </li>
+                                <li>
+                                    {t('nameOfFile')}
+                                </li>
+                            </ul>
+                            {t('example')}
+                            &nbsp;
+                            <i>
+                                {exampleMultiTaskName || 'Task name 1 - video_1.mp4'}
+                            </i>
+                        </>
+                    )}
+                    >
+                        {t('whenFormingTheName')}
+                        {' '}
+                        <QuestionCircleOutlined />
+                    </Tooltip>
+                </Text>
+            ) : null}
+        </Form>
+    );
+});
 
-        return Promise.reject(new Error('Form ref is empty'));
-    }
-
-    public resetFields(): void {
-        if (this.formRef.current) {
-            this.formRef.current.resetFields();
-        }
-    }
-
-    public focus(): void {
-        if (this.inputRef.current) {
-            this.inputRef.current.focus();
-        }
-    }
-
-    public render(): JSX.Element {
-        const { many, exampleMultiTaskName } = this.props;
-
-        return (
-            <Form ref={this.formRef} layout='vertical'>
-                <Form.Item
-                    className={many ? 'cvat-task-name-field-has-tooltip' : ''}
-                    hasFeedback
-                    name='name'
-                    label={<span>Name</span>}
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Task name cannot be empty',
-                        },
-                    ]}
-                    initialValue={this.initialName}
-                >
-                    <Input
-                        ref={this.inputRef}
-                        onChange={(e) => this.handleChangeName(e)}
-                    />
-                </Form.Item>
-                {many ? (
-                    <Text type='secondary'>
-                        <Tooltip title={() => (
-                            <>
-                                You can use in the template:
-                                <ul>
-                                    <li>
-                                        some_text - any text
-                                    </li>
-                                    <li>
-                                        {'{{'}
-                                        index
-                                        {'}}'}
-                                        &nbsp;- index file in set
-                                    </li>
-                                    <li>
-                                        {'{{'}
-                                        file_name
-                                        {'}}'}
-                                        &nbsp;- name of file
-                                    </li>
-                                </ul>
-                                Example:&nbsp;
-                                <i>
-                                    {exampleMultiTaskName || 'Task name 1 - video_1.mp4'}
-                                </i>
-                            </>
-                        )}
-                        >
-                            When forming the name, a template is used.
-                            {' '}
-                            <QuestionCircleOutlined />
-                        </Tooltip>
-                    </Text>
-                ) : null}
-            </Form>
-        );
-    }
-}
+export default BasicConfigurationForm;

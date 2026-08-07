@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18n from 'i18next';
 import { Redirect, Route, Switch } from 'react-router';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Col, Row } from 'antd/lib/grid';
@@ -79,6 +80,7 @@ import CVATMarkdown from './common/cvat-markdown';
 import EmailConfirmationPage from './email-confirmation-pages/email-confirmed';
 import EmailVerificationSentPage from './email-confirmation-pages/email-verification-sent';
 import IncorrectEmailConfirmationPage from './email-confirmation-pages/incorrect-email-confirmation';
+import InvitationConfirmPageComponent from './invitation-confirm-page/invitation-confirm-page';
 import CreateJobPage from './create-job-page/create-job-page';
 import QualityControlPage from './quality-control/quality-control-page';
 import AnalyticsReportPage from './analytics-report/analytics-report-page';
@@ -86,7 +88,6 @@ import ConsensusManagementPage from './consensus-management-page/consensus-manag
 import InvitationWatcher from './invitation-watcher/invitation-watcher';
 import SelectOrganizationModal from './select-organization-modal/select-organization-modal';
 import BulkProgress from './bulk-progress';
-import ProfilePageComponent from './profile-page/profile-page';
 
 interface CVATAppProps {
     loadFormats: () => void;
@@ -229,7 +230,7 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                 });
 
                 Modal.error({
-                    title: 'Cannot connect to the server',
+                    title: i18n.t('cannotConnectToServer'),
                     className: 'cvat-modal-cannot-connect-server',
                     closable: false,
                     content:
@@ -246,22 +247,20 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         if (showPlatformNotification()) {
             stopNotifications(false);
             Modal.warning({
-                title: 'Unsupported platform detected',
+                title: i18n.t('unsupportedPlatformDetected'),
                 className: 'cvat-modal-unsupported-platform-warning',
                 content: (
                     <>
                         <Row>
                             <Col>
                                 <Text>
-                                    {`The browser you are using is ${name} ${version} based on ${engine}.` +
-                                        ' CVAT was tested in the latest versions of Chrome and Firefox.' +
-                                        ' We recommend to use Chrome (or another Chromium based browser)'}
+                                    {i18n.t('unsupportedBrowserDescription', { name, version, engine })}
                                 </Text>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
-                                <Text type='secondary'>{`The operating system is ${os}`}</Text>
+                                <Text type='secondary'>{i18n.t('operatingSystemIs', { os })}</Text>
                             </Col>
                         </Row>
                     </>
@@ -271,12 +270,11 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
         } else if (showUnsupportedNotification()) {
             stopNotifications(false);
             Modal.warning({
-                title: 'Unsupported features detected',
+                title: i18n.t('unsupportedFeaturesDetected'),
                 className: 'cvat-modal-unsupported-features-warning',
                 content: (
                     <Text>
-                        {`${name} v${version} does not support API, which is used by CVAT. `}
-                        It is strongly recommended to update your browser.
+                        {i18n.t('browserMissingRequiredAPI', { name, version })}
                     </Text>
                 ),
                 onOk: () => stopNotifications(true),
@@ -397,7 +395,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                     <CVATMarkdown history={history}>{notificationState?.description}</CVATMarkdown>
                 ),
                 duration: notificationState.duration ?? null,
-                className: notificationState.className,
             });
         }
 
@@ -437,7 +434,8 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                 ),
                 duration: null,
                 description: errorLength > appConfig.MAXIMUM_NOTIFICATION_MESSAGE_LENGTH ?
-                    'Open the Browser Console to get details' : <CVATMarkdown history={history}>{error}</CVATMarkdown>,
+                    i18n.t('openBrowserConsoleForDetails') :
+                    <CVATMarkdown history={history}>{error}</CVATMarkdown>,
             });
 
             if (shouldLog) {
@@ -565,7 +563,6 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                                         <Route exact path='/invitations' component={InvitationsPage} />
                                         <Route exact path='/organization' component={OrganizationPage} />
                                         <Route exact path='/requests' component={RequestsPage} />
-                                        <Route exact path='/profile' component={ProfilePageComponent} />
                                         { routesToRender }
                                         {isModelPluginActive && (
                                             <Route
@@ -611,6 +608,19 @@ class CVATApplication extends React.PureComponent<CVATAppProps & RouteComponentP
                             )}
                             <Route exact path='/auth/email-verification-sent' component={EmailVerificationSentPage} />
                             <Route exact path='/auth/incorrect-email-confirmation' component={IncorrectEmailConfirmationPage} />
+                            <Route exact path='/auth/invitation/confirm' component={InvitationConfirmPageComponent} />
+
+                            <Route
+                                path='/organizations/:slug/invitation'
+                                render={({ location: routeLocation }) => (
+                                    <Redirect
+                                        to={{
+                                            pathname: '/auth/invitation/confirm',
+                                            search: routeLocation.search, // Pass the query params along
+                                        }}
+                                    />
+                                )}
+                            />
                             <Route exact path='/auth/login' component={LoginPageContainer} />
                             {isPasswordResetEnabled && (
                                 <Route exact path='/auth/password/reset' component={ResetPasswordPageComponent} />

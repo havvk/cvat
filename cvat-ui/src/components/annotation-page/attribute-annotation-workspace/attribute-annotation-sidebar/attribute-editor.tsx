@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useRef, useEffect } from 'react';
+import i18n from 'i18next';
 import Text from 'antd/lib/typography/Text';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import Select, { SelectValue } from 'antd/lib/select';
@@ -18,7 +19,7 @@ import { registerComponentShortcuts } from 'actions/shortcuts-actions';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { isEqual } from 'lodash';
 import { CombinedState } from 'reducers';
-import { shallowEqual, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useResetShortcutsOnUnmount } from 'utils/hooks';
 
 interface InputElementParameters {
@@ -32,7 +33,7 @@ interface InputElementParameters {
 
 const componentShortcuts: Record<string, KeyMapItem> = {};
 
-const makeKey = (index: number): string => `AAM_SET_ATTR_VALUE_${index}`;
+const makeKey = (index: number) => `AAM_SET_ATTR_VALUE_${index}`;
 
 for (const idx of Array.from({ length: 10 }, (_, i) => i)) {
     componentShortcuts[makeKey(idx)] = {
@@ -80,7 +81,11 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderCheckbox = (): JSX.Element => (
         <>
-            <Text strong>Checkbox: </Text>
+            <Text strong>
+                {i18n.t('checkbox')}
+:
+                {' '}
+            </Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Checkbox
                     onChange={(event: CheckboxChangeEvent): void => setAttributeValue(event.target.checked ? 'true' : 'false')}
@@ -92,7 +97,11 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderSelect = (): JSX.Element => (
         <>
-            <Text strong>Values: </Text>
+            <Text strong>
+                {i18n.t('values')}
+:
+                {' '}
+            </Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Select
                     value={localAttrValue}
@@ -113,7 +122,11 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderRadio = (): JSX.Element => (
         <>
-            <Text strong>Values: </Text>
+            <Text strong>
+                {i18n.t('values')}
+:
+                {' '}
+            </Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Radio.Group
                     value={localAttrValue}
@@ -144,7 +157,11 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
         const [min, max, step] = values;
         return (
             <>
-                <Text strong>Number: </Text>
+                <Text strong>
+                    {i18n.t('number')}
+:
+                    {' '}
+                </Text>
                 <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                     <InputNumber
                         autoFocus
@@ -167,7 +184,11 @@ function renderInputElement(parameters: InputElementParameters): JSX.Element {
 
     const renderText = (): JSX.Element => (
         <>
-            <Text strong>Text: </Text>
+            <Text strong>
+                {i18n.t('text')}
+:
+                {' '}
+            </Text>
             <div className='attribute-annotation-sidebar-attr-elem-wrapper'>
                 <Input.TextArea
                     autoFocus
@@ -211,10 +232,9 @@ interface ListProps {
 
 function AttrValuesList(props: ListProps): JSX.Element | null {
     const { inputType, values, onChange } = props;
-    const { keyMap, normalizedKeyMap } = useSelector((state: CombinedState) => ({
-        keyMap: state.shortcuts.keyMap,
-        normalizedKeyMap: state.shortcuts.normalizedKeyMap,
-    }), shallowEqual);
+
+    const { keyMap } = useSelector((state: CombinedState) => state.shortcuts);
+    const { normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     const sortedValues = ['true', 'false'];
     const filteredValues = values.filter((value: string): boolean => value !== config.UNDEFINED_ATTRIBUTE_VALUE);
@@ -333,15 +353,24 @@ function AttrValuesList(props: ListProps): JSX.Element | null {
         return (
             <div className='attribute-annotation-sidebar-attr-list-wrapper'>
                 <div>
-                    <Text strong>From:</Text>
+                    <Text strong>
+                        {i18n.t('from')}
+:
+                    </Text>
                     <Text>{` ${values[0]}`}</Text>
                 </div>
                 <div>
-                    <Text strong>To:</Text>
+                    <Text strong>
+                        {i18n.t('to')}
+:
+                    </Text>
                     <Text>{` ${values[1]}`}</Text>
                 </div>
                 <div>
-                    <Text strong>Step:</Text>
+                    <Text strong>
+                        {i18n.t('step')}
+:
+                    </Text>
                     <Text>{` ${values[2]}`}</Text>
                 </div>
             </div>

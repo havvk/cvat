@@ -44,7 +44,7 @@ interface SAM2Plugin {
         worker: Worker;
         core: CVATCore | null;
         jobs: Record<number, Job>;
-        modelIDs: string[];
+        modelID: string;
         modelURL: string;
         embeddings: LRUCache<string, Tensor>;
         features0: LRUCache<string, Tensor>;
@@ -158,7 +158,7 @@ const sam2Plugin: SAM2Plugin = {
                             }
                         }
 
-                        if (plugin.data.modelIDs.includes(model.id)) {
+                        if (model.id === plugin.data.modelID) {
                             if (!plugin.data.initialized) {
                                 sam2Plugin.data.worker.postMessage({
                                     action: WorkerAction.INIT,
@@ -206,7 +206,7 @@ const sam2Plugin: SAM2Plugin = {
                         bounds: [number, number, number, number];
                     }> {
                     return new Promise((resolve, reject) => {
-                        if (!plugin.data.modelIDs.includes(model.id)) {
+                        if (model.id !== plugin.data.modelID) {
                             resolve(result);
                             return;
                         }
@@ -261,7 +261,7 @@ const sam2Plugin: SAM2Plugin = {
                                 const modelScale = getModelScale(imWidth, imHeight);
 
                                 const clicks: ClickType[] = [];
-                                if (obj_bbox && obj_bbox.length) {
+                                if (obj_bbox.length) {
                                     clicks.push({ clickType: 2, x: obj_bbox[0][0], y: obj_bbox[0][1] });
                                     clicks.push({ clickType: 3, x: obj_bbox[1][0], y: obj_bbox[1][1] });
                                 }
@@ -320,7 +320,7 @@ const sam2Plugin: SAM2Plugin = {
                                         const {
                                             masks, lowResMasks, xtl, ytl, xbr, ybr,
                                         } = e.data.payload;
-                                        const imageData = onnxToImage((masks as any).cpuData || masks.data, masks.dims[3], masks.dims[2]);
+                                        const imageData = onnxToImage(masks.data, masks.dims[3], masks.dims[2]);
                                         plugin.data.lowResMasks.set(key, lowResMasks);
                                         plugin.data.lastClicks = clicks;
 
@@ -347,7 +347,7 @@ const sam2Plugin: SAM2Plugin = {
         core: null,
         worker: new Worker(new URL('./inference.worker', import.meta.url)),
         jobs: {},
-        modelIDs: ['pth-facebookresearch-sam2-hiera-large'],
+        modelID: 'pth-facebookresearch-sam2-hiera-large',
         modelURL: '/assets/sam2.1_hiera_large.decoder.onnx',
         embeddings: new LRUCache({
             // float32 tensor [256, 64, 64] is 4 MB, max 128 MB

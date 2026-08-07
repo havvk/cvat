@@ -6,7 +6,7 @@
 import './styles.scss';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Row } from 'antd/lib/grid';
 import Spin from 'antd/lib/spin';
 
@@ -24,21 +24,11 @@ export default function StoragesPageComponent(): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
     const [isMounted, setIsMounted] = useState(false);
-    const {
-        totalCount,
-        fetching,
-        current,
-        query,
-        bulkFetching,
-        selectedCount,
-    } = useSelector((state: CombinedState) => ({
-        totalCount: state.cloudStorages.count,
-        fetching: state.cloudStorages.fetching,
-        current: state.cloudStorages.current,
-        query: state.cloudStorages.gettingQuery,
-        bulkFetching: state.bulkActions.fetching,
-        selectedCount: state.cloudStorages.selected.length,
-    }), shallowEqual);
+    const totalCount = useSelector((state: CombinedState) => state.cloudStorages.count);
+    const fetching = useSelector((state: CombinedState) => state.cloudStorages.fetching);
+    const current = useSelector((state: CombinedState) => state.cloudStorages.current);
+    const query = useSelector((state: CombinedState) => state.cloudStorages.gettingQuery);
+    const bulkFetching = useSelector((state: CombinedState) => state.bulkActions.fetching);
 
     const updatedQuery = useResourceQuery<CloudStoragesQuery>(query, { pageSize: 12 });
 
@@ -65,12 +55,11 @@ export default function StoragesPageComponent(): JSX.Element {
         [query],
     );
 
+    const allStorageIds = useSelector((state: CombinedState) => state.cloudStorages.current.map((s) => s.id));
+    const selectedCount = useSelector((state: CombinedState) => state.cloudStorages.selected.length);
     const onSelectAll = useCallback(() => {
-        dispatch(
-            selectionActions.selectResources(current.map((s) => s.id),
-                SelectedResourceType.CLOUD_STORAGES,
-            ));
-    }, [current]);
+        dispatch(selectionActions.selectResources(allStorageIds, SelectedResourceType.CLOUD_STORAGES));
+    }, [allStorageIds]);
 
     const isAnySearch = anySearch<CloudStoragesQuery>(query);
 

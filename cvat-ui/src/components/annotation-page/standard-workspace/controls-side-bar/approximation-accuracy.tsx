@@ -4,7 +4,9 @@
 // SPDX-License-Identifier: MIT
 
 import React, { CSSProperties } from 'react';
+import i18n from 'i18next';
 import ReactDOM from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import Slider from 'antd/lib/slider';
 import { Col, Row } from 'antd/lib/grid';
@@ -21,13 +23,13 @@ marks[0] = {
     style: {
         color: '#1890ff',
     },
-    label: <strong>less</strong>,
+    label: <strong>{i18n.t('less')}</strong>,
 };
 marks[MAX_ACCURACY] = {
     style: {
         color: '#61c200',
     },
-    label: <strong>more</strong>,
+    label: <strong>{i18n.t('more')}</strong>,
 };
 
 export function thresholdFromAccuracy(approxPolyAccuracy: number): number {
@@ -47,6 +49,7 @@ export function thresholdFromAccuracy(approxPolyAccuracy: number): number {
 }
 
 function ApproximationAccuracy(props: Props): React.ReactPortal | null {
+    const { t } = useTranslation();
     const { approxPolyAccuracy, onChange } = props;
     const target = window.document.getElementsByClassName('cvat-canvas-container')[0];
 
@@ -54,7 +57,7 @@ function ApproximationAccuracy(props: Props): React.ReactPortal | null {
         ReactDOM.createPortal(
             <Row align='middle' className='cvat-approx-poly-threshold-wrapper'>
                 <Col span={5}>
-                    <Text>Points: </Text>
+                    <Text>{t('points')}</Text>
                 </Col>
                 <Col offset={1} span={18}>
                     <Slider

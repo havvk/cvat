@@ -3,20 +3,13 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import dayjs from 'dayjs';
-import advancedFormat from 'dayjs/plugin/advancedFormat';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import localeData from 'dayjs/plugin/localeData';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import weekday from 'dayjs/plugin/weekday';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
-import weekYear from 'dayjs/plugin/weekYear';
-import duration from 'dayjs/plugin/duration';
-
+import { ConfigProvider } from 'antd';
+import enUS from 'antd/lib/locale/en_US';
+import zhCN from 'antd/lib/locale/zh_CN';
 import { getAboutAsync } from 'actions/about-actions';
 import { authenticatedAsync } from 'actions/auth-actions';
 import { getFormatsAsync } from 'actions/formats-actions';
@@ -35,21 +28,12 @@ import { getInvitationsAsync } from 'actions/invitations-actions';
 import { getRequestsAsync } from 'actions/requests-async-actions';
 import { getServerAPISchemaAsync } from 'actions/server-actions';
 import { navigationActions } from 'actions/navigation-actions';
+import i18n, { isChineseLanguage } from './i18n';
 import { CombinedState, NotificationsState, PluginsState } from './reducers';
-import './utils/dayjs-wrapper';
 
 createCVATStore(createRootReducer);
 
 const cvatStore = getCVATStore();
-
-dayjs.extend(customParseFormat);
-dayjs.extend(advancedFormat);
-dayjs.extend(relativeTime);
-dayjs.extend(weekday);
-dayjs.extend(localeData);
-dayjs.extend(weekOfYear);
-dayjs.extend(weekYear);
-dayjs.extend(duration);
 
 interface StateToProps {
     pluginsInitialized: boolean;
@@ -152,15 +136,35 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 const ReduxAppWrapper = connect(mapStateToProps, mapDispatchToProps)(CVATApplication);
 
 const root = createRoot(document.getElementById('root') as HTMLDivElement);
-root.render((
-    <Provider store={cvatStore}>
-        <BrowserRouter>
-            <PluginsEntrypoint />
-            <ReduxAppWrapper />
-        </BrowserRouter>
-        <LayoutGrid />
-    </Provider>
-));
+
+function App(): JSX.Element {
+    const [locale, setLocale] = useState(isChineseLanguage(i18n.resolvedLanguage) ? zhCN : enUS);
+
+    useEffect(() => {
+        const listener = (lng: string): void => {
+            setLocale(isChineseLanguage(lng) ? zhCN : enUS);
+        };
+        i18n.on('languageChanged', listener);
+
+        return () => {
+            i18n.off('languageChanged', listener);
+        };
+    }, []);
+
+    return (
+        <Provider store={cvatStore}>
+            <ConfigProvider locale={locale}>
+                <BrowserRouter>
+                    <PluginsEntrypoint />
+                    <ReduxAppWrapper />
+                </BrowserRouter>
+                <LayoutGrid />
+            </ConfigProvider>
+        </Provider>
+    );
+}
+
+root.render(<App />);
 
 window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
     logError(event.reason, false, { type: 'unhandledrejection' });

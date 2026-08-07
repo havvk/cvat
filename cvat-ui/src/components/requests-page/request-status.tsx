@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import { BaseType } from 'antd/es/typography/Base';
 import LoadingOutlined from '@ant-design/icons/lib/icons/LoadingOutlined';
@@ -33,6 +34,7 @@ export interface Props {
 }
 
 function StatusMessage(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { cancelled } = props;
     let { status, message } = props;
     message = message || '';
@@ -66,30 +68,30 @@ function StatusMessage(props: Props): JSX.Element {
         >
             {((): JSX.Element => {
                 if (cancelled) {
-                    return statusMessage(message, 'Cancelled');
+                    return statusMessage(message, t('requestCancelled'));
                 }
 
                 if (status === RQStatus.FINISHED) {
-                    return statusMessage(message, 'Finished');
+                    return statusMessage(message, t('finished'));
                 }
 
                 if ([RQStatus.QUEUED].includes(status)) {
-                    return statusMessage(message, 'Queued', <LoadingOutlined />);
+                    return statusMessage(message, t('requestQueued'), <LoadingOutlined />);
                 }
 
                 if ([RQStatus.STARTED].includes(status)) {
-                    return statusMessage(message, 'In progress', <LoadingOutlined />);
+                    return statusMessage(message, t('inProgress'), <LoadingOutlined />);
                 }
 
                 if (status === RQStatus.FAILED) {
-                    return statusMessage(message, 'Failed');
+                    return statusMessage(message, t('requestFailed'));
                 }
 
                 if (status === RQStatus.UNKNOWN) {
-                    return statusMessage(message, 'Unknown status received');
+                    return statusMessage(message, t('unknownStatusReceived'));
                 }
 
-                return statusMessage(message, 'Unknown status received');
+                return statusMessage(message, t('unknownStatusReceived'));
             })()}
         </Text>
     );

@@ -7,6 +7,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useHistory } from 'react-router';
 import Dropdown from 'antd/lib/dropdown';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 
 import { Organization, Project, User } from 'cvat-core-wrapper';
 import { useDropdownEditField, usePlugins } from 'utils/hooks';
@@ -37,6 +38,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
 
     const history = useHistory();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const pluginActions = usePlugins((state: CombinedState) => state.plugins.components.projectActions.items, props);
 
     const {
@@ -103,7 +105,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                     project.assignee = assignee;
                     await dispatch(updateProjectAsync(project));
                 },
-                (project, idx, total) => `Updating assignee for project #${project.id} (${idx + 1}/${total})`,
+                (project, idx, total) => t('updatingProjectAssignee', {
+                    projectId: project.id,
+                    current: idx + 1,
+                    total,
+                }),
             ));
         }
     }, [projectInstance, stopEditField, dispatch, collectObjectsForBulkUpdate, onUpdateProject]);
@@ -126,7 +132,11 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
                     project.organizationId = newOrganization?.id ?? null;
                     await dispatch(updateProjectAsync(project, ResourceUpdateTypes.UPDATE_ORGANIZATION));
                 },
-                (project, idx, total) => `Updating organization for project #${project.id} (${idx + 1}/${total})`,
+                (project, idx, total) => t('updatingProjectOrgProgress', {
+                    projectId: project.id,
+                    current: idx + 1,
+                    total,
+                }),
             )).then((processedCount: number) => {
                 if (processedCount) {
                     // as for some projects org has changed
@@ -162,26 +172,32 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
         const projectsToDelete = currentProjects.filter((project) => selectedIds.includes(project.id));
         Modal.confirm({
             title: isBulkMode ?
-                `Delete ${projectsToDelete.length} selected projects` :
-                `The project ${projectInstance.id} will be deleted`,
+                t('deleteSelectedProjectsCount', { count: projectsToDelete.length }) :
+                t('projectWillBeDeletedConfirm', { projectId: projectInstance.id }),
             content: isBulkMode ?
-                'All related data (images, annotations) for all selected projects will be lost. Continue?' :
-                'All related data (images, annotations) will be lost. Continue?',
+                t('confirmDeleteProjects') :
+                t('confirmDeleteAllProjectData'),
             className: 'cvat-modal-confirm-remove-project',
             onOk: () => {
-                dispatch(makeBulkOperationAsync(
-                    projectsToDelete.length ? projectsToDelete : [projectInstance],
-                    async (project) => {
-                        await dispatch(deleteProjectAsync(project));
-                    },
-                    (project, idx, total) => `Deleting project #${project.id} (${idx + 1}/${total})`,
-                ));
+                setTimeout(() => {
+                    dispatch(makeBulkOperationAsync(
+                        projectsToDelete.length ? projectsToDelete : [projectInstance],
+                        async (project) => {
+                            await dispatch(deleteProjectAsync(project));
+                        },
+                        (project, idx, total) => t('deletingProjectProgress', {
+                            projectId: project.id,
+                            current: idx + 1,
+                            total,
+                        }),
+                    ));
+                }, 0);
             },
             okButtonProps: {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? 'Delete selected' : 'Delete',
+            okText: isBulkMode ? t('deleteSelected') : t('Delete'),
         });
     }, [projectInstance, currentProjects, selectedIds, isBulkMode]);
     let menuItems;
@@ -214,6 +230,7 @@ function ProjectActionsComponent(props: Readonly<Props>): JSX.Element {
             onBackupProject,
             onDeleteProject,
             selectedIds,
+            t,
         }, props);
     }
 

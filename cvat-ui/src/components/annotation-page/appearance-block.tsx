@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { Dispatch } from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { AnyAction } from 'redux';
 import { connect } from 'react-redux';
 import Text from 'antd/lib/typography/Text';
@@ -28,21 +29,6 @@ import {
     changeShowProjections as changeShowProjectionsAction,
     changeOrientationVisibility as changeOrientationVisibilityAction,
 } from 'actions/settings-actions';
-import { registerComponentShortcuts } from 'actions/shortcuts-actions';
-import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
-import { ShortcutScope } from 'utils/enums';
-import { subKeyMap } from 'utils/component-subkeymap';
-
-const componentShortcuts = {
-    SWITCH_COLOR_BY_APPEARANCE: {
-        name: 'Switch objects appearance setting "Color by"',
-        description: 'Objects color mode may be by object, label, or group',
-        sequences: [],
-        scope: ShortcutScope.ANNOTATION_PAGE,
-    },
-};
-
-registerComponentShortcuts(componentShortcuts);
 
 interface StateToProps {
     appearanceCollapsed: boolean;
@@ -56,12 +42,11 @@ interface StateToProps {
     orientationVisibility: OrientationVisibility;
     workspace: Workspace;
     jobInstance: Job;
-    keyMap: KeyMap;
 }
 
 interface DispatchToProps {
     collapseAppearance(): void;
-    changeShapesColorBy(colorBy: ColorBy): void;
+    changeShapesColorBy(event: RadioChangeEvent): void;
     changeShapesOpacity(value: number): void;
     changeSelectedShapesOpacity(value: number): void;
     changeShapesOutlinedBorders(outlined: boolean, color: string): void;
@@ -83,7 +68,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
                 orientationVisibility,
             },
         },
-        shortcuts: { keyMap },
     } = state;
 
     return {
@@ -98,7 +82,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
         workspace,
         orientationVisibility,
         jobInstance: jobInstance as Job,
-        keyMap,
     };
 }
 
@@ -107,8 +90,8 @@ function mapDispatchToProps(dispatch: Dispatch<AnyAction>): DispatchToProps {
         collapseAppearance(): void {
             dispatch(collapseAppearanceAction());
         },
-        changeShapesColorBy(colorBy: ColorBy): void {
-            dispatch(changeShapesColorByAction(colorBy));
+        changeShapesColorBy(event: RadioChangeEvent): void {
+            dispatch(changeShapesColorByAction(event.target.value));
         },
         changeShapesOpacity(value: number): void {
             dispatch(changeShapesOpacityAction(value));
@@ -131,7 +114,7 @@ function mapDispatchToProps(dispatch: Dispatch<AnyAction>): DispatchToProps {
     };
 }
 
-type Props = StateToProps & DispatchToProps;
+type Props = StateToProps & DispatchToProps & WithTranslation;
 
 function AppearanceBlock(props: Props): JSX.Element {
     const {
@@ -153,23 +136,11 @@ function AppearanceBlock(props: Props): JSX.Element {
         changeShowProjections,
         changeOrientationVisibility,
         jobInstance,
-        keyMap,
+        t,
     } = props;
 
     const is2D = jobInstance.dimension === DimensionType.DIMENSION_2D;
     const is3D = jobInstance.dimension === DimensionType.DIMENSION_3D;
-    const nextColorBy = {
-        [ColorBy.LABEL]: ColorBy.INSTANCE,
-        [ColorBy.INSTANCE]: ColorBy.GROUP,
-        [ColorBy.GROUP]: ColorBy.LABEL,
-    };
-
-    const handlers: Record<keyof typeof componentShortcuts, (event?: KeyboardEvent) => void> = {
-        SWITCH_COLOR_BY_APPEARANCE: (event: KeyboardEvent | undefined) => {
-            event?.preventDefault();
-            changeShapesColorBy(nextColorBy[colorBy]);
-        },
-    };
 
     return (
         <Collapse
@@ -179,24 +150,23 @@ function AppearanceBlock(props: Props): JSX.Element {
             items={[{
                 label: (
                     <Text strong className='cvat-objects-appearance-collapse-header'>
-                            Appearance
+                        {t('appearance')}
                     </Text>
                 ),
                 key: 'appearance',
                 children: (
-                    <div className='cvat-objects-appearance-content cvat-appearance-block'>
-                        <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
-                        <Text type='secondary'>Color by</Text>
+                    <div className='cvat-objects-appearance-content'>
+                        <Text type='secondary'>{t('colorBy')}</Text>
                         <Radio.Group
                             className='cvat-appearance-color-by-radio-group'
                             value={colorBy}
-                            onChange={(event: RadioChangeEvent) => changeShapesColorBy(event.target.value)}
+                            onChange={changeShapesColorBy}
                         >
-                            {Object.keys(nextColorBy).map((val) => (
-                                <Radio.Button value={val} key={val}>{val}</Radio.Button>
-                            ))}
+                            <Radio.Button value={ColorBy.LABEL}>{t(`colorByOption.${ColorBy.LABEL}`)}</Radio.Button>
+                            <Radio.Button value={ColorBy.INSTANCE}>{t(`colorByOption.${ColorBy.INSTANCE}`)}</Radio.Button>
+                            <Radio.Button value={ColorBy.GROUP}>{t(`colorByOption.${ColorBy.GROUP}`)}</Radio.Button>
                         </Radio.Group>
-                        <Text type='secondary'>Opacity</Text>
+                        <Text type='secondary'>{t('Opacity')}</Text>
                         <Slider
                             className='cvat-appearance-opacity-slider'
                             onChange={changeShapesOpacity}
@@ -204,7 +174,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                             min={0}
                             max={100}
                         />
-                        <Text type='secondary'>Selected opacity</Text>
+                        <Text type='secondary'>{t('selectedOpacity')}</Text>
                         <Slider
                             className='cvat-appearance-selected-opacity-slider'
                             onChange={changeSelectedShapesOpacity}
@@ -219,7 +189,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                             }}
                             checked={outlined}
                         >
-                            Outlined borders
+                            {t('outlinedBorders')}
                             <ColorPicker
                                 onChange={(color) => changeShapesOutlinedBorders(outlined, color)}
                                 value={outlineColor}
@@ -243,7 +213,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                                         });
                                     }}
                                 >
-                                    Cuboid orientation
+                                    {t('cuboidOrientation')}
                                 </Checkbox>
                             </div>
                         )}
@@ -253,7 +223,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                                 onChange={changeShowBitmap}
                                 checked={showBitmap}
                             >
-                                Show bitmap
+                                {t('showBitmap')}
                             </Checkbox>
                         )}
                         {is2D && (
@@ -262,7 +232,7 @@ function AppearanceBlock(props: Props): JSX.Element {
                                 onChange={changeShowProjections}
                                 checked={showProjections}
                             >
-                                Show projections
+                                {t('showProjections')}
                             </Checkbox>
                         )}
                     </div>
@@ -272,4 +242,4 @@ function AppearanceBlock(props: Props): JSX.Element {
     );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(AppearanceBlock));
+export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(React.memo(AppearanceBlock)));

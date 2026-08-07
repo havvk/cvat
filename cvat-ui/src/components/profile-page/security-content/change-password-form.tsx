@@ -8,7 +8,11 @@ import Form from 'antd/lib/form';
 import { LockOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
+<<<<<<< HEAD:cvat-ui/src/components/profile-page/security-content/change-password-form.tsx
 import { Row } from 'antd/lib/grid';
+=======
+import { useTranslation } from 'react-i18next';
+>>>>>>> github-pr-2:cvat-ui/src/components/change-password-modal/change-password-form.tsx
 
 import { ChangePasswordData } from 'reducers';
 import { validateConfirmation, validatePassword } from 'components/register-page/register-form';
@@ -18,7 +22,12 @@ interface Props {
     onCancel(): void;
 }
 
+<<<<<<< HEAD:cvat-ui/src/components/profile-page/security-content/change-password-form.tsx
 function ChangePasswordFormComponent({ onSubmit, onCancel }: Props): JSX.Element {
+=======
+function ChangePasswordFormComponent({ fetching, onSubmit }: Props): JSX.Element {
+    const { t } = useTranslation();
+>>>>>>> github-pr-2:cvat-ui/src/components/change-password-modal/change-password-form.tsx
     return (
         <Form onFinish={onSubmit} className='cvat-change-password-form'>
             <Form.Item
@@ -27,14 +36,14 @@ function ChangePasswordFormComponent({ onSubmit, onCancel }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: 'Please input your current password!',
+                        message: t('pleaseInputYourCurrentPassword'),
                     },
                 ]}
             >
                 <Input.Password
                     autoComplete='current-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='Current password'
+                    placeholder={t('currentPassword')}
                 />
             </Form.Item>
 
@@ -44,15 +53,15 @@ function ChangePasswordFormComponent({ onSubmit, onCancel }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: 'Please input new password!',
+                        message: t('pleaseInputNewPassword'),
                     },
-                    validatePassword,
+                    validatePassword(t),
                 ]}
             >
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='New password'
+                    placeholder={t('newPassword')}
                 />
             </Form.Item>
 
@@ -63,19 +72,20 @@ function ChangePasswordFormComponent({ onSubmit, onCancel }: Props): JSX.Element
                 rules={[
                     {
                         required: true,
-                        message: 'Please confirm your new password!',
+                        message: t('pleaseConfirmYourNewPassword'),
                     },
-                    validateConfirmation('newPassword1'),
+                    validateConfirmation('newPassword1', t),
                 ]}
             >
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='Confirm new password'
+                    placeholder={t('confirmNewPassword')}
                 />
             </Form.Item>
 
             <Form.Item>
+<<<<<<< HEAD:cvat-ui/src/components/profile-page/security-content/change-password-form.tsx
                 <Row justify='end'>
                     <Button
                         className='cvat-change-password-cancel-button'
@@ -91,6 +101,17 @@ function ChangePasswordFormComponent({ onSubmit, onCancel }: Props): JSX.Element
                         Submit
                     </Button>
                 </Row>
+=======
+                <Button
+                    type='primary'
+                    htmlType='submit'
+                    className='cvat-change-password-form-button'
+                    loading={fetching}
+                    disabled={fetching}
+                >
+                    {t('Submit')}
+                </Button>
+>>>>>>> github-pr-2:cvat-ui/src/components/change-password-modal/change-password-form.tsx
             </Form.Item>
         </Form>
     );

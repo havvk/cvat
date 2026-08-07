@@ -9,6 +9,7 @@ import Modal from 'antd/lib/modal';
 import Space from 'antd/lib/space';
 import Button from 'antd/lib/button';
 import Alert from 'antd/lib/alert';
+import { useTranslation } from 'react-i18next';
 
 import { CombinedState } from 'reducers';
 import { Storage, Task } from 'cvat-core-wrapper';
@@ -16,6 +17,7 @@ import { cloudStoragesActions } from 'actions/cloud-storage-actions';
 import CVATTooltip from 'components/common/cvat-tooltip';
 
 function SelectCSUpdatingSchemeModal(): JSX.Element | null {
+    const { t } = useTranslation();
     const {
         instances,
         onUpdate,
@@ -33,7 +35,7 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
 
     useEffect(() => {
         if (instances?.length) {
-            setInstanceType(instances[0] instanceof Task ? 'task' : 'project');
+            setInstanceType(instances[0].constructor.name.toLowerCase());
         }
     }, [instances]);
 
@@ -42,10 +44,9 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
     }
 
     const capitalizedInstanceType = instanceType.charAt(0).toUpperCase() + instanceType.slice(1);
-    const alert = 'Data-linked storage will only be reset during the transfer and must be updated manually afterward';
     const message = instances.length > 1 ?
-        'Some resources are linked to a cloud storage' :
-        `${capitalizedInstanceType} #${instances[0].id} is linked to a cloud storage`;
+        t('someResourcesLinkedToCloudStorage') :
+        t('instanceLinkedToCloudStorage', { instanceType: capitalizedInstanceType, instanceId: instances[0].id });
 
     return (
         <Modal
@@ -55,17 +56,8 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
                     <CVATTooltip
                         title={(
                             <>
-                                <div>
-                                    <strong>Move & Detach</strong>
-                                    : Transfer and unlink from a cloud storage.
-                                </div>
-                                <div>
-                                    <strong>Move & Auto Match</strong>
-                                    : Transfer and attempt to auto-link with a similar cloud storage
-                                     in the target workspace. A similar cloud storage is defined
-                                     by comparing the whole cloud storage configuration except credentials
-                                     and owner.
-                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: t('moveAndDetachHelpText') }} />
+                                <div dangerouslySetInnerHTML={{ __html: t('moveAndAutoMatchHelpText') }} />
                             </>
                         )}
                     >
@@ -78,7 +70,7 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
             open
             footer={[
                 <Button key='cancel' onClick={() => closeModal()}>
-                    Cancel
+                    {t('Cancel')}
                 </Button>,
                 <Button
                     key='move_and_detach'
@@ -98,7 +90,7 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
                         onUpdate();
                     }}
                 >
-                    Move & detach
+                    {t('moveAndDetach')}
                 </Button>,
                 // do not show option "move and auto match" when only data storage is linked
                 (
@@ -114,7 +106,7 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
                             onUpdate();
                         }}
                     >
-                        Move & Auto match
+                        {t('moveAndAutoMatch')}
                     </Button>
                 ),
             ]}
@@ -127,14 +119,14 @@ function SelectCSUpdatingSchemeModal(): JSX.Element | null {
                     ))
                 ) && (
                     <Alert
-                        message={alert}
+                        message={t('dataLinkedStorageManualUpdateWarning')}
                         type='warning'
                     />
                 )
             }
 
             <p>
-                Please choose how you would like the transfer to be done.
+                {t('chooseTransferType')}
             </p>
         </Modal>
     );

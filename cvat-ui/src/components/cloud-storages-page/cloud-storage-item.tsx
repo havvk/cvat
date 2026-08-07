@@ -4,23 +4,22 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import dayjs from 'dayjs';
-import { QuestionCircleOutlined, MoreOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import Card from 'antd/lib/card';
 import Meta from 'antd/lib/card/Meta';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Text from 'antd/lib/typography/Text';
-import Button from 'antd/lib/button';
 import Modal from 'antd/lib/modal';
+import moment from 'moment';
+import { getMomentLocale } from 'i18n';
+import { useTranslation } from 'react-i18next';
 
 import { CloudStorage, CombinedState } from 'reducers';
 import { deleteCloudStorageAsync } from 'actions/cloud-storage-actions';
-import { makeBulkOperationAsync } from 'actions/bulk-actions';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import Preview from 'components/common/preview';
-import { useContextMenuClick } from 'utils/hooks';
 import CloudStorageActionsMenu from './cloud-storage-actions-menu';
 import Status from './cloud-storage-status';
 
@@ -33,7 +32,7 @@ interface Props {
 export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.Element {
     const history = useHistory();
     const dispatch = useDispatch();
-    const { itemRef, handleContextMenuClick, handleContextMenuCapture } = useContextMenuClick<HTMLDivElement>();
+    const { t, i18n } = useTranslation();
 
     const { cloudStorage, selected = false, onClick = () => {} } = props;
     const {
@@ -45,18 +44,9 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
         updatedDate,
         description,
     } = cloudStorage;
-
-    const {
-        deletes,
-        selectedIds,
-        currentCloudStorages,
-    } = useSelector((state: CombinedState) => ({
-        deletes: state.cloudStorages.activities.deletes,
-        selectedIds: state.cloudStorages.selected,
-        currentCloudStorages: state.cloudStorages.current,
-    }), shallowEqual);
+    const deletes = useSelector((state: CombinedState) => state.cloudStorages.activities.deletes);
     const deleted = cloudStorage.id in deletes ? deletes[cloudStorage.id] : false;
-    const isBulkMode = selectedIds.length > 1;
+    const selectedIds = useSelector((state: CombinedState) => state.cloudStorages.selected);
 
     const style: React.CSSProperties = {};
     if (deleted) {
@@ -70,94 +60,20 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
     }, []);
 
     const onDelete = useCallback(() => {
-        const cloudStoragesToDelete = currentCloudStorages.filter((storage) => selectedIds.includes(storage.id));
         Modal.confirm({
-            title: isBulkMode ?
-                `Delete ${cloudStoragesToDelete.length} selected cloud storages` :
-                'Please, confirm your action',
-            content: isBulkMode ?
-                'All selected cloud storages will be permanently removed. Continue?' :
-                `You are going to remove the cloudstorage "${displayName}". Continue?`,
-            className: 'cvat-modal-confirm-delete-cloud-storage',
+            title: t('pleaseConfirmYourAction'),
+            content: t('confirmRemoveCloudStorage', { displayName }),
+            className: 'cvat-delete-cloud-storage-modal',
             onOk: () => {
-                dispatch(makeBulkOperationAsync(
-                    cloudStoragesToDelete.length ? cloudStoragesToDelete : [cloudStorage],
-                    async (storage) => {
-                        await dispatch(deleteCloudStorageAsync(storage));
-                    },
-                    (storage, idx, total) => `Deleting cloud storage #${storage.id} (${idx + 1}/${total})`,
-                ));
+                dispatch(deleteCloudStorageAsync(cloudStorage));
             },
             okButtonProps: {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? 'Delete selected' : 'Delete',
+            okText: t('Delete'),
         });
-    }, [cloudStorage, currentCloudStorages, selectedIds, isBulkMode, displayName]);
-
-    const card = (
-        <Card
-            ref={itemRef}
-            cover={(
-                <>
-                    <Preview
-                        cloudStorage={cloudStorage}
-                        loadingClassName='cvat-cloud-storage-item-loading-preview'
-                        emptyPreviewClassName='cvat-cloud-storage-item-empty-preview'
-                        previewClassName='cvat-cloud-storage-item-preview'
-                    />
-                    {description ? (
-                        <CVATTooltip overlay={description}>
-                            <QuestionCircleOutlined className='cvat-cloud-storage-description-icon' />
-                        </CVATTooltip>
-                    ) : null}
-                </>
-            )}
-            size='small'
-            style={style}
-            className={cardClassName}
-            hoverable
-            onClick={onClick}
-            onContextMenuCapture={handleContextMenuCapture}
-        >
-            <Meta
-                title={(
-                    <Paragraph ellipsis={{ tooltip: displayName }}>
-                        <Text strong>{`#${id}: `}</Text>
-                        <Text>{displayName}</Text>
-                    </Paragraph>
-                )}
-                description={(
-                    <>
-                        <Paragraph>
-                            <Text type='secondary'>Provider: </Text>
-                            <Text>{providerType}</Text>
-                        </Paragraph>
-                        <Paragraph>
-                            <Text type='secondary'>Created </Text>
-                            {owner ? <Text type='secondary'>{`by ${owner.username}`}</Text> : null}
-                            <Text type='secondary'> on </Text>
-                            <Text type='secondary'>{dayjs(createdDate).format('MMMM Do YYYY')}</Text>
-                        </Paragraph>
-                        <Paragraph>
-                            <Text type='secondary'>Last updated </Text>
-                            <Text type='secondary'>{dayjs(updatedDate).fromNow()}</Text>
-                        </Paragraph>
-                        <Status cloudStorage={cloudStorage} />
-                        <Button
-                            type='link'
-                            size='large'
-                            onClick={handleContextMenuClick}
-                            className='cvat-cloud-storage-item-menu-button cvat-actions-menu-button'
-                        >
-                            <MoreOutlined className='cvat-menu-icon' />
-                        </Button>
-                    </>
-                )}
-            />
-        </Card>
-    );
+    }, [cloudStorage.id]);
 
     return (
         <CloudStorageActionsMenu
@@ -165,7 +81,76 @@ export default function CloudStorageItemComponent(props: Readonly<Props>): JSX.E
             onDelete={onDelete}
             selectedIds={selectedIds}
             dropdownTrigger={['contextMenu']}
-            triggerElement={card}
+            triggerElement={(
+                <Card
+                    cover={(
+                        <>
+                            <Preview
+                                cloudStorage={cloudStorage}
+                                loadingClassName='cvat-cloud-storage-item-loading-preview'
+                                emptyPreviewClassName='cvat-cloud-storage-item-empty-preview'
+                                previewClassName='cvat-cloud-storage-item-preview'
+                            />
+                            {description ? (
+                                <CVATTooltip overlay={description}>
+                                    <QuestionCircleOutlined className='cvat-cloud-storage-description-icon' />
+                                </CVATTooltip>
+                            ) : null}
+                        </>
+                    )}
+                    size='small'
+                    style={style}
+                    className={cardClassName}
+                    hoverable
+                    onClick={onClick}
+                >
+                    <Meta
+                        title={(
+                            <Paragraph ellipsis={{ tooltip: displayName }}>
+                                <Text strong>{`#${id}: `}</Text>
+                                <Text>{displayName}</Text>
+                            </Paragraph>
+                        )}
+                        description={(
+                            <>
+                                <Paragraph>
+                                    <Text type='secondary'>
+                                        {t('Provider:')}
+                                        {' '}
+                                    </Text>
+                                    <Text>{providerType}</Text>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Text type='secondary'>
+                                        {t('Created')}
+                                        {' '}
+                                    </Text>
+                                    {owner ? <Text type='secondary'>{t('byOwner', { owner: owner.username })}</Text> : null}
+                                    <Text type='secondary'>{t('onDate')}</Text>
+                                    <Text type='secondary'>
+                                        {moment(createdDate).locale(getMomentLocale(i18n.language)).format('LL')}
+                                    </Text>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Text type='secondary'>
+                                        {t('lastUpdated')}
+                                        {' '}
+                                    </Text>
+                                    <Text type='secondary'>
+                                        {moment(updatedDate).locale(getMomentLocale(i18n.language)).fromNow()}
+                                    </Text>
+                                </Paragraph>
+                                <Status cloudStorage={cloudStorage} />
+                                <CloudStorageActionsMenu
+                                    onUpdate={onUpdate}
+                                    onDelete={onDelete}
+                                    selectedIds={selectedIds}
+                                />
+                            </>
+                        )}
+                    />
+                </Card>
+            )}
         />
     );
 }

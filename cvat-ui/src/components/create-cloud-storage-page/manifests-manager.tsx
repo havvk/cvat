@@ -12,6 +12,7 @@ import { FormListFieldData, FormListOperation } from 'antd/lib/form/FormList';
 import Input from 'antd/lib/input';
 import Row from 'antd/lib/row';
 import Alert from 'antd/lib/alert';
+import { useTranslation } from 'react-i18next';
 import Tooltip from 'antd/lib/tooltip';
 import config from 'config';
 
@@ -23,6 +24,7 @@ interface Props {
 
 export default function ManifestsManager(props: Props): JSX.Element {
     const { form, manifestNames, setManifestNames } = props;
+    const { t } = useTranslation();
     const { DATASET_MANIFEST_GUIDE_URL } = config;
 
     const updateManifestFields = (): void => {
@@ -59,8 +61,8 @@ export default function ManifestsManager(props: Props): JSX.Element {
                 className='cvat-manifests-manager-form-item'
                 label={(
                     <>
-                        Manifests
-                        <Tooltip title='Click to open guide'>
+                        {t('manifests')}
+                        <Tooltip title={t('clickToOpenGuide')}>
                             <Button
                                 type='link'
                                 target='_blank'
@@ -88,18 +90,18 @@ export default function ManifestsManager(props: Props): JSX.Element {
                                                 rules={[
                                                     {
                                                         required: true,
-                                                        message: 'Please specify a manifest name',
+                                                        message: t('pleaseSpecifyManifestName'),
                                                     },
                                                     {
                                                         type: 'string',
                                                         pattern: /^.*\.(jsonl)$/,
-                                                        message: 'Manifest file must have .jsonl extension',
+                                                        message: t('manifestFileExtensionError'),
                                                     },
                                                 ]}
                                                 initialValue={field.name}
                                             >
                                                 <Input
-                                                    placeholder='manifest.jsonl'
+                                                    placeholder={t('manifestPlaceholder')}
                                                     className='cvat-cloud-storage-manifest-field'
                                                     onChange={(event) => onChangeManifestPath(event.target.value, idx)}
                                                 />
@@ -127,7 +129,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
             <Row justify='start'>
                 <Col>
                     <Button onClick={onAddManifestItem} className='cvat-add-manifest-button'>
-                        Add manifest
+                        {t('addManifest')}
                         <PlusCircleOutlined />
                     </Button>
                 </Col>
@@ -138,7 +140,7 @@ export default function ManifestsManager(props: Props): JSX.Element {
                         <Alert
                             showIcon
                             type='info'
-                            message='We highly recommend attaching a manifest file to reduce the number of requests to the bucket'
+                            message={t('attachManifestRecommendation')}
                         />
                     </Col>
                 </Row>

@@ -4,10 +4,12 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
+import { useTranslation } from 'react-i18next';
+import { getMomentLocale } from 'i18n';
 
 import { getCore, Project } from 'cvat-core-wrapper';
 import LabelsEditor from 'components/labels-editor/labels-editor';
@@ -24,6 +26,8 @@ interface DetailsComponentProps {
 
 export default function DetailsComponent(props: DetailsComponentProps): JSX.Element {
     const { project, onUpdateProject } = props;
+    const { t, i18n } = useTranslation();
+    const createdDate = moment(project.createdDate).locale(getMomentLocale(i18n.language)).format('L');
     const [projectName, setProjectName] = useState(project.name);
 
     return (
@@ -48,9 +52,16 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
             <Row justify='space-between' className='cvat-project-description'>
                 <Col>
                     <Text type='secondary'>
-                        {`Project #${project.id} created`}
-                        {project.owner ? ` by ${project.owner.username}` : null}
-                        {` on ${dayjs(project.createdDate).format('MMMM Do YYYY')}`}
+                        {project.owner ?
+                            t('projectIdCreatedByOwnerOnDate', {
+                                id: project.id,
+                                owner: project.owner.username,
+                                date: createdDate,
+                            }) :
+                            t('projectIdCreatedOnDate', {
+                                id: project.id,
+                                date: createdDate,
+                            })}
                     </Text>
                     <MdGuideControl instanceType='project' id={project.id} />
                     <BugTrackerEditor
@@ -62,7 +73,7 @@ export default function DetailsComponent(props: DetailsComponentProps): JSX.Elem
                     />
                 </Col>
                 <Col>
-                    <Text type='secondary'>Assigned to</Text>
+                    <Text type='secondary'>{t('assignedTo')}</Text>
                     <UserSelector
                         value={project.assignee}
                         onSelect={(user) => {

@@ -4,8 +4,8 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
-import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
 import Icon, {
     LeftOutlined, RightOutlined, EyeInvisibleFilled, EyeOutlined,
     CheckCircleFilled, CheckCircleOutlined,
@@ -19,40 +19,28 @@ import {
 import { reviewActions } from 'actions/review-actions';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { ActiveControl, CombinedState, Workspace } from 'reducers';
+import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ConflictSeverity, QualityConflict, Issue } from 'cvat-core-wrapper';
 import { changeShowGroundTruth } from 'actions/settings-actions';
 import { ShowGroundTruthIcon } from 'icons';
 
 export default function LabelsListComponent(): JSX.Element {
+    const { t, i18n } = useTranslation();
     const dispatch = useDispatch();
-    const {
-        frame,
-        frameIssues,
-        frameConflicts,
-        showGroundTruth,
-        issues,
-        conflicts,
-        issuesHidden,
-        issuesResolvedHidden,
-        highlightedConflict,
-        workspace,
-        ready,
-        activeControl,
-    } = useSelector((state: CombinedState) => ({
-        frame: state.annotation.player.frame.number,
-        frameIssues: state.review.frameIssues,
-        frameConflicts: state.review.frameConflicts,
-        showGroundTruth: state.settings.shapes.showGroundTruth,
-        issues: state.review.issues,
-        conflicts: state.review.conflicts,
-        issuesHidden: state.review.issuesHidden,
-        issuesResolvedHidden: state.review.issuesResolvedHidden,
-        highlightedConflict: state.annotation.annotations.highlightedConflict,
-        workspace: state.annotation.workspace,
-        ready: state.annotation.canvas.ready,
-        activeControl: state.annotation.canvas.activeControl,
-    }), shallowEqual);
+    const frame = useSelector((state: CombinedState): number => state.annotation.player.frame.number);
+    const frameIssues = useSelector((state: CombinedState): Issue[] => state.review.frameIssues);
+    const frameConflicts = useSelector((state: CombinedState) => state.review.frameConflicts);
+    const showGroundTruth = useSelector((state: CombinedState) => state.settings.shapes.showGroundTruth);
+    const issues = useSelector((state: CombinedState): Issue[] => state.review.issues);
+    const conflicts = useSelector((state: CombinedState) => state.review.conflicts);
+    const issuesHidden = useSelector((state: CombinedState) => state.review.issuesHidden);
+    const issuesResolvedHidden = useSelector((state: CombinedState) => state.review.issuesResolvedHidden);
+    const highlightedConflict = useSelector((state: CombinedState) => state.annotation.annotations.highlightedConflict);
+    const workspace = useSelector((state: CombinedState) => state.annotation.workspace);
+    const ready = useSelector((state: CombinedState) => state.annotation.canvas.ready);
+    const activeControl = useSelector((state: CombinedState) => state.annotation.canvas.activeControl);
 
     let frames = issues
         .filter((issue: Issue) => !issuesResolvedHidden || !issue.resolved)
@@ -93,20 +81,20 @@ export default function LabelsListComponent(): JSX.Element {
             <div className='cvat-objects-sidebar-issues-list-header'>
                 <Row justify='start' align='middle'>
                     <Col>
-                        <Text>{`Items: ${frameIssues.length}`}</Text>
+                        <Text>{t('itemsCount', { count: frameIssues.length })}</Text>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title='Find the previous frame with issues'>
+                        <CVATTooltip title={t('findPreviousFrameWithIssues')}>
                             <LeftOutlined className='cvat-issues-sidebar-previous-frame' {...dynamicLeftProps} />
                         </CVATTooltip>
                     </Col>
                     <Col offset={1}>
-                        <CVATTooltip title='Find the next frame with issues'>
+                        <CVATTooltip title={t('findNextFrameWithIssues')}>
                             <RightOutlined className='cvat-issues-sidebar-next-frame' {...dynamicRightProps} />
                         </CVATTooltip>
                     </Col>
                     <Col offset={2}>
-                        <CVATTooltip title='Show/hide all issues'>
+                        <CVATTooltip title={t('showHideAllIssues')}>
                             {issuesHidden ? (
                                 <EyeInvisibleFilled
                                     className='cvat-issues-sidebar-hidden-issues'
@@ -121,7 +109,7 @@ export default function LabelsListComponent(): JSX.Element {
                         </CVATTooltip>
                     </Col>
                     <Col offset={2}>
-                        <CVATTooltip title='Show/hide resolved issues'>
+                        <CVATTooltip title={t('showHideResolvedIssues')}>
                             { issuesResolvedHidden ? (
                                 <CheckCircleFilled
                                     className='cvat-issues-sidebar-hidden-resolved-status'
@@ -139,7 +127,7 @@ export default function LabelsListComponent(): JSX.Element {
                     {
                         workspace === Workspace.REVIEW ? (
                             <Col offset={2}>
-                                <CVATTooltip title='Show Ground truth annotations and conflicts'>
+                                <CVATTooltip title={t('showGroundTruthAndConflicts')}>
                                     <Icon
                                         className={
                                             `cvat-objects-sidebar-show-ground-truth ${showGroundTruth ? 'cvat-objects-sidebar-show-ground-truth-active' : ''}`
@@ -189,12 +177,16 @@ export default function LabelsListComponent(): JSX.Element {
                                 <Row justify='space-between'>
                                     <Col>
                                         <Text strong>
-                                            {`#${frameIssue.id} • Issue`}
+                                            {t('issueIdTag', { id: frameIssue.id })}
                                         </Text>
                                     </Col>
                                     <Col offset={1}>
                                         <Text type='secondary'>
-                                            {`created ${dayjs(frameIssue.createdDate).fromNow()}`}
+                                            {t('createdTimeAgo', {
+                                                time: moment(frameIssue.createdDate)
+                                                    .locale(getMomentLocale(i18n.language))
+                                                    .fromNow(),
+                                            })}
                                         </Text>
                                     </Col>
                                 </Row>
@@ -250,8 +242,9 @@ export default function LabelsListComponent(): JSX.Element {
                         >
                             <Row>
                                 <Text strong>
-                                    {`#${frameConflict.id} • ${frameConflict.severity === ConflictSeverity.WARNING ?
-                                        'Warning' : 'Conflict'}`}
+                                    {frameConflict.severity === ConflictSeverity.WARNING ?
+                                        t('warningIdTag', { id: frameConflict.id }) :
+                                        t('conflictIdTag', { id: frameConflict.id })}
                                 </Text>
                             </Row>
                             <Row>

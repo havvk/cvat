@@ -4,7 +4,8 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
-import dayjs from 'dayjs';
+import moment from 'moment';
+import { getMomentLocale } from 'i18n';
 import { Row, Col } from 'antd/lib/grid';
 import Tag from 'antd/lib/tag';
 import Text from 'antd/lib/typography/Text';
@@ -15,10 +16,10 @@ import Meta from 'antd/lib/card/Meta';
 import Divider from 'antd/lib/divider';
 import Card from 'antd/lib/card';
 import Button from 'antd/lib/button';
-import { MenuProps } from 'antd/lib/menu';
+import { useTranslation } from 'react-i18next';
 
 import Preview from 'components/common/preview';
-import { useCardHeightHOC, useContextMenuClick, usePlugins } from 'utils/hooks';
+import { useCardHeightHOC, usePlugins } from 'utils/hooks';
 import { CombinedState } from 'reducers';
 import { MLModel, ModelProviders } from 'cvat-core-wrapper';
 import ModelActionsComponent from './actions-menu';
@@ -37,11 +38,11 @@ const useCardHeight = useCardHeightHOC({
     numberOfRows: 3,
 });
 
-function DeployedModelItem(props: Readonly<Props>): JSX.Element {
+export default function DeployedModelItem(props: Readonly<Props>): JSX.Element {
     const { model, selected, onClick } = props;
+    const { t, i18n } = useTranslation();
     const [isModalShown, setIsModalShown] = useState(false);
     const height = useCardHeight();
-    const { itemRef, handleContextMenuClick, handleContextMenuCapture } = useContextMenuClick<HTMLDivElement>();
     const style: React.CSSProperties = { height };
 
     const systemModel = model.provider === ModelProviders.CVAT;
@@ -55,10 +56,10 @@ function DeployedModelItem(props: Readonly<Props>): JSX.Element {
         setIsModalShown(false);
     };
 
-    const created = dayjs(model.createdDate).fromNow();
+    const created = moment(model.createdDate).locale(getMomentLocale(i18n.language)).fromNow();
     const modelDescription = !systemModel ?
-        <Text type='secondary'>{`Added ${created}`}</Text> :
-        <Text type='secondary'>System model</Text>;
+        <Text type='secondary'>{t('addedCreated', { created })}</Text> :
+        <Text type='secondary'>{t('systemModel')}</Text>;
 
     const topBarItems: [JSX.Element, number][] = [];
 
@@ -80,66 +81,11 @@ function DeployedModelItem(props: Readonly<Props>): JSX.Element {
 
     const cardClassName = `cvat-models-item-card${selected ? ' cvat-item-selected' : ''}`;
 
-    const card = (menuItems: NonNullable<MenuProps['items']>): JSX.Element => (
-        <Card
-            ref={itemRef}
-            cover={(
-                <Preview
-                    model={model}
-                    loadingClassName='cvat-model-item-loading-preview'
-                    emptyPreviewClassName='cvat-model-item-empty-preview'
-                    previewWrapperClassName='cvat-models-item-card-preview-wrapper'
-                    previewClassName='cvat-models-item-card-preview'
-                    onClick={onOpenModel}
-                />
-            )}
-            style={style}
-            size='small'
-            className={cardClassName}
-            hoverable
-            onContextMenuCapture={handleContextMenuCapture}
-        >
-            <Meta
-                title={(
-                    <Text ellipsis={{ tooltip: model.name }} onClick={onOpenModel} className='cvat-models-item-title' aria-hidden>
-                        {model.provider !== ModelProviders.CVAT && `#${model.id}: `}
-                        {model.name}
-                    </Text>
-                )}
-                description={(
-                    <div className='cvat-models-item-description'>
-                        <Row onClick={onOpenModel} className='cvat-models-item-text-description'>
-                            {model.owner && (
-                                <>
-                                    <Text type='secondary'>{`Created by ${model.owner}`}</Text>
-                                    <br />
-                                </>
-                            )}
-                            {modelDescription}
-                        </Row>
-                        {
-                            (menuItems.length > 0) ? (
-                                <Button
-                                    className='cvat-deployed-model-details-button cvat-actions-menu-button'
-                                    type='link'
-                                    size='large'
-                                    icon={<MoreOutlined />}
-                                    onClick={handleContextMenuClick}
-                                />
-                            ) : null
-                        }
-                    </div>
-                )}
-            />
-            { modelTopBar }
-        </Card>
-    );
-
     return (
         <>
             <Modal
                 className='cvat-model-info-modal'
-                title='Model'
+                title={t('Model')}
                 open={isModalShown}
                 onCancel={onCloseModel}
                 footer={null}
@@ -164,7 +110,7 @@ function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                     model.labels?.length ? (
                         <>
                             <div className='cvat-model-info-container'>
-                                <Text className='cvat-model-info-modal-labels-title'>Labels:</Text>
+                                <Text className='cvat-model-info-modal-labels-title'>{t('Labels:')}</Text>
                             </div>
                             <div className='cvat-model-info-container cvat-model-info-modal-labels-list'>
                                 {model.labels.map((label) => <Tag key={label.name}>{label.name}</Tag>)}
@@ -177,10 +123,10 @@ function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                     <Col span={15}>
                         <Row>
                             <Col span={8}>
-                                <Text strong>Provider</Text>
+                                <Text strong>{t('Provider')}</Text>
                             </Col>
                             <Col>
-                                <Text strong>Type</Text>
+                                <Text strong>{t('Type')}</Text>
                             </Col>
                         </Row>
                         <Row>
@@ -196,7 +142,7 @@ function DeployedModelItem(props: Readonly<Props>): JSX.Element {
                         <Col>
                             <Row>
                                 <Col>
-                                    <Text strong>Owner</Text>
+                                    <Text strong>{t('Owner')}</Text>
                                 </Col>
                             </Row>
                             <Row>
@@ -211,10 +157,60 @@ function DeployedModelItem(props: Readonly<Props>): JSX.Element {
             <ModelActionsComponent
                 model={model}
                 dropdownTrigger={['contextMenu']}
-                triggerElement={card}
+                triggerElement={(
+                    <Card
+                        cover={(
+                            <Preview
+                                model={model}
+                                loadingClassName='cvat-model-item-loading-preview'
+                                emptyPreviewClassName='cvat-model-item-empty-preview'
+                                previewWrapperClassName='cvat-models-item-card-preview-wrapper'
+                                previewClassName='cvat-models-item-card-preview'
+                                onClick={onOpenModel}
+                            />
+                        )}
+                        style={style}
+                        size='small'
+                        className={cardClassName}
+                        hoverable
+                    >
+                        <Meta
+                            title={(
+                                <Text ellipsis={{ tooltip: model.name }} onClick={onOpenModel} className='cvat-models-item-title' aria-hidden>
+                                    {model.provider !== ModelProviders.CVAT && `#${model.id}: `}
+                                    {model.name}
+                                </Text>
+                            )}
+                            description={(
+                                <div className='cvat-models-item-description'>
+                                    <Row onClick={onOpenModel} className='cvat-models-item-text-description'>
+                                        {model.owner && (
+                                            <>
+                                                <Text type='secondary'>{t('createdByOwner', { owner: model.owner })}</Text>
+                                                <br />
+                                            </>
+                                        )}
+                                        {modelDescription}
+                                    </Row>
+                                    <ModelActionsComponent
+                                        model={model}
+                                        renderTriggerIfEmpty={false}
+                                        triggerElement={(
+                                            <Button
+                                                className='cvat-deployed-model-details-button cvat-actions-menu-button'
+                                                type='link'
+                                                size='large'
+                                                icon={<MoreOutlined />}
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            )}
+                        />
+                        { modelTopBar }
+                    </Card>
+                )}
             />
         </>
     );
 }
-
-export default React.memo(DeployedModelItem);

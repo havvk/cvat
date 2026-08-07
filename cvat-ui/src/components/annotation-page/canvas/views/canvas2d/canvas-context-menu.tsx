@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import i18n from 'i18next';
 import ReactDOM from 'react-dom';
 import Menu from 'antd/lib/menu';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -19,6 +20,7 @@ import {
 } from 'cvat-core-wrapper';
 
 interface Props {
+    readonly: boolean;
     workspace: Workspace;
     contextMenuParentID: number | null;
     contextMenuClientID: number | null;
@@ -75,7 +77,7 @@ function ReviewContextMenu({
             </Menu.Item>
             {latestComments.length ? (
                 <Menu.SubMenu
-                    title='Quick issue ...'
+                    title={i18n.t('quickIssue')}
                     className='cvat-context-menu-item'
                     key={ReviewContextMenuKeys.QUICK_ISSUE_FROM_LATEST}
                 >
@@ -112,6 +114,7 @@ export default function CanvasContextMenu(props: Props): JSX.Element | null {
         visible,
         left,
         top,
+        readonly,
         workspace,
         latestComments,
         onStartIssue,
@@ -206,6 +209,7 @@ export default function CanvasContextMenu(props: Props): JSX.Element | null {
         return ReactDOM.createPortal(
             <div className='cvat-canvas-context-menu' style={{ top, left }}>
                 <ObjectItemElementComponent
+                    readonly={readonly}
                     key={contextMenuClientID}
                     clientID={contextMenuClientID}
                     parentID={contextMenuParentID as number}
@@ -218,6 +222,7 @@ export default function CanvasContextMenu(props: Props): JSX.Element | null {
     return ReactDOM.createPortal(
         <div className='cvat-canvas-context-menu' style={{ top, left }}>
             <ObjectItemContainer
+                readonly={readonly}
                 key={contextMenuClientID}
                 clientID={contextMenuClientID}
                 objectStates={objectStates}

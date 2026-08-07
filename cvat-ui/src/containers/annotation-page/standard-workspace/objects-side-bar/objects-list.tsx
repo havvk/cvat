@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
@@ -34,6 +35,10 @@ import { registerComponentShortcuts } from 'actions/shortcuts-actions';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
 import { openAnnotationsActionModal } from 'components/annotation-page/annotations-actions/annotations-actions-modal';
+
+interface OwnProps {
+    readonly: boolean;
+}
 
 interface StateToProps {
     jobInstance: any;
@@ -93,7 +98,7 @@ const componentShortcuts = {
     SWITCH_HIDDEN: {
         name: 'Hide/show an object',
         description: 'Change hidden state for an active object',
-        sequences: ['h'],
+        sequences: ['shift+h'],
         scope: ShortcutScope.OBJECTS_SIDEBAR,
     },
     SWITCH_OCCLUDED: {
@@ -124,30 +129,18 @@ const componentShortcuts = {
         name: 'Delete object',
         description: 'Delete an active object. Use shift to force delete of locked objects',
         sequences: ['del', 'shift+del'],
-        scope: ShortcutScope.OBJECTS_SIDEBAR,
+        scope: ShortcutScope.STANDARD_WORKSPACE,
     },
     TO_BACKGROUND: {
-        name: 'Move to background',
-        description: 'Move an active object to the newly created background layer (decrease z-order value)',
+        name: 'To background',
+        description: 'Put an active object "farther" from the user (decrease z axis value)',
         sequences: ['-', '_'],
         scope: ShortcutScope.OBJECTS_SIDEBAR,
     },
     TO_FOREGROUND: {
-        name: 'Move to foreground',
-        description: 'Move an active object to the newly created foreground layer (increase z-order value)',
+        name: 'To foreground',
+        description: 'Put an active object "closer" to the user (increase z axis value)',
         sequences: ['+', '='],
-        scope: ShortcutScope.OBJECTS_SIDEBAR,
-    },
-    TO_ONE_LAYER_BACKWARD: {
-        name: 'Move one layer backward',
-        description: 'Move an active object one layer backward (decrease z-order value)',
-        sequences: [],
-        scope: ShortcutScope.OBJECTS_SIDEBAR,
-    },
-    TO_ONE_LAYER_FORWARD: {
-        name: 'Move one layer forward',
-        description: 'Move an active object one layer forward (increase z-order value)',
-        sequences: [],
         scope: ShortcutScope.OBJECTS_SIDEBAR,
     },
     COPY_SHAPE: {
@@ -297,35 +290,21 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 }
 
 function sortAndMap(objectStates: ObjectState[], ordering: StatesOrdering): number[] {
-    let sorted: ObjectState[] = [];
+    let sorted = [];
     if (ordering === StatesOrdering.ID_ASCENT) {
-        sorted = [...objectStates].sort((a: ObjectState, b: ObjectState): number => (
-            (a.clientID ?? 0) - (b.clientID ?? 0)
-        ));
+        sorted = [...objectStates].sort((a: any, b: any): number => a.clientID - b.clientID);
     } else if (ordering === StatesOrdering.ID_DESCENT) {
-        sorted = [...objectStates].sort((a: ObjectState, b: ObjectState): number => (
-            (b.clientID ?? 0) - (a.clientID ?? 0)
-        ));
+        sorted = [...objectStates].sort((a: any, b: any): number => b.clientID - a.clientID);
     } else if (ordering === StatesOrdering.UPDATED) {
-        sorted = [...objectStates].sort((a: ObjectState, b: ObjectState): number => b.updated - a.updated);
-    } else if (ordering === StatesOrdering.Z_ORDER) {
-        sorted = [...objectStates].sort((a: ObjectState, b: ObjectState): number => a.zOrder - b.zOrder);
-    } else if (ordering === StatesOrdering.LABEL_NAME) {
-        sorted = [...objectStates].sort((a: ObjectState, b: ObjectState): number => {
-            const labelComparison = a.label.name.localeCompare(b.label.name);
-            if (labelComparison !== 0) {
-                return labelComparison;
-            }
-            return (a.clientID ?? 0) - (b.clientID ?? 0);
-        });
+        sorted = [...objectStates].sort((a: any, b: any): number => b.updated - a.updated);
     } else {
-        sorted = [...objectStates];
+        sorted = [...objectStates].sort((a: any, b: any): number => a.zOrder - b.zOrder);
     }
 
-    return sorted.map((state: ObjectState) => state.clientID).filter((id): id is number => id !== null);
+    return sorted.map((state: any) => state.clientID);
 }
 
-type Props = StateToProps & DispatchToProps;
+type Props = StateToProps & DispatchToProps & OwnProps;
 
 interface State {
     statesOrdering: StatesOrdering;
@@ -335,6 +314,14 @@ interface State {
 }
 
 class ObjectsListContainer extends React.PureComponent<Props, State> {
+    static propTypes = {
+        readonly: PropTypes.bool,
+    };
+
+    static defaultProps = {
+        readonly: false,
+    };
+
     public constructor(props: Props) {
         super(props);
         this.state = {
@@ -411,14 +398,16 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
     };
 
     private lockAllStates(locked: boolean): void {
-        const { updateAnnotations } = this.props;
+        const { updateAnnotations, readonly } = this.props;
         const { filteredStates } = this.state;
 
-        for (const objectState of filteredStates) {
-            objectState.lock = locked;
-        }
+        if (!readonly) {
+            for (const objectState of filteredStates) {
+                objectState.lock = locked;
+            }
 
-        updateAnnotations(filteredStates);
+            updateAnnotations(filteredStates);
+        }
     }
 
     private hideAllStates(hidden: boolean): void {
@@ -455,6 +444,7 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
             normalizedKeyMap,
             colors,
             colorBy,
+            readonly,
             statesCollapsedAll,
             showGroundTruth,
             updateAnnotations,
@@ -469,7 +459,7 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
             objectStates, sortedStatesID, statesOrdering, filteredStates,
         } = this.state;
 
-        const preventDefault = (event?: KeyboardEvent): void => {
+        const preventDefault = (event: KeyboardEvent | undefined): void => {
             if (event) {
                 event.preventDefault();
             }
@@ -493,23 +483,23 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
         };
 
         const handlers: Record<keyof typeof componentShortcuts, (event?: KeyboardEvent) => void> = {
-            SWITCH_ALL_LOCK: (event?: KeyboardEvent) => {
+            SWITCH_ALL_LOCK: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 this.lockAllStates(!statesLocked);
             },
-            SWITCH_LOCK: (event?: KeyboardEvent) => {
+            SWITCH_LOCK: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
-                if (state) {
+                if (state && !readonly) {
                     state.lock = !state.lock;
                     updateAnnotations([state]);
                 }
             },
-            SWITCH_ALL_HIDDEN: (event?: KeyboardEvent) => {
+            SWITCH_ALL_HIDDEN: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 this.hideAllStates(!statesHidden);
             },
-            SWITCH_HIDDEN: (event?: KeyboardEvent) => {
+            SWITCH_HIDDEN: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
                 const {
@@ -524,26 +514,26 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
                     updateAnnotations([state]);
                 }
             },
-            SWITCH_OCCLUDED: (event?: KeyboardEvent) => {
+            SWITCH_OCCLUDED: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
-                if (state && state.objectType !== ObjectType.TAG) {
+                if (state && !readonly && state.objectType !== ObjectType.TAG) {
                     state.occluded = !state.occluded;
                     updateAnnotations([state]);
                 }
             },
-            SWITCH_PINNED: (event?: KeyboardEvent) => {
+            SWITCH_PINNED: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState(true);
-                if (state) {
+                if (state && !readonly) {
                     state.pinned = !state.pinned;
                     updateAnnotations([state]);
                 }
             },
-            SWITCH_KEYFRAME: (event?: KeyboardEvent) => {
+            SWITCH_KEYFRAME: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
-                if (state && state.objectType === ObjectType.TRACK) {
+                if (state && !readonly && state.objectType === ObjectType.TRACK) {
                     const { first, last } = state.keyframes as NonNullable<typeof state.keyframes>;
                     if (first !== last || !state.keyframe) {
                         state.keyframe = !state.keyframe;
@@ -551,22 +541,22 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
                     }
                 }
             },
-            SWITCH_OUTSIDE: (event?: KeyboardEvent) => {
+            SWITCH_OUTSIDE: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
-                if (state && (state.objectType === ObjectType.TRACK || state.parentID)) {
+                if (state && !readonly && (state.objectType === ObjectType.TRACK || state.parentID)) {
                     state.outside = !state.outside;
                     updateAnnotations([state]);
                 }
             },
-            DELETE_OBJECT_STANDARD_WORKSPACE: (event?: KeyboardEvent) => {
+            DELETE_OBJECT_STANDARD_WORKSPACE: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState(true);
-                if (state) {
+                if (state && !readonly) {
                     removeObject(state, event ? event.shiftKey : false);
                 }
             },
-            CHANGE_OBJECT_COLOR: (event?: KeyboardEvent) => {
+            CHANGE_OBJECT_COLOR: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
                 if (state) {
@@ -583,60 +573,46 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
                     }
                 }
             },
-            TO_BACKGROUND: (event?: KeyboardEvent) => {
+            TO_BACKGROUND: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState(true);
-                if (state && state.objectType !== ObjectType.TAG) {
+                if (state && !readonly && state.objectType !== ObjectType.TAG) {
                     state.zOrder = minZLayer - 1;
                     updateAnnotations([state]);
                 }
             },
-            TO_FOREGROUND: (event?: KeyboardEvent) => {
+            TO_FOREGROUND: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState(true);
-                if (state && state.objectType !== ObjectType.TAG) {
+                if (state && !readonly && state.objectType !== ObjectType.TAG) {
                     state.zOrder = maxZLayer + 1;
-                    updateAnnotations([state]);
-                }
-            },
-            TO_ONE_LAYER_BACKWARD: (event?: KeyboardEvent) => {
-                preventDefault(event);
-                const state = activatedState(true);
-                if (state && state.objectType !== ObjectType.TAG) {
-                    state.zOrder -= 1;
-                    updateAnnotations([state]);
-                }
-            },
-            TO_ONE_LAYER_FORWARD: (event?: KeyboardEvent) => {
-                preventDefault(event);
-                const state = activatedState(true);
-                if (state && state.objectType !== ObjectType.TAG) {
-                    state.zOrder += 1;
                     updateAnnotations([state]);
                 }
             },
             COPY_SHAPE: () => {
                 const state = activatedState(true);
-                if (state) {
+                if (state && !readonly) {
                     copyShape(state);
                 }
             },
             RUN_ANNOTATIONS_ACTION: () => {
                 const state = activatedState(true);
-                if (state) {
-                    openAnnotationsActionModal({ defaultObjectState: state });
-                } else {
-                    openAnnotationsActionModal();
+                if (!readonly) {
+                    if (state) {
+                        openAnnotationsActionModal({ defaultObjectState: state });
+                    } else {
+                        openAnnotationsActionModal();
+                    }
                 }
             },
-            PROPAGATE_OBJECT: (event?: KeyboardEvent) => {
+            PROPAGATE_OBJECT: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
-                if (state) {
+                if (state && !readonly) {
                     switchPropagateVisibility(true);
                 }
             },
-            NEXT_KEY_FRAME: (event?: KeyboardEvent) => {
+            NEXT_KEY_FRAME: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
                 if (state && state.keyframes) {
@@ -646,7 +622,7 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
                     }
                 }
             },
-            PREV_KEY_FRAME: (event?: KeyboardEvent) => {
+            PREV_KEY_FRAME: (event: KeyboardEvent | undefined) => {
                 preventDefault(event);
                 const state = activatedState();
                 if (state && state.keyframes) {
@@ -665,6 +641,7 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
                     statesHidden={statesHidden}
                     statesLocked={statesLocked}
                     statesCollapsedAll={statesCollapsedAll}
+                    readonly={readonly || false}
                     workspace={workspace}
                     statesOrdering={statesOrdering}
                     sortedStatesID={sortedStatesID}
@@ -686,6 +663,6 @@ class ObjectsListContainer extends React.PureComponent<Props, State> {
     }
 }
 
-export default connect(
+export default connect<StateToProps, DispatchToProps, OwnProps, CombinedState>(
     mapStateToProps, mapDispatchToProps,
 )(ObjectsListContainer);

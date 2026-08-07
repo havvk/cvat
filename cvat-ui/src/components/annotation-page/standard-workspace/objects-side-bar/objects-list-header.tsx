@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import Icon, {
     CaretDownOutlined,
@@ -22,6 +23,7 @@ import { ShowGroundTruthIcon } from 'icons';
 
 interface Props {
     workspace: Workspace;
+    readonly: boolean;
     statesHidden: boolean;
     statesLocked: boolean;
     statesCollapsed: boolean;
@@ -41,12 +43,13 @@ interface Props {
 }
 
 function LockAllSwitcher(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         statesLocked, switchLockAllShortcut, unlockAllStates, lockAllStates,
     } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title={`Switch lock property for all ${switchLockAllShortcut}`}>
+            <CVATTooltip title={t('switchLockAll', { shortcut: switchLockAllShortcut })}>
                 {statesLocked ? <LockFilled onClick={unlockAllStates} /> : <UnlockOutlined onClick={lockAllStates} />}
             </CVATTooltip>
         </Col>
@@ -54,12 +57,13 @@ function LockAllSwitcher(props: Props): JSX.Element {
 }
 
 function HideAllSwitcher(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         statesHidden, switchHiddenAllShortcut, showAllStates, hideAllStates,
     } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title={`Switch hidden property for all ${switchHiddenAllShortcut}`}>
+            <CVATTooltip title={t('switchHiddenAll', { shortcut: switchHiddenAllShortcut })}>
                 {statesHidden ? (
                     <EyeInvisibleFilled onClick={showAllStates} />
                 ) : (
@@ -71,12 +75,13 @@ function HideAllSwitcher(props: Props): JSX.Element {
 }
 
 function GTSwitcher(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         showGroundTruth, changeShowGroundTruth,
     } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title='Show Ground truth annotations and conflicts'>
+            <CVATTooltip title={t('showGroundTruthAndConflicts')}>
                 <Icon
                     className={
                         `cvat-objects-sidebar-show-ground-truth ${showGroundTruth ? 'cvat-objects-sidebar-show-ground-truth-active' : ''}`
@@ -90,10 +95,11 @@ function GTSwitcher(props: Props): JSX.Element {
 }
 
 function CollapseAllSwitcher(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { statesCollapsed, expandAllStates, collapseAllStates } = props;
     return (
         <Col span={3}>
-            <CVATTooltip title='Expand/collapse all'>
+            <CVATTooltip title={t('expandCollapseAll')}>
                 {statesCollapsed ? (
                     <CaretDownOutlined onClick={expandAllStates} />
                 ) : (
@@ -105,15 +111,16 @@ function CollapseAllSwitcher(props: Props): JSX.Element {
 }
 
 function ObjectListHeader(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
-        workspace, statesOrdering, count, changeStatesOrdering,
+        workspace, readonly, statesOrdering, count, changeStatesOrdering,
     } = props;
 
     return (
         <div className='cvat-objects-sidebar-states-header'>
             <Row justify='space-between' align='middle'>
                 <Col span={24}>
-                    <Text>{`Items: ${count}`}</Text>
+                    <Text>{t('itemsCount', { count })}</Text>
                     <StatesOrderingSelector
                         statesOrdering={statesOrdering}
                         changeStatesOrdering={changeStatesOrdering}
@@ -121,7 +128,7 @@ function ObjectListHeader(props: Props): JSX.Element {
                 </Col>
                 <Col span={24}>
                     <Row justify='space-around' align='middle'>
-                        <LockAllSwitcher {...props} />
+                        {!readonly && <LockAllSwitcher {...props} />}
                         <HideAllSwitcher {...props} />
                         { workspace === Workspace.REVIEW && (
                             <GTSwitcher {...props} />

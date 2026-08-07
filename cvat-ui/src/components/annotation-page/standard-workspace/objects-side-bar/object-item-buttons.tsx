@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Icon, {
     UnlockOutlined,
@@ -26,6 +27,7 @@ import {
 } from 'icons';
 
 interface Props {
+    readonly: boolean;
     parentID: number | null;
     objectType: ObjectType;
     shapeType: ShapeType;
@@ -97,277 +99,235 @@ const classes = {
     },
 };
 
-const disabledStyle = { opacity: 0.5, pointerEvents: 'none' as const };
-
-function NavigateFirstKeyframe(props: Props): JSX.Element {
-    const { navigateFirstKeyframe } = props;
-    return navigateFirstKeyframe ? (
-        <Icon {...classes.firstKeyFrame} component={FirstIcon} onClick={navigateFirstKeyframe} />
-    ) : (
-        <Icon {...classes.firstKeyFrame} component={FirstIcon} style={disabledStyle} />
-    );
-}
-
-function NavigatePrevKeyframe(props: Props): JSX.Element {
-    const { prevKeyFrameShortcut, navigatePrevKeyframe } = props;
-    return navigatePrevKeyframe ? (
-        <CVATTooltip title={`Go to previous keyframe ${prevKeyFrameShortcut}`}>
-            <Icon {...classes.prevKeyFrame} component={PreviousIcon} onClick={navigatePrevKeyframe} />
-        </CVATTooltip>
-    ) : (
-        <Icon {...classes.prevKeyFrame} component={PreviousIcon} style={disabledStyle} />
-    );
-}
-
-function NavigateNextKeyframe(props: Props): JSX.Element {
-    const { navigateNextKeyframe, nextKeyFrameShortcut } = props;
-    return navigateNextKeyframe ? (
-        <CVATTooltip title={`Go to next keyframe ${nextKeyFrameShortcut}`}>
-            <Icon {...classes.nextKeyFrame} component={NextIcon} onClick={navigateNextKeyframe} />
-        </CVATTooltip>
-    ) : (
-        <Icon {...classes.nextKeyFrame} component={NextIcon} style={disabledStyle} />
-    );
-}
-
-function NavigateLastKeyframe(props: Props): JSX.Element {
-    const { navigateLastKeyframe } = props;
-    return navigateLastKeyframe ? (
-        <Icon {...classes.lastKeyFrame} component={LastIcon} onClick={navigateLastKeyframe} />
-    ) : (
-        <Icon {...classes.lastKeyFrame} component={LastIcon} style={disabledStyle} />
-    );
-}
-
-function SwitchLock(props: Props): JSX.Element {
-    const {
-        locked, switchLockShortcut, lock, unlock,
-    } = props;
-    return (
-        <CVATTooltip title={`Switch lock property ${switchLockShortcut}`}>
-            {locked ? (
-                <LockFilled {...classes.lock.enabled} onClick={unlock} />
-            ) : (
-                <UnlockOutlined {...classes.lock.disabled} onClick={lock} />
-            )}
-        </CVATTooltip>
-    );
-}
-
-function SwitchOccluded(props: Props): JSX.Element {
-    const {
-        switchOccludedShortcut, locked, occluded, unsetOccluded, setOccluded,
-    } = props;
-
-    const style = locked ? disabledStyle : {};
-    return (
-        <CVATTooltip title={`Switch occluded property ${switchOccludedShortcut}`}>
-            {occluded ? (
-                <TeamOutlined
-                    {...classes.occluded.enabled}
-                    onClick={locked ? undefined : unsetOccluded}
-                    style={style}
-                />
-            ) : (
-                <UserOutlined
-                    {...classes.occluded.disabled}
-                    onClick={locked ? undefined : setOccluded}
-                    style={style}
-                />
-            )}
-        </CVATTooltip>
-    );
-}
-
-function SwitchPinned(props: Props): JSX.Element {
-    const {
-        switchPinnedShortcut, locked, pinned, pin, unpin,
-    } = props;
-
-    const style = locked ? disabledStyle : {};
-    return (
-        <CVATTooltip title={`Switch pinned property ${switchPinnedShortcut}`}>
-            {pinned ? (
-                <PushpinFilled
-                    {...classes.pinned.enabled}
-                    onClick={locked ? undefined : unpin}
-                    style={style}
-                />
-            ) : (
-                <PushpinOutlined
-                    {...classes.pinned.disabled}
-                    onClick={locked ? undefined : pin}
-                    style={style}
-                />
-            )}
-        </CVATTooltip>
-    );
-}
-
-function SwitchHidden(props: Props): JSX.Element {
-    const {
-        switchHiddenShortcut, locked, hidden, hiddenDisabled, show, hide,
-    } = props;
-
-    const style = hiddenDisabled || locked ? disabledStyle : {};
-    return (
-        <CVATTooltip title={`Switch hidden property ${switchHiddenShortcut}`}>
-            {hidden ? (
-                <EyeInvisibleFilled
-                    {...classes.hidden.enabled}
-                    onClick={hiddenDisabled || locked ? undefined : show}
-                    style={style}
-                />
-            ) : (
-                <EyeOutlined
-                    {...classes.hidden.disabled}
-                    onClick={hiddenDisabled || locked ? undefined : hide}
-                    style={style}
-                />
-            )}
-        </CVATTooltip>
-    );
-}
-
-function SwitchOutside(props: Props): JSX.Element {
-    const {
-        outside, locked, switchOutsideShortcut, outsideDisabled, unsetOutside, setOutside,
-    } = props;
-
-    const style = outsideDisabled || locked ? disabledStyle : {};
-    return (
-        <CVATTooltip title={`Switch outside property ${switchOutsideShortcut}`}>
-            {outside ? (
-                <Icon
-                    {...classes.outside.enabled}
-                    component={ObjectOutsideIcon}
-                    onClick={outsideDisabled || locked ? undefined : unsetOutside}
-                    style={style}
-                />
-            ) : (
-                <SelectOutlined
-                    {...classes.outside.disabled}
-                    onClick={outsideDisabled || locked ? undefined : setOutside}
-                    style={style}
-                />
-            )}
-        </CVATTooltip>
-    );
-}
-
-function SwitchKeyframe(props: Props): JSX.Element {
-    const {
-        keyframe, locked, switchKeyFrameShortcut, keyframeDisabled, unsetKeyframe, setKeyframe,
-    } = props;
-
-    const style = keyframeDisabled || locked ? disabledStyle : {};
-    return (
-        <CVATTooltip title={`Switch keyframe property ${switchKeyFrameShortcut}`}>
-            {keyframe ? (
-                <StarFilled
-                    style={style}
-                    onClick={keyframeDisabled || locked ? undefined : unsetKeyframe}
-                    {...classes.keyframe.enabled}
-                />
-            ) : (
-                <StarOutlined
-                    style={style}
-                    onClick={keyframeDisabled || locked ? undefined : setKeyframe}
-                    {...classes.keyframe.disabled}
-                />
-            )}
-        </CVATTooltip>
-    );
-}
-
 function ItemButtonsComponent(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
-        objectType, shapeType, parentID,
+        readonly,
+        objectType,
+        shapeType,
+        parentID,
+        occluded,
+        outside,
+        locked,
+        pinned,
+        hidden,
+        keyframe,
+        outsideDisabled,
+        hiddenDisabled,
+        keyframeDisabled,
+        switchOccludedShortcut,
+        switchPinnedShortcut,
+        switchOutsideShortcut,
+        switchLockShortcut,
+        switchHiddenShortcut,
+        switchKeyFrameShortcut,
+        nextKeyFrameShortcut,
+        prevKeyFrameShortcut,
+        navigateFirstKeyframe,
+        navigatePrevKeyframe,
+        navigateNextKeyframe,
+        navigateLastKeyframe,
+        setOccluded,
+        unsetOccluded,
+        setOutside,
+        unsetOutside,
+        setKeyframe,
+        unsetKeyframe,
+        lock,
+        unlock,
+        pin,
+        unpin,
+        hide,
+        show,
     } = props;
 
-    if (objectType === ObjectType.TRACK) {
-        return (
-            <Row align='middle' justify='space-around'>
-                <Col span={20} style={{ textAlign: 'center' }}>
-                    <Row justify='space-around'>
-                        <Col>
-                            <NavigateFirstKeyframe {...props} />
-                        </Col>
-                        <Col>
-                            <NavigatePrevKeyframe {...props} />
-                        </Col>
-                        <Col>
-                            <NavigateNextKeyframe {...props} />
-                        </Col>
-                        <Col>
-                            <NavigateLastKeyframe {...props} />
-                        </Col>
-                    </Row>
-                    <Row justify='space-around'>
-                        <Col>
-                            <SwitchOutside {...props} />
-                        </Col>
-                        <Col>
-                            <SwitchLock {...props} />
-                        </Col>
-                        <Col>
-                            <SwitchOccluded {...props} />
-                        </Col>
-                        <Col>
-                            <SwitchHidden {...props} />
-                        </Col>
-                        <Col>
-                            <SwitchKeyframe {...props} />
-                        </Col>
-                        {shapeType !== ShapeType.POINTS && (
-                            <Col>
-                                <SwitchPinned {...props} />
-                            </Col>
-                        )}
-                    </Row>
-                </Col>
-            </Row>
-        );
-    }
+    const KeyframeNavigation = (): JSX.Element | null => (objectType === ObjectType.TRACK ? (
+        <Row justify='space-around'>
+            <Col>
+                <CVATTooltip title={t('goToFirstKeyframe')}>
+                    <Icon
+                        {...classes.firstKeyFrame}
+                        component={FirstIcon}
+                        onClick={navigateFirstKeyframe || undefined}
+                        style={!navigateFirstKeyframe ? { opacity: 0.5, pointerEvents: 'none' } : {}}
+                    />
+                </CVATTooltip>
+            </Col>
+            <Col>
+                <CVATTooltip title={t('goToPreviousKeyframe', { shortcut: prevKeyFrameShortcut })}>
+                    <Icon
+                        {...classes.prevKeyFrame}
+                        component={PreviousIcon}
+                        onClick={navigatePrevKeyframe || undefined}
+                        style={!navigatePrevKeyframe ? { opacity: 0.5, pointerEvents: 'none' } : {}}
+                    />
+                </CVATTooltip>
+            </Col>
+            <Col>
+                <CVATTooltip title={t('goToNextKeyframe', { shortcut: nextKeyFrameShortcut })}>
+                    <Icon
+                        {...classes.nextKeyFrame}
+                        component={NextIcon}
+                        onClick={navigateNextKeyframe || undefined}
+                        style={!navigateNextKeyframe ? { opacity: 0.5, pointerEvents: 'none' } : {}}
+                    />
+                </CVATTooltip>
+            </Col>
+            <Col>
+                <CVATTooltip title={t('goToLastKeyframe')}>
+                    <Icon
+                        {...classes.lastKeyFrame}
+                        component={LastIcon}
+                        onClick={navigateLastKeyframe || undefined}
+                        style={!navigateLastKeyframe ? { opacity: 0.5, pointerEvents: 'none' } : {}}
+                    />
+                </CVATTooltip>
+            </Col>
+        </Row>
+    ) : null);
 
-    if (objectType === ObjectType.SHAPE) {
+    const renderButtons = (): JSX.Element => {
+        if (readonly) {
+            return (
+                <Row justify='space-around'>
+                    <Col>
+                        <CVATTooltip title={t('switchHiddenProperty', { shortcut: switchHiddenShortcut })}>
+                            {hidden ? (
+                                <EyeInvisibleFilled {...classes.hidden.enabled} onClick={show} />
+                            ) : (
+                                <EyeOutlined {...classes.hidden.disabled} onClick={hide} />
+                            )}
+                        </CVATTooltip>
+                    </Col>
+                </Row>
+            );
+        }
+
+        const commonButtons = (
+            <>
+                <Col>
+                    <CVATTooltip title={t('switchLockProperty', { shortcut: switchLockShortcut })}>
+                        {locked ? (
+                            <LockFilled {...classes.lock.enabled} onClick={unlock} />
+                        ) : (
+                            <UnlockOutlined {...classes.lock.disabled} onClick={lock} />
+                        )}
+                    </CVATTooltip>
+                </Col>
+                <Col>
+                    <CVATTooltip title={t('switchOccludedProperty', { shortcut: switchOccludedShortcut })}>
+                        {occluded ? (
+                            <TeamOutlined {...classes.occluded.enabled} onClick={unsetOccluded} />
+                        ) : (
+                            <UserOutlined {...classes.occluded.disabled} onClick={setOccluded} />
+                        )}
+                    </CVATTooltip>
+                </Col>
+                <Col>
+                    <CVATTooltip title={t('switchHiddenProperty', { shortcut: switchHiddenShortcut })}>
+                        <div style={hiddenDisabled ? { opacity: 0.5, pointerEvents: 'none' } : {}}>
+                            {hidden ? (
+                                <EyeInvisibleFilled {...classes.hidden.enabled} onClick={show} />
+                            ) : (
+                                <EyeOutlined {...classes.hidden.disabled} onClick={hide} />
+                            )}
+                        </div>
+                    </CVATTooltip>
+                </Col>
+                {shapeType !== ShapeType.POINTS && (
+                    <Col>
+                        <CVATTooltip title={t('switchPinnedProperty', { shortcut: switchPinnedShortcut })}>
+                            {pinned ? (
+                                <PushpinFilled {...classes.pinned.enabled} onClick={unpin} />
+                            ) : (
+                                <PushpinOutlined {...classes.pinned.disabled} onClick={pin} />
+                            )}
+                        </CVATTooltip>
+                    </Col>
+                )}
+            </>
+        );
+
+        if (objectType === ObjectType.TRACK) {
+            return (
+                <Row justify='space-around'>
+                    <Col>
+                        <CVATTooltip title={t('switchOutsideProperty', { shortcut: switchOutsideShortcut })}>
+                            <div style={outsideDisabled ? { opacity: 0.5, pointerEvents: 'none' } : {}}>
+                                {outside ? (
+                                    <Icon
+                                        {...classes.outside.enabled}
+                                        component={ObjectOutsideIcon}
+                                        onClick={unsetOutside}
+                                    />
+                                ) : (
+                                    <SelectOutlined {...classes.outside.disabled} onClick={setOutside} />
+                                )}
+                            </div>
+                        </CVATTooltip>
+                    </Col>
+                    {commonButtons}
+                    <Col>
+                        <CVATTooltip title={t('switchKeyframeProperty', { shortcut: switchKeyFrameShortcut })}>
+                            <div style={keyframeDisabled ? { opacity: 0.5, pointerEvents: 'none' } : {}}>
+                                {keyframe ? (
+                                    <StarFilled onClick={unsetKeyframe} {...classes.keyframe.enabled} />
+                                ) : (
+                                    <StarOutlined onClick={setKeyframe} {...classes.keyframe.disabled} />
+                                )}
+                            </div>
+                        </CVATTooltip>
+                    </Col>
+                </Row>
+            );
+        }
+
+        if (objectType === ObjectType.SHAPE) {
+            return (
+                <Row justify='space-around'>
+                    {Number.isInteger(parentID) && (
+                        <Col>
+                            <CVATTooltip title={t('switchOutsideProperty', { shortcut: switchOutsideShortcut })}>
+                                <div style={outsideDisabled ? { opacity: 0.5, pointerEvents: 'none' } : {}}>
+                                    {outside ? (
+                                        <Icon
+                                            {...classes.outside.enabled}
+                                            component={ObjectOutsideIcon}
+                                            onClick={unsetOutside}
+                                        />
+                                    ) : (
+                                        <SelectOutlined {...classes.outside.disabled} onClick={setOutside} />
+                                    )}
+                                </div>
+                            </CVATTooltip>
+                        </Col>
+                    )}
+                    {commonButtons}
+                </Row>
+            );
+        }
+
+        // TAG
         return (
-            <Row align='middle' justify='space-around'>
-                <Col span={20} style={{ textAlign: 'center' }}>
-                    <Row justify='space-around'>
-                        { Number.isInteger(parentID) && (
-                            <Col>
-                                <SwitchOutside {...props} />
-                            </Col>
+            <Row justify='space-around'>
+                <Col>
+                    <CVATTooltip title={t('switchLockProperty', { shortcut: switchLockShortcut })}>
+                        {locked ? (
+                            <LockFilled {...classes.lock.enabled} onClick={unlock} />
+                        ) : (
+                            <UnlockOutlined {...classes.lock.disabled} onClick={lock} />
                         )}
-                        <Col>
-                            <SwitchLock {...props} />
-                        </Col>
-                        <Col>
-                            <SwitchOccluded {...props} />
-                        </Col>
-                        <Col>
-                            <SwitchHidden {...props} />
-                        </Col>
-                        {shapeType !== ShapeType.POINTS && (
-                            <Col>
-                                <SwitchPinned {...props} />
-                            </Col>
-                        )}
-                    </Row>
+                    </CVATTooltip>
                 </Col>
             </Row>
         );
-    }
+    };
 
     return (
         <Row align='middle' justify='space-around'>
             <Col span={20} style={{ textAlign: 'center' }}>
-                <Row justify='space-around'>
-                    <Col>
-                        <SwitchLock {...props} />
-                    </Col>
-                </Row>
+                <KeyframeNavigation />
+                {renderButtons()}
             </Col>
         </Row>
     );

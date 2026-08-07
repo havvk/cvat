@@ -3,7 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Modal from 'antd/lib/modal';
 import Text from 'antd/lib/typography/Text';
 import AutoComplete from 'antd/lib/auto-complete';
@@ -23,18 +24,13 @@ const SEARCH_LIMIT = 25;
 const SEARCH_DEBOUNCE_TIME = 100;
 
 function SearchFramesModal(): JSX.Element {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-    const {
-        visible,
-        meta,
-        frameNumbers,
-    } = useSelector((state: CombinedState) => ({
-        visible: state.annotation.search.visible,
-        meta: state.annotation.job.meta,
-        frameNumbers: state.annotation.job.frameNumbers,
-    }), shallowEqual);
+    const visible = useSelector((state: CombinedState) => state.annotation.search.visible);
+    const meta = useSelector((state: CombinedState) => state.annotation.job.meta);
+    const frameNumbers = useSelector((state: CombinedState) => state.annotation.job.frameNumbers);
 
     const [searchData, setSearchData] = useState<SearchResult[]>([]);
     useEffect(() => {
@@ -100,10 +96,10 @@ function SearchFramesModal(): JSX.Element {
             <AutoComplete
                 ref={autoCompleteRef}
                 defaultValue={searchTerm}
-                placeholder='Type to search'
+                placeholder={t('typeToSearch')}
                 showSearch
                 onSearch={onSearch}
-                notFoundContent={searchTerm ? <Text>No frames found</Text> : null}
+                notFoundContent={searchTerm ? <Text>{t('noFramesFound')}</Text> : null}
                 options={searchResults.map((item) => ({
                     value: item.number,
                     label: (

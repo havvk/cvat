@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import config from 'config';
 import Location from './location';
 
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function S3Region(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         selectedRegion,
         onSelectRegion,
@@ -24,9 +26,9 @@ export default function S3Region(props: Props): JSX.Element {
             selectedRegion={selectedRegion}
             onSelectRegion={onSelectRegion}
             internalCommonProps={internalCommonProps}
-            values={config.DEFAULT_AWS_REGIONS}
+            values={config.DEFAULT_AWS_S3_REGIONS}
             name='region'
-            label='Region'
+            label={t('region')}
             href='https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions'
         />
     );

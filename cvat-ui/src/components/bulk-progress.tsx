@@ -16,11 +16,9 @@ import CVATMarkdown from './common/cvat-markdown';
 export default function BulkProgress(): JSX.Element | null {
     const dispatch = useDispatch();
     const history = useHistory();
-    const { fetching, status, bulkError } = useSelector((state: CombinedState) => ({
-        fetching: state.bulkActions.fetching,
-        status: state.bulkActions.status,
-        bulkError: state.notifications.errors.bulkOperation.processing,
-    }));
+    const fetching = useSelector((state: CombinedState) => state.bulkActions.fetching);
+    const status = useSelector((state: CombinedState) => state.bulkActions.status);
+    const bulkError = useSelector((state: CombinedState) => state.notifications.errors.bulkOperation.processing);
 
     const percent = status?.percent ?? 0;
     const message = status?.message ?? 'Processing...';

@@ -13,19 +13,15 @@ import ObjectSideBarComponent from 'components/annotation-page/standard-workspac
 import ObjectsListContainer from 'containers/annotation-page/standard-workspace/objects-side-bar/objects-list';
 import CanvasContextMenuContainer from 'containers/annotation-page/canvas/canvas-context-menu';
 import IssueAggregatorComponent from 'components/annotation-page/review/issues-aggregator';
-import RemoveConfirmComponent from 'components/annotation-page/standard-workspace/remove-confirm';
-import BrushTools from 'components/annotation-page/canvas/views/canvas2d/brush-tools';
 
 export default function ReviewWorkspaceComponent(): JSX.Element {
     return (
         <Layout hasSider className='cvat-review-workspace'>
             <ControlsSideBarContainer />
             <CanvasLayout />
-            <BrushTools />
-            <ObjectSideBarComponent objectsList={<ObjectsListContainer />} />
-            <CanvasContextMenuContainer />
+            <ObjectSideBarComponent objectsList={<ObjectsListContainer readonly />} />
+            <CanvasContextMenuContainer readonly />
             <IssueAggregatorComponent />
-            <RemoveConfirmComponent />
         </Layout>
     );
 }

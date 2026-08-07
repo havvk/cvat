@@ -5,16 +5,17 @@
 
 import React from 'react';
 import Dropdown from 'antd/lib/dropdown';
-import { MLModel } from 'cvat-core-wrapper';
+import { MLModel, ModelProviders } from 'cvat-core-wrapper';
 import { usePlugins } from 'utils/hooks';
 import { CombinedState } from 'reducers';
 import { MenuProps } from 'antd/lib/menu';
-import { shallowEqual, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 interface ModelActionsProps {
     model: MLModel;
-    triggerElement: (menuItems: NonNullable<MenuProps['items']>) => JSX.Element | null;
+    triggerElement: JSX.Element;
     dropdownTrigger?: ('click' | 'hover' | 'contextMenu')[];
+    renderTriggerIfEmpty?: boolean;
 }
 
 function ModelActionsComponent(props: Readonly<ModelActionsProps>): JSX.Element | null {
@@ -22,27 +23,15 @@ function ModelActionsComponent(props: Readonly<ModelActionsProps>): JSX.Element 
         model,
         triggerElement,
         dropdownTrigger,
+        renderTriggerIfEmpty = true,
     } = props;
-    const {
-        interactors,
-        detectors,
-        trackers,
-        reid,
-        selectedIds,
-    } = useSelector((state: CombinedState) => ({
-        interactors: state.models.interactors,
-        detectors: state.models.detectors,
-        trackers: state.models.trackers,
-        reid: state.models.reid,
-        selectedIds: state.models.selected,
-    }), shallowEqual);
-
-    const allModels = [
-        ...interactors,
-        ...detectors,
-        ...trackers,
-        ...reid,
-    ];
+    const allModels = useSelector((state: CombinedState) => [
+        ...state.models.interactors,
+        ...state.models.detectors,
+        ...state.models.trackers,
+        ...state.models.reid,
+    ]);
+    const selectedIds = useSelector((state: CombinedState) => state.models.selected);
 
     const menuPlugins = usePlugins(
         (state: CombinedState) => state.plugins.components.modelsPage.modelItem.menu.items,
@@ -58,10 +47,8 @@ function ModelActionsComponent(props: Readonly<ModelActionsProps>): JSX.Element 
 
     // Sort menu items by weight before passing to Dropdown
     const sortedMenuItems = [...menuItems].sort((menuItem1, menuItem2) => menuItem1[1] - menuItem2[1]);
-    const finalMenuItems = sortedMenuItems.map((menuItem) => menuItem[0]);
 
-    const renderedTrigger = triggerElement(finalMenuItems);
-    if (!renderedTrigger) {
+    if (!renderTriggerIfEmpty && (menuItems.length === 0 || model.provider === ModelProviders.CVAT)) {
         return null;
     }
 
@@ -70,11 +57,11 @@ function ModelActionsComponent(props: Readonly<ModelActionsProps>): JSX.Element 
             trigger={dropdownTrigger || ['click']}
             destroyPopupOnHide
             menu={{
-                items: finalMenuItems,
+                items: sortedMenuItems.map((menuItem) => menuItem[0]),
                 triggerSubMenuAction: 'click',
             }}
         >
-            {renderedTrigger}
+            {triggerElement}
         </Dropdown>
     );
 }

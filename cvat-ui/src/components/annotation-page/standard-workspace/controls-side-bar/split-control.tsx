@@ -5,6 +5,7 @@
 
 import React from 'react';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { SplitIcon } from 'icons';
 import { Canvas } from 'cvat-canvas-wrapper';
@@ -26,17 +27,27 @@ function SplitControl(props: Props): JSX.Element {
         disabled,
     } = props;
 
+    const { t } = useTranslation();
     const { normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     return disabled ? (
-        <Icon className='cvat-split-track-control cvat-disabled-canvas-control' component={SplitIcon} />
+        <CVATTooltip
+            title={t('splitATrackTooltip', {
+                shortcut: canvasInstance instanceof Canvas3d ?
+                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_3D_CONTROLS :
+                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_CONTROLS,
+            })}
+            placement='right'
+        >
+            <Icon className='cvat-split-track-control cvat-disabled-canvas-control' component={SplitIcon} />
+        </CVATTooltip>
     ) : (
         <CVATTooltip
-            title={`Split a track ${
-                canvasInstance instanceof Canvas3d ?
+            title={t('splitATrackTooltip', {
+                shortcut: canvasInstance instanceof Canvas3d ?
                     normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_3D_CONTROLS :
-                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_CONTROLS
-            }`}
+                    normalizedKeyMap.SWITCH_SPLIT_MODE_STANDARD_CONTROLS,
+            })}
             placement='right'
         >
             <Icon {...dynamicIconProps} component={SplitIcon} />

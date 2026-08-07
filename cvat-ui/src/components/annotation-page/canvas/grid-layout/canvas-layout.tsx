@@ -6,11 +6,13 @@ import './styles.scss';
 import 'react-grid-layout/css/styles.css';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import i18n from 'i18next';
+import { useSelector } from 'react-redux';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import PropTypes from 'prop-types';
 import { isEqual } from 'lodash';
 import Layout from 'antd/lib/layout';
+import { useTranslation } from 'react-i18next';
 import {
     CloseOutlined,
     DragOutlined,
@@ -22,7 +24,6 @@ import {
 } from '@ant-design/icons';
 
 import config from 'config';
-import { Canvas } from 'cvat-canvas-wrapper';
 import { DimensionType } from 'cvat-core-wrapper';
 import { CombinedState } from 'reducers';
 import CanvasWrapperComponent from 'components/annotation-page/canvas/views/canvas2d/canvas-wrapper';
@@ -63,7 +64,7 @@ const ViewFabric = (itemLayout: ItemLayout): JSX.Element => {
             component = <TopViewComponent />;
             break;
         default:
-            component = <div> Undefined view </div>;
+            component = <div>{i18n.t('undefinedView')}</div>;
     }
 
     return component;
@@ -143,15 +144,10 @@ const fitLayout = (type: DimensionType, layoutConfig: ItemLayout[]): ItemLayout[
 };
 
 function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
-    const {
-        relatedFiles,
-        canvasInstance,
-        canvasBackgroundColor,
-    } = useSelector((state: CombinedState) => ({
-        relatedFiles: state.annotation.player.frame.relatedFiles,
-        canvasInstance: state.annotation.canvas.instance,
-        canvasBackgroundColor: state.settings.player.canvasBackgroundColor,
-    }), shallowEqual);
+    const { t } = useTranslation();
+    const relatedFiles = useSelector((state: CombinedState) => state.annotation.player.frame.relatedFiles);
+    const canvasInstance = useSelector((state: CombinedState) => state.annotation.canvas.instance);
+    const canvasBackgroundColor = useSelector((state: CombinedState) => state.settings.player.canvasBackgroundColor);
 
     const computeRowHeight = (): number => {
         const container = window.document.getElementsByClassName('cvat-annotation-header')[0];
@@ -177,8 +173,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
     const [fullscreenKey, setFullscreenKey] = useState<string>('');
 
     const fitCanvas = useCallback(() => {
-        if (canvasInstance instanceof Canvas) {
-            // only applicable for 2D canvas because of SVG-based nature
+        if (canvasInstance) {
             canvasInstance.fitCanvas();
             canvasInstance.fit();
         }
@@ -308,7 +303,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
             )}
             { type === DimensionType.DIMENSION_3D && <CanvasWrapper3DComponent /> }
             <div className='cvat-grid-layout-common-setups'>
-                <CVATTooltip title='Fit views'>
+                <CVATTooltip title={t('fitViewsTooltip')}>
                     <PicCenterOutlined
                         onClick={() => {
                             setLayoutConfig(fitLayout(type as DimensionType, layoutConfig));
@@ -316,7 +311,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Add context image'>
+                <CVATTooltip title={t('addContextImageTooltip')}>
                     <PlusOutlined
                         style={{
                             pointerEvents: !relatedFiles ? 'none' : undefined,
@@ -355,7 +350,7 @@ function CanvasLayout({ type }: { type?: DimensionType }): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
-                <CVATTooltip title='Reload layout'>
+                <CVATTooltip title={t('reloadLayoutTooltip')}>
                     <ReloadOutlined onClick={() => {
                         setLayoutConfig([...getLayout()]);
                         window.dispatchEvent(new Event('resize'));

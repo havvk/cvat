@@ -15,6 +15,7 @@ import { DownloadOutlined, MoreOutlined } from '@ant-design/icons';
 import { Config } from '@react-awesome-query-builder/antd';
 import jsonLogic from 'json-logic-js';
 
+import { useTranslation } from 'react-i18next';
 import { ResourceFilterHOC, defaultVisibility } from 'components/resource-sorting-filtering';
 import CVATTooltip from './cvat-tooltip';
 
@@ -31,7 +32,7 @@ type Props = TableProps & {
     csvExport?: {
         filename: string;
     };
-    tableTitle?: string | React.ReactNode;
+    tableTitle?: string;
     searchDataIndex?: (string | string[])[];
 };
 
@@ -73,6 +74,7 @@ function CVATTable(props: Props): JSX.Element {
         columns,
         ...rest
     } = props;
+    const { t } = useTranslation();
 
     const [FilteringComponent, setFilteringComponent] = useState<ReturnType<typeof ResourceFilterHOC> | null>(null);
     const [filterValue, setFilterValue] = useState<string | null>(null);
@@ -169,18 +171,10 @@ function CVATTable(props: Props): JSX.Element {
 
     return (
         <div className='cvat-table-wrapper'>
-            <Row align='middle'>
+            <Row justify='space-between' align='middle'>
                 <Col>
                     <Space align='center'>
-                        {!!tableTitle && (
-                            <div className='cvat-text-color cvat-table-header'>
-                                {typeof tableTitle === 'string' ? (
-                                    <Text strong>{tableTitle}</Text>
-                                ) : (
-                                    tableTitle
-                                )}
-                            </div>
-                        )}
+                        {!!tableTitle && <Text strong className='cvat-text-color cvat-table-header'>{tableTitle}</Text> }
                         { !!csvExport && !!columns && (
                             <Button
                                 className='cvat-table-export-csv-button'
@@ -189,21 +183,21 @@ function CVATTable(props: Props): JSX.Element {
                                 onClick={downloadCSV}
                             />
                         ) }
+                        { !!renderExtraActions && renderExtraActions() }
                     </Space>
-                </Col>
-                <Col flex='auto'>
-                    { !!renderExtraActions && renderExtraActions() }
                 </Col>
                 <Col>
                     <Space align='center'>
                         {Array.isArray(searchDataIndex) && !!searchDataIndex.length && (
                             <CVATTooltip
-                                title={`Search across fields: ${searchDataIndex
-                                    .map((dataIndex) => stringifyDataIndex(dataIndex)).join(', ')}`}
+                                title={t('searchAcrossFields', {
+                                    fields: searchDataIndex
+                                        .map((dataIndex) => stringifyDataIndex(dataIndex)).join(', '),
+                                })}
                             >
                                 <Input.Search
                                     className='cvat-table-search-bar'
-                                    placeholder='Search ..'
+                                    placeholder={t('search')}
                                     onSearch={setSearchPhrase}
                                     enterButton
                                 />

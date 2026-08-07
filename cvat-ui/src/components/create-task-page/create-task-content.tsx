@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { RefObject } from 'react';
+import i18n from 'i18next';
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { Row, Col } from 'antd/lib/grid';
@@ -204,6 +205,11 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             ...defaultState,
             projectId: state.projectId,
         }));
+    };
+
+    private validateLabelsOrProject = (): boolean => {
+        const { projectId, labels } = this.state;
+        return !!labels.length || !!projectId;
     };
 
     private validateFiles = (): boolean => {
@@ -437,11 +443,20 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
     private validateBlocks = (): Promise<any> => new Promise((resolve, reject) => {
         const { projectId } = this.state;
+        if (!this.validateLabelsOrProject()) {
+            notification.error({
+                message: i18n.t('couldNotCreateTask'),
+                description: i18n.t('taskNeedsLabelOrProject'),
+                className: 'cvat-notification-create-task-fail',
+            });
+            reject();
+            return;
+        }
 
         if (!this.validateFiles()) {
             notification.error({
-                message: 'Could not create a task',
-                description: 'A task must contain at least one file',
+                message: i18n.t('couldNotCreateTask'),
+                description: i18n.t('taskNeedsFile'),
                 className: 'cvat-notification-create-task-fail',
             });
             reject();
@@ -481,9 +496,8 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                             }, () => {
                                 _resolve();
                                 notification.info({
-                                    message: 'Task parameters were automatically updated',
-                                    description: 'Sorting method has been updated as Honeypots' +
-                                        ' quality method only supports RANDOM sorting',
+                                    message: i18n.t('taskParametersAutoUpdated'),
+                                    description: i18n.t('honeypotsSortingUpdated'),
                                 });
                             });
                         } else {
@@ -516,7 +530,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             }).then(resolve)
             .catch((error: Error | ValidateErrorEntity): void => {
                 notification.error({
-                    message: 'Could not create a task',
+                    message: i18n.t('couldNotCreateTask'),
                     description: formFieldsError(error).map((text: string): JSX.Element => <div>{text}</div>),
                     className: 'cvat-notification-create-task-fail',
                 });
@@ -541,7 +555,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             .then(this.createOneTask)
             .then(() => {
                 notification.info({
-                    message: 'The task has been created',
+                    message: i18n.t('taskCreated'),
                     className: 'cvat-notification-create-task-success',
                 });
             })
@@ -661,11 +675,13 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                 const countAll = multiTasks.length;
 
                 notification.info({
-                    message: 'The tasks have been created',
-                    description:
-                        `Completed: ${countCompleted}, failed: ${countFailed},${countCancelled ?
-                            ` cancelled: ${countCancelled},` :
-                            ''} total: ${countAll}, `,
+                    message: i18n.t('tasksCreated'),
+                    description: i18n.t('taskCreationSummary', {
+                        completed: countCompleted,
+                        failed: countFailed,
+                        cancelled: countCancelled,
+                        total: countAll,
+                    }),
                     className: 'cvat-notification-create-task-success',
                 });
             });
@@ -688,7 +704,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             multiTasks: newMultiTasks,
         }, () => {
             notification.info({
-                message: `Creation of ${count} tasks have been canceled`,
+                message: i18n.t('taskCreationCancelled', { count }),
                 className: 'cvat-notification-create-task-success',
             });
         });
@@ -794,7 +810,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return (
             <>
                 <Col span={24}>
-                    <Text className='cvat-text-color'>Project</Text>
+                    <Text className='cvat-text-color'>{i18n.t('project')}</Text>
                 </Col>
                 <Col span={24}>
                     <ProjectSearchField onSelect={this.handleProjectIdChange} value={projectId} />
@@ -810,7 +826,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             return (
                 <>
                     <Col span={24}>
-                        <Text className='cvat-text-color'>Subset</Text>
+                        <Text className='cvat-text-color'>{i18n.t('Subset')}</Text>
                     </Col>
                     <Col span={24}>
                         <ProjectSubsetField
@@ -834,10 +850,10 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             return (
                 <>
                     <Col span={24}>
-                        <Text className='cvat-text-color'>Labels</Text>
+                        <Text className='cvat-text-color'>{i18n.t('labels')}</Text>
                     </Col>
                     <Col span={24}>
-                        <Text type='secondary'>Project labels will be used</Text>
+                        <Text type='secondary'>{i18n.t('projectLabelsWillBeUsed')}</Text>
                     </Col>
                 </>
             );
@@ -845,7 +861,8 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
 
         return (
             <Col span={24}>
-                <Text className='cvat-text-color'>Labels</Text>
+                <Text type='danger'>* </Text>
+                <Text className='cvat-text-color'>{i18n.t('labels')}</Text>
                 <LabelsEditor
                     labels={labels}
                     onSubmit={(newLabels): void => {
@@ -866,7 +883,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
             <>
                 <Col span={24}>
                     <Text type='danger'>* </Text>
-                    <Text className='cvat-text-color'>Select files</Text>
+                    <Text className='cvat-text-color'>{i18n.t('selectFiles')}</Text>
                     <FileManagerComponent
                         many={many}
                         onChangeActiveKey={this.changeFileManagerTab}
@@ -914,7 +931,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                     className='cvat-advanced-configuration-wrapper'
                     items={[{
                         key: '1',
-                        label: <Text className='cvat-title'>Advanced configuration</Text>,
+                        label: <Text className='cvat-title'>{i18n.t('advancedConfiguration')}</Text>,
                         children: (
                             <AdvancedConfigurationForm
                                 activeFileManagerTab={activeFileManagerTab}
@@ -951,7 +968,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                     className='cvat-quality-configuration-wrapper'
                     items={[{
                         key: '1',
-                        label: <Text className='cvat-title'>Quality</Text>,
+                        label: <Text className='cvat-title'>{i18n.t('quality')}</Text>,
                         children: (
                             <QualityConfigurationForm
                                 ref={this.qualityConfigurationComponent}
@@ -984,7 +1001,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                         onClick={this.handleSubmitAndOpen}
                         disabled={!!uploadFileErrorMessage}
                     >
-                        Submit & Open
+                        {i18n.t('submitAndOpen')}
                     </Button>
                 </Col>
                 <Col>
@@ -994,7 +1011,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                         onClick={this.handleSubmitAndContinue}
                         disabled={!!uploadFileErrorMessage}
                     >
-                        Submit & Continue
+                        {i18n.t('submitAndContinue')}
                     </Button>
                 </Col>
             </Row>
@@ -1035,9 +1052,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
                         onClick={this.handleSubmitMultiTasks}
                         disabled={!!uploadFileErrorMessage}
                     >
-                        Submit&nbsp;
-                        {currentFiles.length}
-                        &nbsp;tasks
+                        {i18n.t('submitTaskCount', { count: currentFiles.length })}
                     </Button>
                 </Col>
             </Row>
@@ -1050,7 +1065,7 @@ class CreateTaskContent extends React.PureComponent<Props & RouteComponentProps,
         return (
             <Row justify='start' align='middle' className='cvat-create-task-content'>
                 <Col span={24}>
-                    <Text className='cvat-title'>Basic configuration</Text>
+                    <Text className='cvat-title'>{i18n.t('basicConfiguration')}</Text>
                 </Col>
 
                 {this.renderBasicBlock()}

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { QuestionCircleOutlined } from '@ant-design/icons/lib/icons';
 import Text from 'antd/lib/typography/Text';
 import InputNumber from 'antd/lib/input-number';
@@ -32,6 +33,7 @@ const FilteringComponent = ResourceFilterHOC(
 
 export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element | null {
     const { form, settings, disabled } = props;
+    const { t } = useTranslation();
 
     const [visibility, setVisibility] = useState(defaultVisibility);
 
@@ -90,53 +92,53 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
 
     const generalTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Target metric', targetMetricDescription)}
-            {makeTooltipFragment('Target metric threshold', settings.descriptions.targetMetricThreshold)}
-            {makeTooltipFragment('Compare attributes', settings.descriptions.compareAttributes)}
-            {makeTooltipFragment('Empty frames are annotated', settings.descriptions.emptyIsAnnotated)}
-            {makeTooltipFragment('Job selection filter', settings.descriptions.jobFilter)}
+            {makeTooltipFragment(t('targetMetric'), targetMetricDescription)}
+            {makeTooltipFragment(t('targetMetricThreshold'), settings.descriptions.targetMetricThreshold)}
+            {makeTooltipFragment(t('compareAttributes'), settings.descriptions.compareAttributes)}
+            {makeTooltipFragment(t('emptyFramesAreAnnotated'), settings.descriptions.emptyIsAnnotated)}
+            {makeTooltipFragment(t('jobSelectionFilter'), settings.descriptions.jobFilter)}
         </>,
     );
 
     const jobValidationTooltip = makeTooltip(
-        makeTooltipFragment('Max validations per job', settings.descriptions.maxValidationsPerJob),
+        makeTooltipFragment(t('maxValidationsPerJob'), settings.descriptions.maxValidationsPerJob),
     );
 
     const shapeComparisonTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Min overlap threshold (IoU)', settings.descriptions.iouThreshold)}
-            {makeTooltipFragment('Low overlap threshold', settings.descriptions.lowOverlapThreshold)}
+            {makeTooltipFragment(t('minOverlapThresholdIoU'), settings.descriptions.iouThreshold)}
+            {makeTooltipFragment(t('lowOverlapThreshold'), settings.descriptions.lowOverlapThreshold)}
         </>,
     );
 
     const keypointTooltip = makeTooltip(
-        makeTooltipFragment('Object Keypoint Similarity (OKS)', settings.descriptions.oksSigma),
+        makeTooltipFragment(t('objectKeypointSimilarityOKS'), settings.descriptions.oksSigma),
     );
 
     const pointTooltip = makeTooltip(
-        makeTooltipFragment('Point size base', pointSizeBaseDescription),
+        makeTooltipFragment(t('pointSizeBase'), pointSizeBaseDescription),
     );
 
     const linesTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Line thickness', settings.descriptions.lineThickness)}
-            {makeTooltipFragment('Check orientation', settings.descriptions.compareLineOrientation)}
-            {makeTooltipFragment('Min similarity gain', settings.descriptions.lineOrientationThreshold)}
+            {makeTooltipFragment(t('lineThickness'), settings.descriptions.lineThickness)}
+            {makeTooltipFragment(t('checkOrientation'), settings.descriptions.compareLineOrientation)}
+            {makeTooltipFragment(t('minSimilarityGain'), settings.descriptions.lineOrientationThreshold)}
         </>,
     );
 
     const groupTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Compare groups', settings.descriptions.compareGroups)}
-            {makeTooltipFragment('Min group match threshold', settings.descriptions.groupMatchThreshold)}
+            {makeTooltipFragment(t('compareGroups'), settings.descriptions.compareGroups)}
+            {makeTooltipFragment(t('minGroupMatchThreshold'), settings.descriptions.groupMatchThreshold)}
         </>,
     );
 
     const segmentationTooltip = makeTooltip(
         <>
-            {makeTooltipFragment('Check object visibility', settings.descriptions.checkCoveredAnnotations)}
-            {makeTooltipFragment('Min visibility threshold', settings.descriptions.objectVisibilityThreshold)}
-            {makeTooltipFragment('Match only visible parts', settings.descriptions.panopticComparison)}
+            {makeTooltipFragment(t('checkObjectVisibility'), settings.descriptions.checkCoveredAnnotations)}
+            {makeTooltipFragment(t('minVisibilityThreshold'), settings.descriptions.objectVisibilityThreshold)}
+            {makeTooltipFragment(t('matchOnlyVisibleParts'), settings.descriptions.panopticComparison)}
         </>,
     );
 
@@ -150,7 +152,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
         >
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    General
+                    {t('general')}
                 </Text>
                 <CVATTooltip title={generalTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -162,21 +164,21 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='targetMetric'
-                        label='Target metric'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('targetMetric')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Select
                             style={{ width: '70%' }}
                             virtual={false}
                         >
                             <Select.Option value={TargetMetric.ACCURACY}>
-                                Accuracy
+                                {t('accuracy')}
                             </Select.Option>
                             <Select.Option value={TargetMetric.PRECISION}>
-                                Precision
+                                {t('precision')}
                             </Select.Option>
                             <Select.Option value={TargetMetric.RECALL}>
-                                Recall
+                                {t('recall')}
                             </Select.Option>
                         </Select>
                     </Form.Item>
@@ -184,8 +186,8 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='targetMetricThreshold'
-                        label='Target metric threshold'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('targetMetricThreshold')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -196,10 +198,10 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                     <Form.Item
                         name='compareAttributes'
                         valuePropName='checked'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Compare attributes</Text>
+                            <Text className='cvat-text-color'>{t('compareAttributes')}</Text>
                         </Checkbox>
                     </Form.Item>
                 </Col>
@@ -207,10 +209,10 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                     <Form.Item
                         name='emptyIsAnnotated'
                         valuePropName='checked'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Empty frames are annotated</Text>
+                            <Text className='cvat-text-color'>{t('emptyFramesAreAnnotated')}</Text>
                         </Checkbox>
                     </Form.Item>
                 </Col>
@@ -219,7 +221,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='jobFilter'
-                        label='Job selection filter'
+                        label={t('jobSelectionFilter')}
                         trigger='onApplyFilter'
                     >
                         {/* value and onApplyFilter will be automatically provided by Form.Item */}
@@ -243,7 +245,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Job validation
+                    {t('jobValidation')}
                 </Text>
                 <CVATTooltip title={jobValidationTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -255,8 +257,8 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='maxValidationsPerJob'
-                        label='Max validations per job'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('maxValidationsPerJob')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber
                             min={0}
@@ -269,7 +271,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Shape comparison
+                    {t('shapeComparison')}
                 </Text>
                 <CVATTooltip title={shapeComparisonTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -281,8 +283,8 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='iouThreshold'
-                        label='Min overlap threshold (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('minOverlapThresholdPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -290,8 +292,8 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='lowOverlapThreshold'
-                        label='Low overlap threshold (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('lowOverlapThresholdPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -300,7 +302,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Keypoint Comparison
+                    {t('keypointComparison')}
                 </Text>
                 <CVATTooltip title={keypointTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -312,8 +314,8 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='oksSigma'
-                        label='OKS sigma (bbox side %)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('oksSigmaBboxSidePercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -322,7 +324,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Point Comparison
+                    {t('pointComparison')}
                 </Text>
                 <CVATTooltip title={pointTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -334,18 +336,18 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='pointSizeBase'
-                        label='Point size base'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('pointSizeBase')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Select
                             style={{ width: '70%' }}
                             virtual={false}
                         >
                             <Select.Option value={PointSizeBase.IMAGE_SIZE}>
-                                Image size
+                                {t('imageSize')}
                             </Select.Option>
                             <Select.Option value={PointSizeBase.GROUP_BBOX_SIZE}>
-                                Group bbox size
+                                {t('groupBboxSize')}
                             </Select.Option>
                         </Select>
                     </Form.Item>
@@ -354,7 +356,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Line Comparison
+                    {t('lineComparison')}
                 </Text>
                 <CVATTooltip title={linesTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -366,8 +368,8 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='lineThickness'
-                        label='Relative thickness (frame side %)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('relativeThicknessFrameSidePercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={1000} precision={0} />
                     </Form.Item>
@@ -377,19 +379,19 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                 <Col span={12}>
                     <Form.Item
                         name='compareLineOrientation'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                         valuePropName='checked'
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Check orientation</Text>
+                            <Text className='cvat-text-color'>{t('checkOrientation')}</Text>
                         </Checkbox>
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
                         name='lineOrientationThreshold'
-                        label='Min similarity gain (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('minSimilarityGainPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -398,7 +400,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Group Comparison
+                    {t('groupComparison')}
                 </Text>
                 <CVATTooltip title={groupTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -411,18 +413,18 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                     <Form.Item
                         name='compareGroups'
                         valuePropName='checked'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Compare groups</Text>
+                            <Text className='cvat-text-color'>{t('compareGroups')}</Text>
                         </Checkbox>
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
                         name='groupMatchThreshold'
-                        label='Min group match threshold (%)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('minGroupMatchThresholdPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -431,7 +433,7 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
             <Divider />
             <Row className='cvat-quality-settings-title'>
                 <Text strong>
-                    Segmentation Comparison
+                    {t('segmentationComparison')}
                 </Text>
                 <CVATTooltip title={segmentationTooltip} className='cvat-settings-tooltip' overlayStyle={{ maxWidth: '500px' }}>
                     <QuestionCircleOutlined
@@ -444,18 +446,18 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                     <Form.Item
                         name='checkCoveredAnnotations'
                         valuePropName='checked'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Check object visibility</Text>
+                            <Text className='cvat-text-color'>{t('checkObjectVisibility')}</Text>
                         </Checkbox>
                     </Form.Item>
                 </Col>
                 <Col span={12}>
                     <Form.Item
                         name='objectVisibilityThreshold'
-                        label='Min visibility threshold (area %)'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        label={t('minVisibilityThresholdAreaPercentage')}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <InputNumber min={0} max={100} precision={0} />
                     </Form.Item>
@@ -466,10 +468,10 @@ export default function QualitySettingsForm(props: Readonly<Props>): JSX.Element
                     <Form.Item
                         name='panopticComparison'
                         valuePropName='checked'
-                        rules={[{ required: true, message: 'This field is required' }]}
+                        rules={[{ required: true, message: t('thisFieldIsRequired') }]}
                     >
                         <Checkbox>
-                            <Text className='cvat-text-color'>Match only visible parts</Text>
+                            <Text className='cvat-text-color'>{t('matchOnlyVisibleParts')}</Text>
                         </Checkbox>
                     </Form.Item>
                 </Col>

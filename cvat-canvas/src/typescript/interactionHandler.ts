@@ -294,7 +294,11 @@ export class InteractionHandlerImpl implements InteractionHandler {
             this.canvas.node.prepend(this.drawnIntermediateShape.node);
         } else if (shapeType === 'mask') {
             const [left, top, right, bottom] = points.slice(-4);
+<<<<<<< HEAD
             const imageBitmap = expandChannels(255, 80, 80, points);
+=======
+            const imageBitmap = expandChannels(255, 0, 0, points);
+>>>>>>> github-pr-2
 
             const image = this.canvas.image().attr({
                 'color-rendering': 'optimizeQuality',

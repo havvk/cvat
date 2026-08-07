@@ -1,0 +1,17 @@
+services:
+  cvat_ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+      target: cvat-ui
+    command: yarn workspace cvat-ui start
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://cvat_server:8080
+    volumes:
+      - ./cvat-ui:/tmp/cvat-ui
+      - ./cvat-core:/tmp/cvat-core
+      - ./cvat-data:/tmp/cvat-data
+      - ./cvat-canvas:/tmp/cvat-canvas
+      - ./cvat-canvas3d:/tmp/cvat-canvas3d

@@ -10,6 +10,7 @@ import { Row, Col } from 'antd/lib/grid';
 import Text from 'antd/lib/typography/Text';
 import { CloudOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     notFound: boolean;
@@ -17,27 +18,28 @@ interface Props {
 
 export default function EmptyListComponent(props: Props): JSX.Element {
     const { notFound } = props;
+    const { t } = useTranslation();
 
     return (
         <div className='cvat-empty-cloud-storages-list'>
             <Empty
                 description={notFound ? (
-                    <Text strong>No results matched your search...</Text>
+                    <Text strong>{t('noResultsMatchedYourSearch')}</Text>
                 ) : (
                     <>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text strong>No cloud storages attached yet...</Text>
+                                <Text strong>{t('noCloudStoragesAttachedYet')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Text type='secondary'>To get started with your cloud storage</Text>
+                                <Text type='secondary'>{t('getStartedWithCloudStorage')}</Text>
                             </Col>
                         </Row>
                         <Row justify='center' align='middle'>
                             <Col>
-                                <Link to='/cloudstorages/create'>attach a new one</Link>
+                                <Link to='/cloudstorages/create'>{t('attachANewOne')}</Link>
                             </Col>
                         </Row>
                     </>

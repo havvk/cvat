@@ -3,13 +3,12 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Tag from 'antd/lib/tag';
 
 export enum TagType {
     GROUND_TRUTH = 'ground_truth',
     CONSENSUS = 'consensus',
-    PARENT = 'parent',
-    REPLICA = 'replica',
 }
 
 interface TagProps {
@@ -17,17 +16,14 @@ interface TagProps {
 }
 
 function CVATTag(props: TagProps): JSX.Element | null {
+    const { t } = useTranslation();
     const { type } = props;
 
     switch (type) {
         case TagType.GROUND_TRUTH:
-            return <Tag className='cvat-tag-ground-truth' color='#ED9C00'>Ground truth</Tag>;
+            return <Tag className='cvat-tag-ground-truth' color='#ED9C00'>{t('groundTruth')}</Tag>;
         case TagType.CONSENSUS:
-            return <Tag className='cvat-tag-consensus' color='#1890FF'>Consensus</Tag>;
-        case TagType.PARENT:
-            return <Tag className='cvat-tag-parent' color='#1890FF'>Parent</Tag>;
-        case TagType.REPLICA:
-            return <Tag className='cvat-tag-replica' color='#13c2c2'>Replica</Tag>;
+            return <Tag className='cvat-tag-consensus' color='#1890FF'>{t('Consensus')}</Tag>;
         default:
             return null;
     }

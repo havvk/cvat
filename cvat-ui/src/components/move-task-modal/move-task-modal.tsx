@@ -7,12 +7,13 @@ import './styles.scss';
 import React, {
     useState, useEffect, useCallback, useRef,
 } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import { Row, Col } from 'antd/lib/grid';
 import Divider from 'antd/lib/divider';
 import notification from 'antd/lib/notification';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import ProjectSearch from 'components/create-task-page/project-search-field';
 import CVATLoadingSpinner from 'components/common/loading-spinner';
@@ -30,10 +31,9 @@ function MoveTaskModal({
     onUpdateTask?: (task: Task) => Promise<Task>;
 }): JSX.Element {
     const dispatch = useDispatch();
-    const { visible, taskId } = useSelector((state: CombinedState) => ({
-        visible: state.tasks.moveTask.modalVisible,
-        taskId: state.tasks.moveTask.taskId,
-    }), shallowEqual);
+    const { t } = useTranslation();
+    const visible = useSelector((state: CombinedState) => state.tasks.moveTask.modalVisible);
+    const taskId = useSelector((state: CombinedState) => state.tasks.moveTask.taskId);
     const mounted = useRef(false);
 
     const [taskFetching, setTaskFetching] = useState(false);
@@ -71,17 +71,17 @@ function MoveTaskModal({
 
     const submitMove = async (): Promise<void> => {
         if (!taskInstance) {
-            throw new Error('Task to move is not specified');
+            throw new Error(t('taskToMoveIsNotSpecified'));
         }
 
         if (!projectId) {
-            notification.error({ message: 'Please, select a project' });
+            notification.error({ message: t('pleaseSelectAProject') });
             return;
         }
 
         if (Object.values(labelMap).some((map) => map.newLabelName === null)) {
             notification.error({
-                message: 'Please, specify mapping for all the labels',
+                message: t('specifyMappingForAllLabels'),
             });
             return;
         }
@@ -109,7 +109,7 @@ function MoveTaskModal({
                     setIsUpdating(false);
                 }
             }).catch((error: Error) => notification.error({
-                message: 'Could not update the task',
+                message: t('couldNotUpdateTheTask'),
                 className: 'cvat-notification-notice-update-task-failed',
                 description: error.toString(),
             }));
@@ -129,7 +129,7 @@ function MoveTaskModal({
                     }
                 })
                 .catch((error: Error) => notification.error({
-                    message: 'Could not fetch task from the server',
+                    message: t('couldNotFetchTaskFromTheServer'),
                     description: error.toString(),
                 })).finally(() => {
                     if (mounted.current) {
@@ -182,9 +182,9 @@ function MoveTaskModal({
             okButtonProps={{ disabled: isUpdating }}
             title={(
                 <span>
-                    {`Move task ${taskInstance?.id} to project`}
+                    {t('moveTaskTaskidToProject', { taskId: taskInstance?.id })}
                     {/* TODO: replace placeholder */}
-                    <CVATTooltip title='Some moving process description here'>
+                    <CVATTooltip title={t('moveTaskModalDescription')}>
                         <QuestionCircleOutlined className='ant-typography-secondary' />
                     </CVATTooltip>
                 </span>
@@ -193,7 +193,7 @@ function MoveTaskModal({
         >
             { taskFetching && <CVATLoadingSpinner size='large' /> }
             <Row align='middle'>
-                <Col>Project:</Col>
+                <Col>{t('Project:')}</Col>
                 <Col>
                     <ProjectSearch
                         value={projectId}
@@ -202,7 +202,7 @@ function MoveTaskModal({
                     />
                 </Col>
             </Row>
-            <Divider orientation='left'>Label mapping</Divider>
+            <Divider orientation='left'>{t('labelMapping')}</Divider>
             {!!Object.keys(labelMap).length &&
                 !isUpdating &&
                 taskInstance?.labels.map((label: any) => (

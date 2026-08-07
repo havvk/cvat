@@ -3,35 +3,49 @@
 //
 // SPDX-License-Identifier: MIT
 
+import i18n from 'i18next';
+
 const validationPatterns = {
-    validatePasswordLength: {
-        pattern: /(?=.{8,})/,
-        message: 'Password must have at least 8 characters',
+    get validatePasswordLength() {
+        return {
+            pattern: /(?=.{8,})/,
+            message: i18n.t('validationMessages.passwordLength'),
+        };
     },
 
-    passwordContainsNumericCharacters: {
-        pattern: /(?=.*[0-9])/,
-        message: 'Password must have at least 1 numeric characters',
+    get passwordContainsNumericCharacters() {
+        return {
+            pattern: /(?=.*[0-9])/,
+            message: i18n.t('validationMessages.passwordNumeric'),
+        };
     },
 
-    passwordContainsUpperCaseCharacter: {
-        pattern: /(?=.*[A-Z])/,
-        message: 'Password must have at least 1 uppercase alphabetical character',
+    get passwordContainsUpperCaseCharacter() {
+        return {
+            pattern: /(?=.*[A-Z])/,
+            message: i18n.t('validationMessages.passwordUppercase'),
+        };
     },
 
-    passwordContainsLowerCaseCharacter: {
-        pattern: /(?=.*[a-z])/,
-        message: 'Password must have at least 1 lowercase alphabetical character',
+    get passwordContainsLowerCaseCharacter() {
+        return {
+            pattern: /(?=.*[a-z])/,
+            message: i18n.t('validationMessages.passwordLowercase'),
+        };
     },
 
-    validateUsernameLength: {
-        pattern: /(?=.{5,})/,
-        message: 'Username must have at least 5 characters',
+    get validateUsernameLength() {
+        return {
+            pattern: /(?=.{5,})/,
+            message: i18n.t('validationMessages.usernameLength'),
+        };
     },
 
-    validateUsernameCharacters: {
-        pattern: /^[a-zA-Z0-9_\-.]{5,}$/,
-        message: 'Only characters (a-z), (A-Z), (0-9), -, _, . are available',
+    get validateUsernameCharacters() {
+        return {
+            pattern: /^[a-zA-Z0-9_\-.]{5,}$/,
+            message: i18n.t('validationMessages.usernameCharacters'),
+        };
     },
 
     /*
@@ -44,41 +58,55 @@ const validationPatterns = {
         https://stackoverflow.com/questions/280712/javascript-unicode-regexes
         https://stackoverflow.com/questions/6377407/how-to-validate-both-chinese-unicode-and-english-name
     */
-    validateName: {
-        // eslint-disable-next-line
-        pattern: /^(\p{L}|\p{Pd}|\p{Cf}|\p{Pc}|['\s]){2,}$/gu,
-        message: 'Invalid name',
+    get validateName() {
+        return {
+            // eslint-disable-next-line
+            pattern: /^(\p{L}|\p{Pd}|\p{Cf}|\p{Pc}|['\s]){2,}$/gu,
+            message: i18n.t('validationMessages.invalidName'),
+        };
     },
 
-    validateAttributeName: {
-        pattern: /\S+/,
-        message: 'Invalid name',
+    get validateAttributeName() {
+        return {
+            pattern: /\S+/,
+            message: i18n.t('validationMessages.invalidName'),
+        };
     },
 
-    validateLabelName: {
-        pattern: /\S+/,
-        message: 'Invalid name',
+    get validateLabelName() {
+        return {
+            pattern: /\S+/,
+            message: i18n.t('validationMessages.invalidName'),
+        };
     },
 
-    validateAttributeValue: {
-        pattern: /\S+/,
-        message: 'Invalid attribute value',
+    get validateAttributeValue() {
+        return {
+            pattern: /\S+/,
+            message: i18n.t('validationMessages.invalidAttributeValue'),
+        };
     },
 
-    validateURL: {
-        // eslint-disable-next-line
-        pattern: /^(https?:\/\/)[^\s$.?#].[^\s]*$/, // url, ip
-        message: 'URL is not valid',
+    get validateURL() {
+        return {
+            // eslint-disable-next-line
+            pattern: /^(https?:\/\/)[^\s$.?#].[^\s]*$/, // url, ip
+            message: i18n.t('validationMessages.invalidURL'),
+        };
     },
 
-    validateOrganizationSlug: {
-        pattern: /^[a-zA-Z\d]+$/,
-        message: 'Only Latin characters and numbers are allowed',
+    get validateOrganizationSlug() {
+        return {
+            pattern: /^[a-zA-Z\d]+$/,
+            message: i18n.t('validationMessages.organizationSlug'),
+        };
     },
 
-    validatePhoneNumber: {
-        pattern: /^[+]*[-\s0-9]*$/g,
-        message: 'Input phone number is not correct',
+    get validatePhoneNumber() {
+        return {
+            pattern: /^[+]*[-\s0-9]*$/g,
+            message: i18n.t('validationMessages.invalidPhoneNumber'),
+        };
     },
 };
 

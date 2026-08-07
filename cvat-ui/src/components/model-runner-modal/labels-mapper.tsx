@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Attribute, Label, LabelType } from 'cvat-core-wrapper';
 import ObjectMatcher from './object-mapper';
@@ -79,6 +80,7 @@ function computeAttributesAutoMapping(
 
 function LabelsMapperComponent(props: Props): JSX.Element {
     const { modelLabels, taskLabels, onUpdateMapping } = props;
+    const { t } = useTranslation();
     const mappingRef = useRef<FullMapping>([]);
     const setMapping = useCallback((_mapping: FullMapping) => {
         mappingRef.current = _mapping;
@@ -150,8 +152,8 @@ function LabelsMapperComponent(props: Props): JSX.Element {
             rightData={taskLabels}
             allowManyToOne
             defaultMapping={computeLabelsAutoMapping(modelLabels, taskLabels)}
-            deleteMappingLabel='Remove mapped label'
-            infoMappingLabel='Specify mapping between labels'
+            deleteMappingLabel={t('removeMappedLabel')}
+            infoMappingLabel={t('specifyMappingBetweenLabels')}
             containerClassName='cvat-runner-label-mapper'
             rowClassName='cvat-runner-label-mapping-row'
             getObjectName={(object: LabelInterface) => object.name}
@@ -194,8 +196,8 @@ function LabelsMapperComponent(props: Props): JSX.Element {
                                 ) as [AttributeInterface, AttributeInterface][]}
                                 rowClassName='cvat-runner-attribute-mapping-row'
                                 containerClassName='cvat-runner-attribute-mapper'
-                                deleteMappingLabel='Remove mapped attribute'
-                                infoMappingLabel='Specify mapping between label attributes'
+                                deleteMappingLabel={t('removeMappedAttribute')}
+                                infoMappingLabel={t('specifyMappingBetweenLabelAttributes')}
                                 getObjectName={(object: AttributeInterface) => object.name}
                                 getObjectColor={() => taskLabel.color}
                                 filterObjects={(
@@ -233,8 +235,8 @@ function LabelsMapperComponent(props: Props): JSX.Element {
                                 )}
                                 rowClassName='cvat-runner-label-mapping-row'
                                 containerClassName='cvat-runner-label-mapper'
-                                deleteMappingLabel='Remove mapped label'
-                                infoMappingLabel='Specify mapping between skeleton sublabels'
+                                deleteMappingLabel={t('removeMappedLabel')}
+                                infoMappingLabel={t('specifyMappingBetweenSkeletonSublabels')}
                                 getObjectName={(object: LabelInterface) => object.name}
                                 getObjectColor={(object: LabelInterface) => object.color}
                                 filterObjects={(
@@ -261,8 +263,8 @@ function LabelsMapperComponent(props: Props): JSX.Element {
                                                     ) as [AttributeInterface, AttributeInterface][]}
                                                     rowClassName='cvat-runner-attribute-mapping-row'
                                                     containerClassName='cvat-runner-attribute-mapper'
-                                                    deleteMappingLabel='Remove mapped attribute'
-                                                    infoMappingLabel='Specify mapping between sublabel attributes'
+                                                    deleteMappingLabel={t('removeMappedAttribute')}
+                                                    infoMappingLabel={t('specifyMappingBetweenSublabelAttributes')}
                                                     getObjectName={(object: AttributeInterface) => object.name}
                                                     getObjectColor={() => taskSublabel.color}
                                                     filterObjects={(
@@ -312,3 +314,4 @@ function LabelsMapperComponent(props: Props): JSX.Element {
 }
 
 export default React.memo(LabelsMapperComponent);
+''

@@ -5,6 +5,8 @@
 import React from 'react';
 import Popover from 'antd/lib/popover';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import CVATTooltip from 'components/common/cvat-tooltip';
 
 import { Canvas } from 'cvat-canvas-wrapper';
 import { BrushIcon } from 'icons';
@@ -20,7 +22,8 @@ export interface Props {
 }
 
 const CustomPopover = withVisibilityHandling(Popover, 'draw-mask');
-function DrawPointsControl(props: Props): JSX.Element {
+function DrawMaskControl(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { canvasInstance, isDrawing, disabled } = props;
     const dynamicPopoverProps = isDrawing ? {
         overlayStyle: {
@@ -38,7 +41,9 @@ function DrawPointsControl(props: Props): JSX.Element {
     };
 
     return disabled ? (
-        <Icon className='cvat-draw-mask-control cvat-disabled-canvas-control' component={BrushIcon} />
+        <CVATTooltip title={t('tooltipDrawMask')} placement='right'>
+            <Icon className='cvat-draw-mask-control cvat-disabled-canvas-control' component={BrushIcon} />
+        </CVATTooltip>
     ) : (
         <CustomPopover
             {...dynamicPopoverProps}
@@ -46,9 +51,11 @@ function DrawPointsControl(props: Props): JSX.Element {
             placement='right'
             content={<DrawShapePopoverContainer shapeType={ShapeType.MASK} />}
         >
-            <Icon {...dynamicIconProps} component={BrushIcon} />
+            <CVATTooltip title={t('tooltipDrawMask')} placement='right'>
+                <Icon {...dynamicIconProps} component={BrushIcon} />
+            </CVATTooltip>
         </CustomPopover>
     );
 }
 
-export default React.memo(DrawPointsControl);
+export default React.memo(DrawMaskControl);

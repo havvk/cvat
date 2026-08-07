@@ -8,11 +8,11 @@ import { SelectValue, RefSelectProps } from 'antd/lib/select';
 import Autocomplete from 'antd/lib/auto-complete';
 import Input from 'antd/lib/input';
 import debounce from 'lodash/debounce';
+import { useTranslation } from 'react-i18next';
 
 import { User, getCore, ServerError } from 'cvat-core-wrapper';
 import { getCVATStore } from 'cvat-store';
 import { handleDropdownKeyDown } from 'utils/dropdown-utils';
-import { useUpdateEffect } from 'utils/hooks';
 
 const core = getCore();
 
@@ -80,6 +80,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
     const {
         value, className, username, onSelect,
     } = props;
+    const { t } = useTranslation();
     const [searchPhrase, setSearchPhrase] = useState(username || '');
     const [initialUsers, setInitialUsers] = useState<User[]>([]);
     const [users, setUsers] = useState<User[]>([]);
@@ -136,19 +137,17 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
         }
     };
 
-    useUpdateEffect(() => {
-        if (value && !users.filter((user) => user.id === value.id).length) {
-            core.users.get({ id: value.id }).then((result: User[]) => {
-                const [user] = result;
-                if (user) {
-                    setUsers([...users, user]);
-                }
-            });
-        }
-    }, [value]);
-
     useEffect(() => {
         if (value) {
+            if (!users.filter((user) => user.id === value.id).length) {
+                core.users.get({ id: value.id }).then((result: User[]) => {
+                    const [user] = result;
+                    if (user) {
+                        setUsers([...users, user]);
+                    }
+                });
+            }
+
             setSearchPhrase(value.username);
         } else {
             setSearchPhrase('');
@@ -160,7 +159,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
         <Autocomplete
             ref={autocompleteRef}
             value={searchPhrase}
-            placeholder='Select a user'
+            placeholder={t('selectAUser')}
             onSearch={setSearchPhrase}
             onSelect={handleSelect}
             onBlur={onBlur}
@@ -170,7 +169,7 @@ export default function UserSelector(props: Readonly<Props>): JSX.Element {
             options={[
                 ...(!searchPhrase || 'reset assignee'.includes(searchPhrase.toLowerCase()) ? [{
                     value: 'RESET_ASSIGNEE',
-                    label: 'Reset assignee',
+                    label: t('resetAssignee'),
                 }] : []),
                 ...users.map((user) => ({
                     value: user.id.toString(),

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import Button from 'antd/lib/button';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -24,10 +25,11 @@ function ObjectSwitcher(props: Props): JSX.Element {
         currentLabel, clientID, objectsCount, currentIndex, nextObject, normalizedKeyMap,
     } = props;
 
+    const { t } = useTranslation();
     const title = `${currentLabel} ${clientID} [${currentIndex + 1}/${objectsCount}]`;
     return (
         <div className='cvat-attribute-annotation-sidebar-object-switcher'>
-            <CVATTooltip title={`Previous object ${normalizedKeyMap.PREVIOUS_OBJECT}`}>
+            <CVATTooltip title={t('previousObjectTooltip', { shortcut: normalizedKeyMap.PREVIOUS_OBJECT })}>
                 <Button
                     className='cvat-attribute-annotation-sidebar-object-switcher-left'
                     disabled={objectsCount <= 1}
@@ -41,7 +43,7 @@ function ObjectSwitcher(props: Props): JSX.Element {
                 <Text className='cvat-text'>{` ${clientID} `}</Text>
                 <Text strong>{`[${currentIndex + 1}/${objectsCount}]`}</Text>
             </CVATTooltip>
-            <CVATTooltip title={`Next object ${normalizedKeyMap.NEXT_OBJECT}`}>
+            <CVATTooltip title={t('nextObjectTooltip', { shortcut: normalizedKeyMap.NEXT_OBJECT })}>
                 <Button
                     className='cvat-attribute-annotation-sidebar-object-switcher-right'
                     disabled={objectsCount <= 1}

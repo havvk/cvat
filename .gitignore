@@ -77,3 +77,8 @@ cvat-ui/dist
 **/!.yarn/releases
 **/!.yarn/sdks
 **/!.yarn/versions
+clickhouse_logs/
+
+# Ignore model weights files
+*.pt
+*.pth

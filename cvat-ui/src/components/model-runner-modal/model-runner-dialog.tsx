@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Modal from 'antd/lib/modal';
 import notification from 'antd/lib/notification';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import { ThunkDispatch } from 'utils/redux';
 import { modelsActions, startInferenceAsync } from 'actions/models-actions';
@@ -54,9 +55,9 @@ function mapDispatchToProps(dispatch: ThunkDispatch): DispatchToProps {
     };
 }
 
-function ModelRunnerDialog(props: StateToProps & DispatchToProps): JSX.Element {
+function ModelRunnerDialog(props: StateToProps & DispatchToProps & WithTranslation): JSX.Element {
     const {
-        reid, detectors, task, visible, runInference, closeDialog,
+        reid, detectors, task, visible, runInference, closeDialog, t,
     } = props;
 
     const models = [...reid, ...detectors];
@@ -69,7 +70,7 @@ function ModelRunnerDialog(props: StateToProps & DispatchToProps): JSX.Element {
                     setTaskInstance(_task);
                 }
             }).catch((error: any) => {
-                notification.error({ message: 'Could not get task details', description: error.toString() });
+                notification.error({ message: t('couldNotGetTaskDetails'), description: error.toString() });
             });
         }
     }, [visible, task]);
@@ -81,7 +82,7 @@ function ModelRunnerDialog(props: StateToProps & DispatchToProps): JSX.Element {
             footer={[]}
             onCancel={(): void => closeDialog()}
             maskClosable
-            title='Automatic annotation'
+            title={t('automaticAnnotation')}
         >
             { taskInstance ? (
                 <DetectorRunner
@@ -99,4 +100,4 @@ function ModelRunnerDialog(props: StateToProps & DispatchToProps): JSX.Element {
     );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModelRunnerDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(ModelRunnerDialog));

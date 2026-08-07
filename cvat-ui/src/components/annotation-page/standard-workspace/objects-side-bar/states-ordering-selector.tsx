@@ -3,6 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { Col } from 'antd/lib/grid';
 import Select from 'antd/lib/select';
@@ -16,11 +17,12 @@ interface StatesOrderingSelectorComponentProps {
 }
 
 function StatesOrderingSelectorComponent(props: StatesOrderingSelectorComponentProps): JSX.Element {
+    const { t } = useTranslation();
     const { statesOrdering, changeStatesOrdering } = props;
 
     return (
         <Col>
-            <Text>Sort by</Text>
+            <Text>{t('sortBy')}</Text>
             <Select
                 size='small'
                 className='cvat-objects-sidebar-ordering-selector'
@@ -29,19 +31,16 @@ function StatesOrderingSelectorComponent(props: StatesOrderingSelectorComponentP
                 onChange={changeStatesOrdering}
             >
                 <Select.Option key={StatesOrdering.ID_DESCENT} value={StatesOrdering.ID_DESCENT}>
-                    {StatesOrdering.ID_DESCENT}
+                    {t(`statesOrdering.${StatesOrdering.ID_DESCENT}`)}
                 </Select.Option>
                 <Select.Option key={StatesOrdering.ID_ASCENT} value={StatesOrdering.ID_ASCENT}>
-                    {StatesOrdering.ID_ASCENT}
+                    {t(`statesOrdering.${StatesOrdering.ID_ASCENT}`)}
                 </Select.Option>
                 <Select.Option key={StatesOrdering.UPDATED} value={StatesOrdering.UPDATED}>
-                    {StatesOrdering.UPDATED}
+                    {t(`statesOrdering.${StatesOrdering.UPDATED}`)}
                 </Select.Option>
                 <Select.Option key={StatesOrdering.Z_ORDER} value={StatesOrdering.Z_ORDER}>
-                    {StatesOrdering.Z_ORDER}
-                </Select.Option>
-                <Select.Option key={StatesOrdering.LABEL_NAME} value={StatesOrdering.LABEL_NAME}>
-                    {StatesOrdering.LABEL_NAME}
+                    {t(`statesOrdering.${StatesOrdering.Z_ORDER}`)}
                 </Select.Option>
             </Select>
         </Col>

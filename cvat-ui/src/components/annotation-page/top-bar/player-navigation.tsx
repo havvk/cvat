@@ -6,18 +6,17 @@
 import React, {
     useState, useEffect, useCallback, CSSProperties,
 } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { Row, Col } from 'antd/lib/grid';
 import Icon, {
     LinkOutlined, DeleteOutlined, CopyOutlined, SearchOutlined,
 } from '@ant-design/icons';
-import Slider, { SliderMarks } from 'antd/lib/slider';
+import Slider from 'antd/lib/slider';
 import InputNumber from 'antd/lib/input-number';
 import Text from 'antd/lib/typography/Text';
 import Modal from 'antd/lib/modal';
-import Tooltip from 'antd/lib/tooltip';
 
-import { Workspace, CombinedState } from 'reducers';
+import { Workspace } from 'reducers';
 import { RestoreIcon } from 'icons';
 import { registerComponentShortcuts } from 'actions/shortcuts-actions';
 import CVATTooltip from 'components/common/cvat-tooltip';
@@ -25,8 +24,6 @@ import { clamp } from 'utils/math';
 import GlobalHotKeys, { KeyMap } from 'utils/mousetrap-react';
 import { ShortcutScope } from 'utils/enums';
 import { subKeyMap } from 'utils/component-subkeymap';
-import { Chapter } from 'cvat-core/src/frames';
-import { usePlugins } from 'utils/hooks';
 
 interface Props {
     startFrame: number;
@@ -34,8 +31,6 @@ interface Props {
     playing: boolean;
     ranges: string;
     frameNumber: number;
-    chapters: Chapter[] | null;
-    hoveredChapter: number | null;
     frameFilename: string;
     frameDeleted: boolean;
     deleteFrameShortcut: string;
@@ -80,11 +75,10 @@ const componentShortcuts = {
 registerComponentShortcuts(componentShortcuts);
 
 function PlayerNavigation(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const {
         startFrame,
         stopFrame,
-        chapters,
-        hoveredChapter,
         playing,
         frameNumber,
         frameFilename,
@@ -109,11 +103,6 @@ function PlayerNavigation(props: Props): JSX.Element {
 
     const [frameInputValue, setFrameInputValue] = useState<number>(frameNumber);
 
-    const playerSliderPlugins = usePlugins(
-        (state: CombinedState) => state.plugins.components.annotationPage.player.slider,
-        props,
-    );
-
     useEffect(() => {
         if (frameNumber !== frameInputValue) {
             setFrameInputValue(frameNumber);
@@ -124,10 +113,10 @@ function PlayerNavigation(props: Props): JSX.Element {
         if (!playing) {
             switchNavigationBlocked(true);
             Modal.confirm({
-                title: `Do you want to delete frame #${frameNumber}?`,
-                content: 'The frame will not be visible in navigation and exported datasets, but it still can be restored with all the annotations.',
+                title: t('deleteFrameTitle', { frameNumber }),
+                content: t('deleteFrameContent'),
                 className: 'cvat-modal-delete-frame',
-                okText: 'Delete',
+                okText: t('Delete'),
                 okType: 'danger',
                 onOk: () => {
                     switchNavigationBlocked(false);
@@ -168,20 +157,8 @@ function PlayerNavigation(props: Props): JSX.Element {
         opacity: 0.5,
     } : {};
 
-    const marks: SliderMarks = (chapters ?? []).reduce<SliderMarks>((acc, chapter) => {
-        const active = hoveredChapter === chapter.id;
-        const innerAcc = acc ?? {};
-        innerAcc[chapter.start] = {
-            label:
-                    <Tooltip title={`${chapter.metadata.title}`}>
-                        <span className={`ant-slider-mark-chapter ${active ? 'active' : ''}`} />
-                    </Tooltip>,
-        };
-        return innerAcc;
-    }, {});
-
     const deleteFrameIcon = !frameDeleted ? (
-        <CVATTooltip title={`Delete the frame ${deleteFrameShortcut}`}>
+        <CVATTooltip title={t('deleteFrame', { shortcut: deleteFrameShortcut })}>
             <DeleteOutlined
                 style={deleteFrameIconStyle}
                 className='cvat-player-delete-frame'
@@ -189,7 +166,7 @@ function PlayerNavigation(props: Props): JSX.Element {
             />
         </CVATTooltip>
     ) : (
-        <CVATTooltip title='Restore the frame'>
+        <CVATTooltip title={t('restoreFrame')}>
             <Icon
                 style={deleteFrameIconStyle}
                 className='cvat-player-restore-frame'
@@ -206,12 +183,11 @@ function PlayerNavigation(props: Props): JSX.Element {
             )}
             <Col className='cvat-player-controls'>
                 <Row align='bottom'>
-                    <Col style={{ position: 'relative' }}>
+                    <Col>
                         <Slider
                             className='cvat-player-slider'
                             min={startFrame}
                             max={stopFrame}
-                            marks={marks}
                             value={frameNumber || 0}
                             onChange={workspace !== Workspace.SINGLE_SHAPE ? onSliderChange : undefined}
                         />
@@ -229,12 +205,6 @@ function PlayerNavigation(props: Props): JSX.Element {
                                 })}
                             </svg>
                         )}
-                        {playerSliderPlugins
-                            .sort((a, b) => a.weight - b.weight)
-                            .map(({ component: Component }, index) => {
-                                const ComponentToRender = Component as React.ComponentType<any>;
-                                return <ComponentToRender key={index} targetProps={props} />;
-                            })}
                     </Col>
                 </Row>
                 <Row justify='center'>
@@ -244,10 +214,10 @@ function PlayerNavigation(props: Props): JSX.Element {
                         </CVATTooltip>
                     </Col>
                     <Col className='cvat-player-frame-actions' offset={1}>
-                        <CVATTooltip title='Copy frame filename'>
+                        <CVATTooltip title={t('copyFrameFilename')}>
                             <CopyOutlined className='cvat-player-copy-frame-name-icon' onClick={onCopyFilenameIconClick} />
                         </CVATTooltip>
-                        <CVATTooltip title='Create frame URL'>
+                        <CVATTooltip title={t('createFrameUrl')}>
                             <LinkOutlined className='cvat-player-frame-url-icon' onClick={onURLIconClick} />
                         </CVATTooltip>
                         { deleteFrameIcon }
@@ -255,7 +225,7 @@ function PlayerNavigation(props: Props): JSX.Element {
                 </Row>
             </Col>
             <Col>
-                <CVATTooltip title={`Press ${focusFrameInputShortcut} to focus here`}>
+                <CVATTooltip title={t('focusFrameInput', { shortcut: focusFrameInputShortcut })}>
                     <InputNumber
                         ref={inputFrameRef}
                         className='cvat-player-frame-selector'
@@ -283,7 +253,7 @@ function PlayerNavigation(props: Props): JSX.Element {
             <Col className='cvat-player-actions'>
                 {
                     showSearchFrameByName && (
-                        <CVATTooltip title={`Search frame by name ${searchFrameByNameShortcut}`}>
+                        <CVATTooltip title={t('searchFrameByName', { shortcut: searchFrameByNameShortcut })}>
                             <SearchOutlined
                                 className='cvat-player-search-frame-name-icon'
                                 onClick={onSearchIconClick}

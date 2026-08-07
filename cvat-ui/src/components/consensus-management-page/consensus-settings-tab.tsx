@@ -6,6 +6,7 @@ import React, { useCallback } from 'react';
 import Text from 'antd/lib/typography/Text';
 import Form from 'antd/lib/form';
 import notification from 'antd/lib/notification';
+import { useTranslation } from 'react-i18next';
 import { ConsensusSettings } from 'cvat-core-wrapper';
 import { formFieldsError } from 'utils/validation';
 import CVATLoadingSpinner from 'components/common/loading-spinner';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function ConsensusSettingsTab(props: Readonly<Props>): JSX.Element | null {
+    const { t } = useTranslation();
     const {
         fetching,
         settings,
@@ -31,7 +33,7 @@ function ConsensusSettingsTab(props: Readonly<Props>): JSX.Element | null {
             setSettings(values);
         } catch (error) {
             notification.error({
-                message: 'Could not save consensus settings',
+                message: t('couldNotSaveConsensusSettings'),
                 description: formFieldsError(error).map((text: string): JSX.Element => <div>{text}</div>),
                 className: 'cvat-notification-save-consensus-settings-failed',
             });
@@ -56,7 +58,7 @@ function ConsensusSettingsTab(props: Readonly<Props>): JSX.Element | null {
                     settings={settings}
                     onSave={onSave}
                 />
-            ) : <Text>No consensus settings found</Text> }
+            ) : <Text>{t('noConsensusSettingsFound')}</Text> }
         </div>
     );
 }

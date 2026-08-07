@@ -8,6 +8,7 @@ import { Row, Col } from 'antd/lib/grid';
 import { MoreOutlined } from '@ant-design/icons';
 import Dropdown from 'antd/lib/dropdown';
 import Text from 'antd/lib/typography/Text';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 import { ColorBy } from 'reducers';
 import CVATTooltip from 'components/common/cvat-tooltip';
@@ -16,8 +17,9 @@ import { ObjectType, ShapeType } from 'cvat-core-wrapper';
 import ItemMenu from './object-item-menu';
 import ColorPicker from './color-picker';
 
-interface Props {
+interface Props extends WithTranslation {
     jobInstance: any;
+    readonly: boolean;
     clientID: number;
     serverID: number | null;
     labelID: number;
@@ -35,8 +37,6 @@ interface Props {
     propagateShortcut: string;
     toBackgroundShortcut: string;
     toForegroundShortcut: string;
-    toOneLayerBackwardShortcut: string;
-    toOneLayerForwardShortcut: string;
     removeShortcut: string;
     sliceShortcut: string;
     runAnnotationsActionShortcut: string;
@@ -48,9 +48,7 @@ interface Props {
     createURL(): void;
     switchOrientation(): void;
     toBackground(): void;
-    toOneLayerBackward(): void;
     toForeground(): void;
-    toOneLayerForward(): void;
     resetCuboidPerspective(): void;
     runAnnotationAction(): void;
     edit(): void;
@@ -59,6 +57,8 @@ interface Props {
 
 function ItemTopComponent(props: Props): JSX.Element {
     const {
+        t,
+        readonly,
         clientID,
         serverID,
         labelID,
@@ -75,8 +75,6 @@ function ItemTopComponent(props: Props): JSX.Element {
         propagateShortcut,
         toBackgroundShortcut,
         toForegroundShortcut,
-        toOneLayerBackwardShortcut,
-        toOneLayerForwardShortcut,
         removeShortcut,
         sliceShortcut,
         runAnnotationsActionShortcut,
@@ -90,8 +88,6 @@ function ItemTopComponent(props: Props): JSX.Element {
         switchOrientation,
         toBackground,
         toForeground,
-        toOneLayerBackward,
-        toOneLayerForward,
         resetCuboidPerspective,
         runAnnotationAction,
         edit,
@@ -116,9 +112,9 @@ function ItemTopComponent(props: Props): JSX.Element {
                 </Text>
             </Col>
             <Col span={12}>
-                <CVATTooltip title='Change current label'>
+                <CVATTooltip title={t('changeCurrentLabel')}>
                     <LabelSelector
-                        disabled={locked || shapeType === ShapeType.SKELETON}
+                        disabled={readonly || shapeType === ShapeType.SKELETON}
                         size='small'
                         labels={labels}
                         value={labelID}
@@ -149,8 +145,9 @@ function ItemTopComponent(props: Props): JSX.Element {
                         className='cvat-object-item-menu-button'
                         menu={ItemMenu({
                             jobInstance,
-                            locked,
+                            readonly,
                             serverID,
+                            locked,
                             shapeType,
                             objectType,
                             color,
@@ -162,8 +159,6 @@ function ItemTopComponent(props: Props): JSX.Element {
                             propagateShortcut,
                             toBackgroundShortcut,
                             toForegroundShortcut,
-                            toOneLayerBackwardShortcut,
-                            toOneLayerForwardShortcut,
                             removeShortcut,
                             sliceShortcut,
                             runAnnotationsActionShortcut,
@@ -175,8 +170,6 @@ function ItemTopComponent(props: Props): JSX.Element {
                             switchOrientation,
                             toBackground,
                             toForeground,
-                            toOneLayerBackward,
-                            toOneLayerForward,
                             resetCuboidPerspective,
                             setColorPickerVisible,
                             edit,
@@ -194,4 +187,4 @@ function ItemTopComponent(props: Props): JSX.Element {
     );
 }
 
-export default React.memo(ItemTopComponent);
+export default withTranslation()(React.memo(ItemTopComponent));

@@ -14,6 +14,7 @@ import Switch from 'antd/lib/switch';
 import Tag from 'antd/lib/tag';
 import notification from 'antd/lib/notification';
 import { ArrowRightOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { clamp } from 'utils/math';
@@ -43,6 +44,7 @@ export interface AnnotateTaskRequestBody {
     cleanup: boolean;
     conv_mask_to_poly: boolean;
     threshold?: number;
+    tolerance?: number;
 }
 
 function convertMappingToServer(mapping: FullMapping): ServerMapping {
@@ -67,6 +69,7 @@ function DetectorRunner(props: Props): JSX.Element {
     const {
         models, withCleanup, labels, dimension, runInference,
     } = props;
+    const { t } = useTranslation();
 
     const [modelID, setModelID] = useState<string | null>(null);
     const [threshold, setThreshold] = useState<number>(0.5);
@@ -75,6 +78,7 @@ function DetectorRunner(props: Props): JSX.Element {
     const [mapping, setMapping] = useState<FullMapping>([]);
     const [convertMasksToPolygons, setConvertMasksToPolygons] = useState<boolean>(false);
     const [detectorThreshold, setDetectorThreshold] = useState<number | null>(null);
+    const [tolerance, setTolerance] = useState<number | null>(null);
     const [modelLabels, setModelLabels] = useState<LabelInterface[]>([]);
     const [taskLabels, setTaskLabels] = useState<LabelInterface[]>([]);
 
@@ -112,7 +116,7 @@ function DetectorRunner(props: Props): JSX.Element {
         if (model) {
             setModelLabels(model.labels);
             if (!model.labels.length && model.kind !== ModelKind.REID) {
-                notification.warning({ message: 'This model does not have specified labels' });
+                notification.warning({ message: t('modelHasNoLabels') });
             }
         } else {
             setModelLabels([]);
@@ -122,10 +126,13 @@ function DetectorRunner(props: Props): JSX.Element {
     return (
         <div className='cvat-run-model-content'>
             <Row align='middle'>
-                <Col span={4}>Model:</Col>
+                <Col span={4}>
+                    {t('model')}
+:
+                </Col>
                 <Col span={20}>
                     <Select
-                        placeholder={dimension === DimensionType.DIMENSION_2D ? 'Select a model' : 'No models available'}
+                        placeholder={dimension === DimensionType.DIMENSION_2D ? t('selectAModel') : t('noModelsAvailable')}
                         disabled={dimension !== DimensionType.DIMENSION_2D}
                         style={{ width: '100%' }}
                         onChange={(_modelID: string): void => {
@@ -146,12 +153,12 @@ function DetectorRunner(props: Props): JSX.Element {
                 <div>
                     <div className='cvat-detector-runner-mapping-header'>
                         <div>
-                            <Text strong>Setup mapping between labels and attributes</Text>
+                            <Text strong>{t('setupLabelAttributeMapping')}</Text>
                         </div>
                         <div>
-                            <Tag>Model Spec</Tag>
+                            <Tag>{t('modelSpec')}</Tag>
                             <ArrowRightOutlined />
-                            <Tag>CVAT Spec</Tag>
+                            <Tag>{t('cvatSpec')}</Tag>
                         </div>
                     </div>
                     <LabelsMapperComponent
@@ -170,7 +177,7 @@ function DetectorRunner(props: Props): JSX.Element {
                             setConvertMasksToPolygons(checked);
                         }}
                     />
-                    <Text>Convert masks to polygons</Text>
+                    <Text>{t('convertMasksToPolygons')}</Text>
                 </div>
             )}
             {isDetector && withCleanup && (
@@ -179,7 +186,7 @@ function DetectorRunner(props: Props): JSX.Element {
                         checked={cleanup}
                         onChange={(checked: boolean): void => setCleanup(checked)}
                     />
-                    <Text>Clean previous annotations</Text>
+                    <Text>{t('cleanPreviousAnnotations')}</Text>
                 </div>
             )}
             {isDetector && (
@@ -197,8 +204,31 @@ function DetectorRunner(props: Props): JSX.Element {
                             />
                         </Col>
                         <Col>
-                            <Text>Threshold</Text>
-                            <CVATTooltip title='Minimum confidence threshold for detections. Leave empty to use the default value specified in the model settings'>
+                            <Text>{t('threshold')}</Text>
+                            <CVATTooltip title={t('minConfidenceThresholdTooltip')}>
+                                <QuestionCircleOutlined className='cvat-info-circle-icon' />
+                            </CVATTooltip>
+                        </Col>
+                    </Row>
+                </div>
+            )}
+            {isDetector && (
+                <div className='cvat-detector-runner-tolerance-wrapper' style={{ marginTop: '10px' }}>
+                    <Row align='middle' justify='start'>
+                        <Col>
+                            <InputNumber
+                                min={0.1}
+                                step={0.1}
+                                value={tolerance}
+                                onChange={(value: number | null) => {
+                                    setTolerance(value);
+                                }}
+                                placeholder='2.5'
+                            />
+                        </Col>
+                        <Col>
+                            <Text>{t('tolerance')}</Text>
+                            <CVATTooltip title={t('polygonApproximationToleranceTooltip')}>
                                 <QuestionCircleOutlined className='cvat-info-circle-icon' />
                             </CVATTooltip>
                         </Col>
@@ -209,10 +239,10 @@ function DetectorRunner(props: Props): JSX.Element {
                 <div>
                     <Row align='middle' justify='start'>
                         <Col>
-                            <Text>Threshold</Text>
+                            <Text>{t('threshold')}</Text>
                         </Col>
                         <Col offset={1}>
-                            <CVATTooltip title='Minimum similarity value for shapes that can be merged'>
+                            <CVATTooltip title={t('minimumSimilarityValueForShapesThatCanBeMerged')}>
                                 <InputNumber
                                     min={0.01}
                                     step={0.01}
@@ -229,12 +259,12 @@ function DetectorRunner(props: Props): JSX.Element {
                     </Row>
                     <Row align='middle' justify='start'>
                         <Col>
-                            <Text>Maximum distance</Text>
+                            <Text>{t('maximumDistance')}</Text>
                         </Col>
                         <Col offset={1}>
-                            <CVATTooltip title='Maximum distance between shapes that can be merged'>
+                            <CVATTooltip title={t('maximumDistanceBetweenShapesThatCanBeMerged')}>
                                 <InputNumber
-                                    placeholder='Threshold'
+                                    placeholder={t('threshold')}
                                     min={1}
                                     value={distance}
                                     onChange={(value: number | undefined | string | null) => {
@@ -264,6 +294,7 @@ function DetectorRunner(props: Props): JSX.Element {
                                     cleanup,
                                     conv_mask_to_poly: convertMasksToPolygons,
                                     ...(detectorThreshold !== null ? { threshold: detectorThreshold } : {}),
+                                    ...(tolerance !== null ? { tolerance } : {}),
                                 };
 
                                 runInference(model, body);
@@ -272,7 +303,7 @@ function DetectorRunner(props: Props): JSX.Element {
                             }
                         }}
                     >
-                        Annotate
+                        {t('Annotate')}
                     </Button>
                 </Col>
             </Row>

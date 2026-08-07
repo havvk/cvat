@@ -44,23 +44,24 @@ export default function Preview(props: Readonly<Props>): JSX.Element {
     const [hasFetched, setHasFetched] = React.useState(false);
     const { ref, inView } = useInView({ triggerOnce: true });
 
-    const { preview, entity } = useSelector((state: CombinedState) => {
+    const entity = job || project || task || cloudStorage || model || null;
+    const preview = useSelector((state: CombinedState) => {
         if (job !== undefined) {
-            return { preview: state.jobs.previews[job.id], entity: job };
+            return state.jobs.previews[job.id];
         }
         if (project !== undefined) {
-            return { preview: state.projects.previews[project.id], entity: project };
+            return state.projects.previews[project.id];
         }
         if (task !== undefined) {
-            return { preview: state.tasks.previews[task.id], entity: task };
+            return state.tasks.previews[task.id];
         }
         if (cloudStorage !== undefined) {
-            return { preview: state.cloudStorages.previews[cloudStorage.id], entity: cloudStorage };
+            return state.cloudStorages.previews[cloudStorage.id];
         }
         if (model !== undefined) {
-            return { preview: state.models.previews[model.id], entity: model };
+            return state.models.previews[model.id];
         }
-        return { preview: undefined, entity: null };
+        return undefined;
     });
 
     useEffect(() => {

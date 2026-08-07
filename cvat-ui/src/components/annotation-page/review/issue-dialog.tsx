@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
-import dayjs from 'dayjs';
 import Modal from 'antd/lib/modal';
 import { Row, Col } from 'antd/lib/grid';
 import { CloseOutlined } from '@ant-design/icons';
@@ -16,6 +15,8 @@ import { Comment } from '@ant-design/compatible';
 import Text from 'antd/lib/typography/Text';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
+import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { Issue, Comment as CommentModel } from 'cvat-core-wrapper';
 import { deleteIssueAsync } from 'actions/review-actions';
@@ -43,6 +44,7 @@ export default function IssueDialog(props: Props): JSX.Element {
     const ref = useRef<HTMLDivElement>(null);
     const [currentText, setCurrentText] = useState<string>('');
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const {
         issue,
         left,
@@ -115,7 +117,7 @@ export default function IssueDialog(props: Props): JSX.Element {
 
     const lines = comments.map(
         (_comment: CommentModel): JSX.Element => {
-            const created = dayjs(_comment.createdDate ?? undefined);
+            const created = _comment.createdDate ? moment(_comment.createdDate) : moment(moment.now());
             const diff = created.fromNow();
 
             return (
@@ -155,7 +157,7 @@ export default function IssueDialog(props: Props): JSX.Element {
                     <Text strong>{typeof id === 'number' ? `Issue #${id}` : 'Issue'}</Text>
                 </Col>
                 <Col>
-                    <CVATTooltip title='Collapse the chat'>
+                    <CVATTooltip title={t('collapseTheChatTooltip')}>
                         <CloseOutlined onClick={collapse} />
                     </CVATTooltip>
                 </Col>
@@ -163,14 +165,14 @@ export default function IssueDialog(props: Props): JSX.Element {
             <Row className='cvat-issue-dialog-chat' justify='start'>
                 {
                     lines.length > 0 ? <Col style={{ display: 'block' }}>{lines}</Col> : (
-                        <Col>No comments found</Col>
+                        <Col>{t('noCommentsFound')}</Col>
                     )
                 }
             </Row>
             <Row className='cvat-issue-dialog-input' justify='start'>
                 <Col span={24}>
                     <Input
-                        placeholder='Type a comment here..'
+                        placeholder={t('typeCommentHere')}
                         value={currentText}
                         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                             setCurrentText(event.target.value);

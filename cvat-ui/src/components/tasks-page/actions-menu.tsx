@@ -7,6 +7,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import Modal from 'antd/lib/modal';
 import Dropdown from 'antd/lib/dropdown';
+import { useTranslation } from 'react-i18next';
 
 import {
     RQStatus, Task, User, Organization,
@@ -29,6 +30,7 @@ import UserSelector from 'components/task-page/user-selector';
 import OrganizationSelector from 'components/selectors/organization-selector';
 import { confirmTransferModal } from 'utils/modals';
 import { makeBulkOperationAsync } from 'actions/bulk-actions';
+import DropdownMenuItemWrapper from 'components/common/dropdown-menu-item-wrapper';
 import TaskActionsItems from './actions-menu-items';
 
 interface Props {
@@ -44,6 +46,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
     } = props;
     const history = useHistory();
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const pluginActions = usePlugins((state: CombinedState) => state.plugins.components.taskActions.items, props);
     const {
         activeInference,
@@ -80,8 +83,8 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
     const onMergeConsensusJobs = useCallback(() => {
         if (taskInstance.consensusEnabled) {
             Modal.confirm({
-                title: 'The consensus jobs will be merged',
-                content: 'Existing annotations in parent jobs will be updated. Continue?',
+                title: t('theConsensusJobsWillBeMerged'),
+                content: t('updateParentJobAnnosConfirm'),
                 className: 'cvat-modal-confirm-consensus-merge-task',
                 onOk: () => {
                     dispatch(mergeConsensusJobsAsync(taskInstance));
@@ -90,7 +93,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     type: 'primary',
                     danger: true,
                 },
-                okText: 'Merge',
+                okText: t('Merge'),
             });
         }
     }, [taskInstance.consensusEnabled, taskInstance]);
@@ -143,7 +146,11 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     await dispatch(updateTaskAsync(task, { assignee }));
                 }
             },
-            (task, idx, total) => `Updating assignee for task #${task.id} (${idx + 1}/${total})`,
+            (task, idx, total) => t('updatingTaskAssigneeProgress', {
+                taskId: task.id,
+                current: idx + 1,
+                total,
+            }),
         ));
     }, [taskInstance, stopEditField, dispatch, collectObjectsForBulkUpdate]);
 
@@ -151,26 +158,32 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
         const tasksToDelete = currentTasks.filter((task) => selectedIds.includes(task.id));
         Modal.confirm({
             title: isBulkMode ?
-                `Delete ${tasksToDelete.length} selected tasks` :
-                `The task ${taskInstance.id} will be deleted`,
+                t('deleteCountSelectedTasks', { count: tasksToDelete.length }) :
+                t('taskWillBeDeletedConfirmation', { taskId: taskInstance.id }),
             content: isBulkMode ?
-                'All related data (images, annotations) for all selected tasks will be lost. Continue?' :
-                'All related data (images, annotations) will be lost. Continue?',
+                t('confirmDeleteAllTaskData') :
+                t('confirmDeleteAllProjectData'),
             className: 'cvat-modal-confirm-delete-task',
             onOk: () => {
-                dispatch(makeBulkOperationAsync(
-                    tasksToDelete.length ? tasksToDelete : [taskInstance],
-                    async (task) => {
-                        await dispatch(deleteTaskAsync(task));
-                    },
-                    (task, idx, total) => `Deleting task #${task.id} (${idx + 1}/${total})`,
-                ));
+                setTimeout(() => {
+                    dispatch(makeBulkOperationAsync(
+                        tasksToDelete.length ? tasksToDelete : [taskInstance],
+                        async (task) => {
+                            await dispatch(deleteTaskAsync(task));
+                        },
+                        (task, idx, total) => t('Deleting task #{{taskId}} ({{current}}/{{total}})', {
+                            taskId: task.id,
+                            current: idx + 1,
+                            total,
+                        }),
+                    ));
+                }, 0);
             },
             okButtonProps: {
                 type: 'primary',
                 danger: true,
             },
-            okText: isBulkMode ? 'Delete selected' : 'Delete',
+            okText: isBulkMode ? t('deleteSelected') : t('Delete'),
         });
     }, [taskInstance, currentTasks, selectedIds, isBulkMode]);
 
@@ -192,7 +205,11 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
                     task.organizationId = newOrganization?.id ?? null;
                     await dispatch(updateTaskAsync(task, {}, ResourceUpdateTypes.UPDATE_ORGANIZATION));
                 },
-                (task, idx, total) => `Updating organization for task #${task.id} (${idx + 1}/${total})`,
+                (task, idx, total) => t('updatingTaskOrgProgress', {
+                    taskId: task.id,
+                    current: idx + 1,
+                    total,
+                }),
             )).then((processedCount: number) => {
                 if (processedCount) {
                     // as for some tasks org has changed
@@ -242,7 +259,11 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
         };
         menuItems = [{
             key: `${editField}-selector`,
-            label: fieldSelectors[editField],
+            label: (
+                <DropdownMenuItemWrapper>
+                    {fieldSelectors[editField]}
+                </DropdownMenuItemWrapper>
+            ),
         }];
     } else {
         menuItems = TaskActionsItems({
@@ -265,6 +286,7 @@ function TaskActionsComponent(props: Readonly<Props>): JSX.Element {
             onMoveTaskToProject,
             onDeleteTask,
             selectedIds,
+            t,
         }, props);
     }
 

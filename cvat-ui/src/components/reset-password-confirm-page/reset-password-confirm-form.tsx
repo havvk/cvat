@@ -8,6 +8,7 @@ import Form from 'antd/lib/form';
 import Button from 'antd/lib/button';
 import { LockOutlined } from '@ant-design/icons';
 import Input from 'antd/lib/input';
+import { useTranslation } from 'react-i18next';
 
 import { validateConfirmation, validatePassword } from 'components/register-page/register-form';
 
@@ -25,6 +26,7 @@ interface Props {
 
 function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.Element {
     const location = useLocation();
+    const { t } = useTranslation();
     return (
         <Form
             onFinish={(values: Record<string, string>): void => {
@@ -43,14 +45,14 @@ function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.E
                 rules={[
                     {
                         required: true,
-                        message: 'Please input new password!',
-                    }, validatePassword,
+                        message: t('pleaseInputNewPassword'),
+                    }, validatePassword(t),
                 ]}
             >
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='New password'
+                    placeholder={t('newPassword')}
                 />
             </Form.Item>
 
@@ -61,14 +63,14 @@ function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.E
                 rules={[
                     {
                         required: true,
-                        message: 'Please confirm your new password!',
-                    }, validateConfirmation('newPassword1'),
+                        message: t('pleaseConfirmYourNewPassword'),
+                    }, validateConfirmation('newPassword1', t),
                 ]}
             >
                 <Input.Password
                     autoComplete='new-password'
                     prefix={<LockOutlined style={{ color: 'rgba(0, 0, 0, 0.25)' }} />}
-                    placeholder='Confirm new password'
+                    placeholder={t('confirmNewPassword')}
                 />
             </Form.Item>
 
@@ -80,7 +82,7 @@ function ResetPasswordConfirmFormComponent({ fetching, onSubmit }: Props): JSX.E
                     loading={fetching}
                     disabled={fetching}
                 >
-                    Change password
+                    {t('changePassword')}
                 </Button>
             </Form.Item>
         </Form>

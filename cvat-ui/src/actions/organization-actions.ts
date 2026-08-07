@@ -175,15 +175,12 @@ export function createOrganizationAsync(
     };
 }
 
-export function updateOrganizationAsync(
-    organization: Organization,
-    fields: Parameters<typeof Organization.prototype.save>[0],
-): ThunkAction {
+export function updateOrganizationAsync(organization: any): ThunkAction {
     return async function (dispatch) {
         dispatch(organizationActions.updateOrganization());
 
         try {
-            const updatedOrganization = await organization.save(fields);
+            const updatedOrganization = await organization.save();
             dispatch(organizationActions.updateOrganizationSuccess(updatedOrganization));
         } catch (error) {
             dispatch(organizationActions.updateOrganizationFailed(organization.slug, error));

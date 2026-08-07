@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Text from 'antd/lib/typography/Text';
 import Button from 'antd/lib/button';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -22,10 +23,11 @@ function AttributeSwitcher(props: Props): JSX.Element {
         currentAttribute, currentIndex, attributesCount, nextAttribute, normalizedKeyMap,
     } = props;
 
+    const { t } = useTranslation();
     const title = `${currentAttribute} [${currentIndex + 1}/${attributesCount}]`;
     return (
         <div className='cvat-attribute-annotation-sidebar-attribute-switcher'>
-            <CVATTooltip title={`Previous attribute ${normalizedKeyMap.PREVIOUS_ATTRIBUTE}`}>
+            <CVATTooltip title={t('previousAttributeTooltip', { shortcut: normalizedKeyMap.PREVIOUS_ATTRIBUTE })}>
                 <Button
                     className='cvat-attribute-annotation-sidebar-attribute-switcher-left'
                     disabled={attributesCount <= 1}
@@ -38,7 +40,7 @@ function AttributeSwitcher(props: Props): JSX.Element {
                 <Text className='cvat-text'>{currentAttribute}</Text>
                 <Text strong>{` [${currentIndex + 1}/${attributesCount}]`}</Text>
             </CVATTooltip>
-            <CVATTooltip title={`Next attribute ${normalizedKeyMap.NEXT_ATTRIBUTE}`}>
+            <CVATTooltip title={t('nextAttributeTooltip', { shortcut: normalizedKeyMap.NEXT_ATTRIBUTE })}>
                 <Button
                     className='cvat-attribute-annotation-sidebar-attribute-switcher-right'
                     disabled={attributesCount <= 1}

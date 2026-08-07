@@ -115,7 +115,7 @@ export default function AnnotationPageComponent(props: Props): JSX.Element {
                         <span>
                             {`${job.projectId ? 'Project' : 'Task'} ${
                                 job.projectId || job.taskId
-                            } does not contain any labels. `}
+                            } does not contain any label. `}
                             <a href={`/${job.projectId ? 'projects' : 'tasks'}/${job.projectId || job.taskId}/`}>
                                 Add
                             </a>

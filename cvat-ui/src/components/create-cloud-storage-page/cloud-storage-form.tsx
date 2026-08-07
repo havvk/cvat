@@ -4,7 +4,8 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useState, useEffect, useRef } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
@@ -57,6 +58,7 @@ const { Dragger } = Upload;
 
 export default function CreateCloudStorageForm(props: Props): JSX.Element {
     const { cloudStorage } = props;
+    const { t } = useTranslation();
     const cloudStorageId = cloudStorage ? cloudStorage.id : null;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -66,18 +68,12 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
     const [providerType, setProviderType] = useState<ProviderType | null>(null);
     const [credentialsType, setCredentialsType] = useState<CredentialsType | null>(null);
     const [selectedRegion, setSelectedRegion] = useState<string | undefined>(undefined);
-    const {
-        newCloudStorageId,
-        attaching,
-        updating,
-        updatedCloudStorageId,
-    } = useSelector((state: CombinedState) => ({
-        newCloudStorageId: state.cloudStorages.activities.creates.id,
-        attaching: state.cloudStorages.activities.creates.attaching,
-        updating: state.cloudStorages.activities.updates.updating,
-        updatedCloudStorageId: state.cloudStorages.activities.updates.cloudStorageID,
-    }), shallowEqual);
-
+    const newCloudStorageId = useSelector((state: CombinedState) => state.cloudStorages.activities.creates.id);
+    const attaching = useSelector((state: CombinedState) => state.cloudStorages.activities.creates.attaching);
+    const updating = useSelector((state: CombinedState) => state.cloudStorages.activities.updates.updating);
+    const updatedCloudStorageId = useSelector(
+        (state: CombinedState) => state.cloudStorages.activities.updates.cloudStorageID,
+    );
     const loading = cloudStorage ? updating : attaching;
     const fakeCredentialsData = {
         accountName: 'X'.repeat(24),
@@ -182,7 +178,7 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
             onReset();
 
             notification.info({
-                message: 'The cloud storage has been attached',
+                message: t('cloudStorageAttached'),
                 className: 'cvat-notification-create-cloud-storage-success',
             });
         }
@@ -194,7 +190,7 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
     useEffect(() => {
         if (updatedCloudStorageId && shouldShowUpdationNotification && shouldShowUpdationNotification.current) {
             notification.info({
-                message: 'The cloud storage has been updated',
+                message: t('cloudStorageUpdated'),
                 className: 'cvat-notification-update-cloud-storage-success',
             });
         }
@@ -338,9 +334,9 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
             return (
                 <>
                     <Form.Item
-                        label='Access key ID'
+                        label={t('accessKeyId')}
                         name='key'
-                        rules={[{ required: true, message: 'Please, specify your access key ID' }]}
+                        rules={[{ required: true, message: t('specifyAccessKeyId') }]}
                         {...internalCommonProps}
                     >
                         <Input.Password
@@ -352,9 +348,9 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
                         />
                     </Form.Item>
                     <Form.Item
-                        label='Secret access key'
+                        label={t('secretAccessKey')}
                         name='secret_key'
-                        rules={[{ required: true, message: 'Please, specify your secret access key' }]}
+                        rules={[{ required: true, message: t('specifySecretAccessKey') }]}
                         {...internalCommonProps}
                     >
                         <Input.Password
@@ -376,9 +372,9 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
             return (
                 <>
                     <Form.Item
-                        label='Account name'
+                        label={t('accountName')}
                         name='account_name'
-                        rules={[{ required: true, message: 'Please, specify your account name' }]}
+                        rules={[{ required: true, message: t('specifyAccountName') }]}
                         {...internalCommonProps}
                     >
                         <Input.Password
@@ -391,9 +387,9 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
                         />
                     </Form.Item>
                     <Form.Item
-                        label='SAS token'
+                        label={t('sasToken')}
                         name='SAS_token'
-                        rules={[{ required: true, message: 'Please, specify your SAS token' }]}
+                        rules={[{ required: true, message: t('specifySasToken') }]}
                         {...internalCommonProps}
                     >
                         <Input.Password
@@ -411,9 +407,9 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
         if (providerType === ProviderType.AZURE_CONTAINER && credentialsType === CredentialsType.ANONYMOUS_ACCESS) {
             return (
                 <Form.Item
-                    label='Account name'
+                    label={t('accountName')}
                     name='account_name'
-                    rules={[{ required: true, message: 'Please, specify your account name' }]}
+                    rules={[{ required: true, message: t('specifyAccountName') }]}
                     {...internalCommonProps}
                 >
                     <Input.Password
@@ -429,9 +425,9 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
         if (providerType === ProviderType.AZURE_CONTAINER && credentialsType === CredentialsType.CONNECTION_STRING) {
             return (
                 <Form.Item
-                    label='Connection string'
+                    label={t('connectionString')}
                     name='connection_string'
-                    rules={[{ required: true, message: 'Please, specify your connection string' }]}
+                    rules={[{ required: true, message: t('specifyConnectionString') }]}
                     {...internalCommonProps}
                 >
                     <Input.Password
@@ -449,10 +445,7 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
                     name='key_file'
                     {...internalCommonProps}
                     label={(
-                        <CVATTooltip title='You can upload a key file.
-                                If you leave this field blank, the environment variable
-                                GOOGLE_APPLICATION_CREDENTIALS will be used.'
-                        >
+                        <CVATTooltip title={t('keyFileUploadHelpText')}>
                             Key file
                             <Button
                                 href='https://cloud.google.com/docs/authentication/getting-started#setting_the_environment_variable'
@@ -502,30 +495,30 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
         return (
             <>
                 <Form.Item
-                    label='Bucket name'
+                    label={t('bucketName')}
                     name='resource'
-                    rules={[{ required: true, message: 'Please, specify a bucket name' }]}
+                    rules={[{ required: true, message: t('specifyBucketName') }]}
                     {...internalCommonProps}
                 >
                     <Input disabled={!!cloudStorage} maxLength={63} />
                 </Form.Item>
                 <Form.Item
-                    label='Authentication type'
+                    label={t('authenticationType')}
                     name='credentials_type'
-                    rules={[{ required: true, message: 'Please, specify credentials type' }]}
+                    rules={[{ required: true, message: t('specifyCredentialsType') }]}
                     {...internalCommonProps}
                 >
                     <Select onSelect={(value: CredentialsType) => onChangeCredentialsType(value)}>
                         <Select.Option value={CredentialsType.KEY_SECRET_KEY_PAIR}>
                             Key id and secret access key pair
                         </Select.Option>
-                        <Select.Option value={CredentialsType.ANONYMOUS_ACCESS}>Anonymous access</Select.Option>
+                        <Select.Option value={CredentialsType.ANONYMOUS_ACCESS}>{t('anonymousAccess')}</Select.Option>
                     </Select>
                 </Form.Item>
                 {credentialsBlock()}
                 <Form.Item
-                    label='Endpoint URL'
-                    help='You can specify an endpoint for your storage when using an S3-compatible cloud storage API'
+                    label={t('endpointUrl')}
+                    help='You can specify an endpoint for your storage when using the AWS S3 cloud storage compatible API'
                     name='endpoint_url'
                     {...internalCommonProps}
                 >
@@ -548,25 +541,25 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
         return (
             <>
                 <Form.Item
-                    label='Container name'
+                    label={t('containerName')}
                     name='resource'
-                    rules={[{ required: true, message: 'Please, specify a container name' }]}
+                    rules={[{ required: true, message: t('specifyContainerName') }]}
                     {...internalCommonProps}
                 >
                     <Input disabled={!!cloudStorage} maxLength={63} />
                 </Form.Item>
                 <Form.Item
-                    label='Authentication type'
+                    label={t('authenticationType')}
                     name='credentials_type'
-                    rules={[{ required: true, message: 'Please, specify credentials type' }]}
+                    rules={[{ required: true, message: t('specifyCredentialsType') }]}
                     {...internalCommonProps}
                 >
                     <Select onSelect={(value: CredentialsType) => onChangeCredentialsType(value)}>
                         <Select.Option value={CredentialsType.ACCOUNT_NAME_TOKEN_PAIR}>
                             Account name and SAS token
                         </Select.Option>
-                        <Select.Option value={CredentialsType.ANONYMOUS_ACCESS}>Anonymous access</Select.Option>
-                        <Select.Option value={CredentialsType.CONNECTION_STRING}>Connection string</Select.Option>
+                        <Select.Option value={CredentialsType.ANONYMOUS_ACCESS}>{t('anonymousAccess')}</Select.Option>
+                        <Select.Option value={CredentialsType.CONNECTION_STRING}>{t('connectionString')}</Select.Option>
                     </Select>
                 </Form.Item>
 
@@ -583,30 +576,30 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
         return (
             <>
                 <Form.Item
-                    label='Bucket name'
+                    label={t('bucketName')}
                     name='resource'
-                    rules={[{ required: true, message: 'Please, specify a bucket name' }]}
+                    rules={[{ required: true, message: t('specifyBucketName') }]}
                     {...internalCommonProps}
                 >
                     {/* maxlength https://cloud.google.com/storage/docs/naming-buckets#requirements */}
                     <Input disabled={!!cloudStorage} maxLength={222} />
                 </Form.Item>
                 <Form.Item
-                    label='Authentication type'
+                    label={t('authenticationType')}
                     name='credentials_type'
-                    rules={[{ required: true, message: 'Please, specify credentials type' }]}
+                    rules={[{ required: true, message: t('specifyCredentialsType') }]}
                     {...internalCommonProps}
                 >
                     <Select onSelect={(value: CredentialsType) => onChangeCredentialsType(value)}>
                         <Select.Option value={CredentialsType.KEY_FILE_PATH}>
                             Key file
                         </Select.Option>
-                        <Select.Option value={CredentialsType.ANONYMOUS_ACCESS}>Anonymous access</Select.Option>
+                        <Select.Option value={CredentialsType.ANONYMOUS_ACCESS}>{t('anonymousAccess')}</Select.Option>
                     </Select>
                 </Form.Item>
                 {credentialsBlock()}
                 <Form.Item
-                    label='Project ID'
+                    label={t('projectId')}
                     name='project_id'
                     {...internalCommonProps}
                 >
@@ -630,20 +623,20 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
         >
             <Form.Item
                 {...commonProps}
-                label='Display name'
+                label={t('displayName')}
                 name='display_name'
-                rules={[{ required: true, message: 'Please, specify a display name' }]}
+                rules={[{ required: true, message: t('specifyDisplayName') }]}
             >
                 <Input maxLength={63} />
             </Form.Item>
-            <Form.Item {...commonProps} label='Description' name='description'>
-                <TextArea autoSize={{ minRows: 1, maxRows: 5 }} placeholder='Any useful description' />
+            <Form.Item {...commonProps} label={t('Description')} name='description'>
+                <TextArea autoSize={{ minRows: 1, maxRows: 5 }} placeholder={t('usefulDescription')} />
             </Form.Item>
             <Form.Item
                 {...commonProps}
-                label='Provider'
+                label={t('Provider')}
                 name='provider_type'
-                rules={[{ required: true, message: 'Please, specify a cloud storage provider' }]}
+                rules={[{ required: true, message: t('specifyCloudStorageProvider') }]}
             >
                 <Select
                     disabled={!!cloudStorage}
@@ -656,13 +649,13 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
                     <Select.Option value={ProviderType.AWS_S3_BUCKET}>
                         <span className='cvat-cloud-storage-select-provider'>
                             <S3Provider />
-                            Amazon S3
+                            AWS S3
                         </span>
                     </Select.Option>
                     <Select.Option value={ProviderType.AZURE_CONTAINER}>
                         <span className='cvat-cloud-storage-select-provider'>
                             <AzureProvider />
-                            Azure Blob Storage
+                            Azure Blob Container
                         </span>
                     </Select.Option>
                     <Select.Option value={ProviderType.GOOGLE_CLOUD_STORAGE}>
@@ -678,7 +671,7 @@ export default function CreateCloudStorageForm(props: Props): JSX.Element {
             {providerType === ProviderType.GOOGLE_CLOUD_STORAGE && googleCloudStorageConfiguration()}
             <Form.Item
                 label={(
-                    <CVATTooltip title='Prefix is used to filter bucket content'>
+                    <CVATTooltip title={t('prefixHelpText')}>
                         Prefix
                         <QuestionCircleOutlined className='cvat-cloud-storage-help-button' />
                     </CVATTooltip>

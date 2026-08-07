@@ -12,6 +12,7 @@ import Popover from 'antd/lib/popover';
 import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
+import { useTranslation } from 'react-i18next';
 import { importActions } from 'actions/import-actions';
 import {
     SortingComponent,
@@ -44,6 +45,7 @@ interface VisibleTopBarProps {
 
 export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JSX.Element {
     const dispatch = useDispatch();
+    const { t } = useTranslation();
     const {
         importing, query, onApplyFilter, onApplySorting, onApplySearch,
         selectedCount, onSelectAll,
@@ -70,7 +72,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                             }}
                             defaultValue={query.search ?? ''}
                             className='cvat-tasks-page-search-bar'
-                            placeholder='Search ...'
+                            placeholder={t('search')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>
@@ -81,7 +83,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                 setVisibility({ ...defaultVisibility, sorting: visible })
                             )}
                             defaultFields={query.sort?.split(',') || ['-ID']}
-                            sortingFields={['ID', 'Owner', 'Status', 'Assignee', 'Updated date', 'Subset', 'Mode', 'Dimension', 'Project ID', 'Name', 'Project name']}
+                            sortingFields={['ID', 'Owner', 'Status', 'Assignee', 'Updated date', 'Subset', 'Mode', 'Dimension', 'Project ID', 'Name', 'Project name'].map((field) => t(field))}
                             onApplySorting={onApplySorting}
                         />
                         <FilteringComponent
@@ -115,7 +117,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     onClick={(): void => history.push('/tasks/create')}
                                     icon={<PlusOutlined />}
                                 >
-                                    Create a new task
+                                    {t('createNewTask')}
                                 </Button>
                                 <Button
                                     className='cvat-create-multi-tasks-button'
@@ -123,7 +125,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     onClick={(): void => history.push('/tasks/create?many=true')}
                                     icon={<span className='anticon'><MultiPlusIcon /></span>}
                                 >
-                                    Create multi tasks
+                                    {t('createMultiTasks')}
                                 </Button>
                                 <Button
                                     className='cvat-import-task-button'
@@ -132,7 +134,7 @@ export default function TopBarComponent(props: Readonly<VisibleTopBarProps>): JS
                                     icon={importing ? <LoadingOutlined /> : <UploadOutlined />}
                                     onClick={() => dispatch(importActions.openImportBackupModal('task'))}
                                 >
-                                    Create from backup
+                                    {t('createFromBackup')}
                                 </Button>
                             </CvatDropdownMenuPaper>
                         )}

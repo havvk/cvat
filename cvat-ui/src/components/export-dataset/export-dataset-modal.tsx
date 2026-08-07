@@ -4,10 +4,11 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React, { useState, useEffect, useCallback } from 'react';
-import {
-    connect, shallowEqual, useDispatch, useSelector,
-} from 'react-redux';
+import React, {
+    useState, useEffect, useCallback, useMemo,
+} from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import Modal from 'antd/lib/modal';
 import Notification from 'antd/lib/notification';
@@ -29,6 +30,7 @@ import {
     Dumper, ProjectOrTaskOrJob, Job, Project,
     Storage, StorageData, StorageLocation, Task,
 } from 'cvat-core-wrapper';
+import { createSelector } from 'reselect';
 
 type FormValues = {
     selectedFormat: string | undefined;
@@ -49,7 +51,22 @@ const initialValues: FormValues = {
     useProjectTargetStorage: true,
 };
 
+const selectProjects = (state: CombinedState) => state.projects;
+const selectTasks = (state: CombinedState) => state.tasks;
+const selectJobs = (state: CombinedState) => state.jobs;
+
+const selectSelectedProjectIds = createSelector([selectProjects], (projects) => projects.selected);
+const selectSelectedTaskIds = createSelector([selectTasks], (tasks) => tasks.selected);
+const selectSelectedJobIds = createSelector([selectJobs], (jobs) => jobs.selected);
+
+const selectAllProjects = createSelector([selectProjects], (projects) => projects.current);
+const selectAllTasks = createSelector([selectTasks], (tasks) => tasks.current);
+const selectAllJobs = createSelector([selectJobs], (jobs) => jobs.current);
+
+const EMPTY_ARRAY: number[] = [];
+
 function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
+    const { t } = useTranslation();
     const { dumpers, instance } = props;
 
     const [instanceType, setInstanceType] = useState('');
@@ -64,35 +81,19 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const {
-        selectedIds,
-        allTasks,
-        allProjects,
-        allJobs,
-    } = useSelector((state: CombinedState) => {
-        const getSelectedIds = (): number[] => {
-            if (instanceType === 'project') {
-                return state.projects.selected;
-            }
+    const selectedProjectIds = useSelector(selectSelectedProjectIds);
+    const selectedTaskIds = useSelector(selectSelectedTaskIds);
+    const selectedJobIds = useSelector(selectSelectedJobIds);
+    const allProjects = useSelector(selectAllProjects);
+    const allTasks = useSelector(selectAllTasks);
+    const allJobs = useSelector(selectAllJobs);
 
-            if (instanceType === 'task') {
-                return state.tasks.selected;
-            }
-
-            if (instanceType === 'job') {
-                return state.jobs.selected;
-            }
-
-            return [];
-        };
-
-        return {
-            selectedIds: getSelectedIds(),
-            allTasks: state.tasks.current,
-            allProjects: state.projects.current,
-            allJobs: state.jobs.current,
-        };
-    }, shallowEqual);
+    const selectedIds = useMemo(() => {
+        if (instanceType === 'project') return selectedProjectIds;
+        if (instanceType === 'task') return selectedTaskIds;
+        if (instanceType === 'job') return selectedJobIds;
+        return EMPTY_ARRAY;
+    }, [instanceType, selectedProjectIds, selectedTaskIds, selectedJobIds]);
 
     const isBulkMode = selectedIds.length > 1;
     const [selectedInstances, setSelectedInstances] = useState<ProjectOrTaskOrJob[]>([]);
@@ -100,7 +101,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
         if (isBulkMode) {
             let filtered: ProjectOrTaskOrJob[] = [];
             if (instanceType === 'task') {
-                filtered = allTasks.filter((t) => selectedIds.includes(t.id));
+                filtered = allTasks.filter((task) => selectedIds.includes(task.id));
             } else if (instanceType === 'project') {
                 filtered = allProjects.filter((p) => selectedIds.includes(p.id));
             } else if (instanceType === 'job') {
@@ -146,8 +147,8 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
     useEffect(() => {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
-        setHelpMessage(`Export to ${loc} storage ${cloudId}`);
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        setHelpMessage(t('exportToCloudStorageLocation', { loc, cloudId }));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultTargetStorage(true);
@@ -184,16 +185,20 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                         );
                     },
                     (inst: ProjectOrTaskOrJob, idx: number, total: number) => (
-                        `Exporting dataset for ${instanceType}#${inst.id} [${idx + 1}/${total}]`
+                        t('exportingResourceForInstance', {
+                            resource: t('requestResourceDataset'),
+                            instanceType: t(instanceType),
+                            instanceId: inst.id,
+                            current: idx + 1,
+                            total,
+                        })
                     ),
                 ));
                 closeModal();
-                const resource = values.saveImages ? 'Dataset' : 'Annotations';
-                const description =
-                    `Bulk ${resource.toLowerCase()} export was started. ` +
-                    'You can check progress and download the file [here](/requests).';
+                const resource = t(values.saveImages ? 'requestResourceDataset' : 'requestResourceAnnotations');
+                const description = t('bulkExportStartedDescription', { resource });
                 Notification.info({
-                    message: `Bulk ${resource.toLowerCase()} export started`,
+                    message: t('bulkExportStartedTitle', { resource }),
                     description: (
                         <CVATMarkdown history={history}>{description}</CVATMarkdown>
                     ),
@@ -216,11 +221,13 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                 ),
             );
             closeModal();
-            const resource = values.saveImages ? 'Dataset' : 'Annotations';
-            const description = `${resource} export was started for ${instanceType}. ` +
-            'You can check progress and download the file [here](/requests).';
+            const resource = t(values.saveImages ? 'requestResourceDataset' : 'requestResourceAnnotations');
+            const description = t('exportStartedForInstanceDescription', {
+                resource,
+                instanceType: t(instanceType),
+            });
             Notification.info({
-                message: `${resource} export started`,
+                message: t('exportStartedTitle', { resource }),
                 description: (
                     <CVATMarkdown history={history}>{description}</CVATMarkdown>
                 ),
@@ -237,6 +244,7 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
             isBulkMode,
             selectedInstances,
             nameTemplate,
+            t,
         ],
     );
 
@@ -252,16 +260,20 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
 
     const sortedDumpers = dumpers.slice();
     sortedDumpers.sort((a: Dumper, b: Dumper) => a.name.localeCompare(b.name));
+    const translatedInstanceType = instanceType ? t(instanceType) : '';
 
     return (
         <Modal
             title={
                 isBulkMode ? (
                     <Text strong>
-                        {`Export ${selectedInstances.length} ${instanceType}s as datasets`}
+                        {t('exportInstancesAsDatasets', {
+                            count: selectedInstances.length,
+                            instanceType: translatedInstanceType,
+                        })}
                     </Text>
                 ) : (
-                    <Text strong>{`Export ${instanceType} as a dataset`}</Text>
+                    <Text strong>{t('exportInstanceAsDataset', { instanceType: translatedInstanceType })}</Text>
                 )
             }
             open={!!instance}
@@ -279,10 +291,10 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
             >
                 <Form.Item
                     name='selectedFormat'
-                    label={<Text strong>Export format</Text>}
-                    rules={[{ required: true, message: 'Format must be selected' }]}
+                    label={<Text strong>{t('exportFormat')}</Text>}
+                    rules={[{ required: true, message: t('formatMustBeSelected') }]}
                 >
-                    <Select virtual={false} placeholder='Select dataset format' className='cvat-modal-export-select'>
+                    <Select virtual={false} placeholder={t('selectDatasetFormat')} className='cvat-modal-export-select'>
                         {sortedDumpers
                             .filter(
                                 (dumper: Dumper): boolean => dumper.dimension === instance?.dimension ||
@@ -310,10 +322,10 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                     >
                         <Switch className='cvat-modal-export-save-images' />
                     </Form.Item>
-                    <Text strong>Save images</Text>
+                    <Text strong>{t('saveImages')}</Text>
                 </Space>
                 {isBulkMode ? (
-                    <Form.Item label={<Text strong>Name template</Text>} required>
+                    <Form.Item label={<Text strong>{t('nameTemplate')}</Text>} required>
                         <Input
                             value={nameTemplate}
                             onChange={(e) => setNameTemplate(e.target.value)}
@@ -329,16 +341,16 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                                     />
                                 )}
                             >
-                                When forming the dataset name, a template is used.
+                                {t('templateUsedForDatasetName')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>
                         </Text>
                     </Form.Item>
                 ) : (
-                    <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
+                    <Form.Item label={<Text strong>{t('customName')}</Text>} name='customName'>
                         <Input
-                            placeholder='Custom name for a dataset'
+                            placeholder={t('customNameForDataset')}
                             suffix='.zip'
                             className='cvat-modal-export-filename-input'
                         />
@@ -346,10 +358,10 @@ function ExportDatasetModal(props: Readonly<StateToProps>): JSX.Element {
                 )}
                 <TargetStorageField
                     instanceId={instance ? instance.id : null}
-                    switchDescription='Use default settings'
+                    switchDescription={t('useDefaultSettings')}
                     switchHelpMessage={helpMessage}
                     useDefaultStorage={isBulkMode ? false : useDefaultTargetStorage}
-                    storageDescription='Specify target storage for export dataset'
+                    storageDescription={t('specifyTargetStorageForExport')}
                     locationValue={targetStorage.location}
                     onChangeUseDefaultStorage={isBulkMode ? undefined : (value: boolean) => {
                         setUseDefaultTargetStorage(value);
@@ -376,7 +388,7 @@ function mapStateToProps(state: CombinedState): StateToProps {
 
     return {
         instance,
-        dumpers: state.formats.annotationFormats?.dumpers ?? [],
+        dumpers: state.formats.annotationFormats.dumpers,
     };
 }
 

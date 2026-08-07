@@ -3,8 +3,11 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+import React, {
+    useState, useEffect, useCallback, useMemo,
+} from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import Modal from 'antd/lib/modal';
 import Notification from 'antd/lib/notification';
@@ -20,7 +23,6 @@ import { exportActions, exportBackupAsync } from 'actions/export-actions';
 import { makeBulkOperationAsync } from 'actions/bulk-actions';
 import {
     getCore, Job, ProjectOrTaskOrJob, Storage, StorageData, StorageLocation,
-    Project, Task,
 } from 'cvat-core-wrapper';
 
 import CVATMarkdown from 'components/common/cvat-markdown';
@@ -46,7 +48,14 @@ const initialValues: FormValues = {
     lightweight: true,
 };
 
+const EMPTY_ARRAY: number[] = [];
+const selectProjectsSelected = (state: CombinedState) => state.projects.selected;
+const selectTasksSelected = (state: CombinedState) => state.tasks.selected;
+const selectProjectsCurrent = (state: CombinedState) => state.projects.current;
+const selectTasksCurrent = (state: CombinedState) => state.tasks.current;
+
 function ExportBackupModal(): JSX.Element {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
     const [form] = Form.useForm();
@@ -59,40 +68,36 @@ function ExportBackupModal(): JSX.Element {
     const [lightweight, setLightweight] = useState(true);
     const [nameTemplate, setNameTemplate] = useState('backup_task_{{id}}');
 
-    const {
-        selectedIds,
-        allTasks,
-        allProjects,
-        instance,
-    } = useSelector((state: CombinedState) => {
-        const instanceT = state.export.instanceType;
-        const result = {
-            allTasks: state.tasks.current,
-            allProjects: state.projects.current,
-            selectedIds: null as null | number[],
-            instance: null as (Project | Task | null),
-        };
-
+    const instanceT = useSelector((state: CombinedState) => state.export.instanceType);
+    const selectedProjects = useSelector(selectProjectsSelected);
+    const selectedTasks = useSelector(selectTasksSelected);
+    const selectedIds = useMemo(() => {
         if (instanceT === 'project') {
-            result.selectedIds = state.projects.selected;
-            result.instance = state.export.projects?.backup?.modalInstance ?? null;
+            return selectedProjects;
         }
-
         if (instanceT === 'task') {
-            result.selectedIds = state.tasks.selected;
-            result.instance = state.export.tasks?.backup?.modalInstance ?? null;
+            return selectedTasks;
         }
+        return EMPTY_ARRAY;
+    }, [instanceT, selectedProjects, selectedTasks]);
+    const allTasks = useSelector(selectTasksCurrent);
+    const allProjects = useSelector(selectProjectsCurrent);
 
-        return result;
-    }, shallowEqual);
+    const instance = useSelector((state: CombinedState) => {
+        if (!instanceT) {
+            return null;
+        }
+        return state.export[`${instanceT}s` as 'projects' | 'tasks']?.backup?.modalInstance ?? null;
+    });
 
-    const isBulkMode = selectedIds && selectedIds.length > 1;
+    const isBulkMode = selectedIds.length > 1;
+
     const [selectedInstances, setSelectedInstances] = useState<Exclude<ProjectOrTaskOrJob, Job>[]>([]);
     useEffect(() => {
         if (isBulkMode) {
             let filtered: Exclude<ProjectOrTaskOrJob, Job>[] = [];
             if (instanceType === 'task') {
-                filtered = allTasks.filter((t) => selectedIds.includes(t.id));
+                filtered = allTasks.filter((task) => selectedIds.includes(task.id));
             } else if (instanceType === 'project') {
                 filtered = allProjects.filter((p) => selectedIds.includes(p.id));
             }
@@ -125,8 +130,8 @@ function ExportBackupModal(): JSX.Element {
     useEffect(() => {
         const loc = defaultStorageLocation ? defaultStorageLocation.split('_')[0] : 'local';
         const cloudId = defaultStorageCloudId !== undefined && defaultStorageCloudId !== null ? `№${defaultStorageCloudId}` : '';
-        setHelpMessage(`Export backup to ${loc} storage ${cloudId}`);
-    }, [defaultStorageLocation, defaultStorageCloudId]);
+        setHelpMessage(t('exportBackupToCloudStorage', { loc, cloudId }));
+    }, [defaultStorageLocation, defaultStorageCloudId, t]);
 
     const closeModal = (): void => {
         setUseDefaultStorage(true);
@@ -163,14 +168,20 @@ function ExportBackupModal(): JSX.Element {
                         );
                     },
                     (inst: Exclude<ProjectOrTaskOrJob, Job>, idx: number, total: number) => (
-                        `Exporting backup for ${instanceType}#${inst.id} [${idx + 1}/${total}]`
+                        t('exportingResourceForInstance', {
+                            resource: t('requestResourceBackup'),
+                            instanceType: t(instanceType),
+                            instanceId: inst.id,
+                            current: idx + 1,
+                            total,
+                        })
                     ),
                 ));
                 closeModal();
-                const description =
-                    'Bulk backup export was started. You can check progress [here](/requests).';
+                const resource = t('requestResourceBackup');
+                const description = t('bulkExportStartedDescription', { resource });
                 Notification.info({
-                    message: 'Bulk backup export started',
+                    message: t('bulkExportStartedTitle', { resource }),
                     description: (
                         <CVATMarkdown history={history}>{description}</CVATMarkdown>
                     ),
@@ -198,11 +209,10 @@ function ExportBackupModal(): JSX.Element {
                 );
                 closeModal();
 
-                const description = isBulkMode ?
-                    'Bulk backup export was started. You can check progress [here](/requests).' :
-                    'Backup export was started. You can check progress [here](/requests).';
+                const resource = t('requestResourceBackup');
+                const description = t('exportStartedDescription', { resource });
                 Notification.info({
-                    message: isBulkMode ? 'Bulk backup export started' : 'Backup export started',
+                    message: t('exportStartedTitle', { resource }),
                     description: (
                         <CVATMarkdown history={history}>{description}</CVATMarkdown>
                     ),
@@ -219,6 +229,7 @@ function ExportBackupModal(): JSX.Element {
             defaultStorageLocation,
             defaultStorageCloudId,
             lightweight,
+            t,
         ],
     );
 
@@ -228,16 +239,25 @@ function ExportBackupModal(): JSX.Element {
             .replaceAll('{{name}}', selectedInstances[0].name ?? '')
             .replaceAll('{{index}}', '1') :
         `backup_${instanceType}_1.zip`;
+    const translatedInstanceType = instanceType ? t(instanceType) : '';
 
     return (
         <Modal
             title={
                 isBulkMode ? (
                     <Text strong>
-                        {`Export ${selectedInstances.length} ${instanceType}s`}
+                        {t('exportInstances', {
+                            count: selectedInstances.length,
+                            instanceType: translatedInstanceType,
+                        })}
                     </Text>
                 ) : (
-                    <Text strong>{`Export ${instanceType} #${instance?.id}`}</Text>
+                    <Text strong>
+                        {t('exportInstance', {
+                            instanceType: translatedInstanceType,
+                            instanceId: instance?.id,
+                        })}
+                    </Text>
                 )
             }
             open={!!instance}
@@ -253,7 +273,7 @@ function ExportBackupModal(): JSX.Element {
                 onFinish={handleExport}
             >
                 {isBulkMode ? (
-                    <Form.Item label={<Text strong>Name template</Text>} required>
+                    <Form.Item label={<Text strong>{t('nameTemplate')}</Text>} required>
                         <Input
                             value={nameTemplate}
                             onChange={(e) => setNameTemplate(e.target.value)}
@@ -269,16 +289,16 @@ function ExportBackupModal(): JSX.Element {
                                     />
                                 )}
                             >
-                                When forming the backup name, a template is used.
+                                {t('templateUsedForBackupName')}
                                 {' '}
                                 <QuestionCircleOutlined />
                             </Tooltip>
                         </Text>
                     </Form.Item>
                 ) : (
-                    <Form.Item label={<Text strong>Custom name</Text>} name='customName'>
+                    <Form.Item label={<Text strong>{t('customName')}</Text>} name='customName'>
                         <Input
-                            placeholder='Custom name for a backup file'
+                            placeholder={t('customNameForBackup')}
                             suffix='.zip'
                             className='cvat-modal-export-filename-input'
                         />
@@ -286,10 +306,12 @@ function ExportBackupModal(): JSX.Element {
                 )}
                 <TargetStorageField
                     instanceId={instance ? instance.id : null}
-                    switchDescription='Use default settings'
+                    switchDescription={t('useDefaultSettings')}
                     switchHelpMessage={helpMessage}
                     useDefaultStorage={isBulkMode ? false : useDefaultStorage}
-                    storageDescription={`Specify target storage for export ${instanceType}`}
+                    storageDescription={t('specifyTargetStorageForBackupExport', {
+                        instanceType: translatedInstanceType,
+                    })}
                     locationValue={storageLocation}
                     onChangeUseDefaultStorage={isBulkMode ? undefined : (value: boolean) => setUseDefaultStorage(value)}
                     onChangeLocationValue={(value: StorageLocation) => setStorageLocation(value)}
@@ -303,8 +325,8 @@ function ExportBackupModal(): JSX.Element {
                             checked={lightweight}
                             onChange={setLightweight}
                         />
-                        <Text strong>Use lightweight backup whenever possible</Text>
-                        <Tooltip title='If a task uses media from a cloud storage, its possible to make a backup without including media. The task restored from a lightweight backup has to be manually connected to the cloud storage.'>
+                        <Text strong>{t('useLightweightBackup')}</Text>
+                        <Tooltip title={t('lightweightBackupTooltip')}>
                             <QuestionCircleOutlined />
                         </Tooltip>
                     </Space>

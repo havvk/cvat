@@ -6,6 +6,7 @@
 import Modal from 'antd/lib/modal';
 import Table from 'antd/lib/table';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { getApplicationKeyMap } from 'utils/mousetrap-react';
 import { shortcutsActions } from 'actions/shortcuts-actions';
@@ -40,6 +41,7 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 }
 
 function ShortcutsDialog(props: StateToProps & DispatchToProps): JSX.Element | null {
+    const { t } = useTranslation();
     const { visible, switchShortcutsModalVisible } = props;
     const keyMap = getApplicationKeyMap();
 
@@ -55,18 +57,18 @@ function ShortcutsDialog(props: StateToProps & DispatchToProps): JSX.Element | n
 
     const columns = [
         {
-            title: 'Name',
+            title: t('name'),
             dataIndex: 'name',
             key: 'name',
         },
         {
-            title: 'Shortcut',
+            title: t('shortcut'),
             dataIndex: 'shortcut',
             key: 'shortcut',
             render: splitToRows,
         },
         {
-            title: 'Description',
+            title: t('description'),
             dataIndex: 'description',
             key: 'description',
         },
@@ -83,7 +85,7 @@ function ShortcutsDialog(props: StateToProps & DispatchToProps): JSX.Element | n
 
     return (
         <Modal
-            title='Active list of shortcuts'
+            title={t('activeShortcuts')}
             open={visible}
             closable={false}
             width={800}

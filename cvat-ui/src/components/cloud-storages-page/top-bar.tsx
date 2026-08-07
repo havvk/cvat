@@ -8,6 +8,7 @@ import { useHistory } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
 import { PlusOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { CloudStoragesQuery } from 'reducers';
 import Input from 'antd/lib/input';
@@ -43,6 +44,7 @@ export default function StoragesTopBar(props: Readonly<Props>): JSX.Element {
         query, onApplyFilter, onApplySorting, onApplySearch, selectedCount, onSelectAll,
     } = props;
     const history = useHistory();
+    const { t } = useTranslation();
     const [visibility, setVisibility] = useState(defaultVisibility);
 
     return (
@@ -57,7 +59,7 @@ export default function StoragesTopBar(props: Readonly<Props>): JSX.Element {
                             }}
                             defaultValue={query.search ?? ''}
                             className='cvat-cloudstorages-page-tasks-search-bar'
-                            placeholder='Search ...'
+                            placeholder={t('search')}
                         />
                         <ResourceSelectionInfo selectedCount={selectedCount} onSelectAll={onSelectAll} />
                     </div>
@@ -68,7 +70,7 @@ export default function StoragesTopBar(props: Readonly<Props>): JSX.Element {
                                 setVisibility({ ...defaultVisibility, sorting: visible })
                             )}
                             defaultFields={query.sort?.split(',') || ['-ID']}
-                            sortingFields={['ID', 'Provider type', 'Updated date', 'Display name', 'Resource', 'Credentials type', 'Owner', 'Description']}
+                            sortingFields={['ID', 'Provider type', 'Updated date', 'Display name', 'Resource', 'Credentials type', 'Owner', 'Description'].map((field) => t(field))}
                             onApplySorting={(sorting: string | null) => {
                                 onApplySorting(sorting);
                             }}

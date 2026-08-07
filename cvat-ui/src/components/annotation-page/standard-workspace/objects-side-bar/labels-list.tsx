@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import message from 'antd/lib/message';
 
@@ -36,6 +37,7 @@ for (const index of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]) {
 registerComponentShortcuts(componentShortcuts);
 
 function LabelsListComponent(): JSX.Element {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const { labels, keyMap } = useSelector((state: CombinedState) => ({
@@ -125,7 +127,7 @@ function LabelsListComponent(): JSX.Element {
         <div className='cvat-objects-sidebar-labels-list'>
             <GlobalHotKeys keyMap={subKeyMap(componentShortcuts, keyMap)} handlers={handlers} />
             <div className='cvat-objects-sidebar-labels-list-header'>
-                <Text>{`Items: ${labels.length}`}</Text>
+                <Text>{t('itemsCount', { count: labels.length })}</Text>
             </div>
             {labelIDs.map(
                 (labelID: number): JSX.Element => (

@@ -4,8 +4,10 @@
 // SPDX-License-Identifier: MIT
 
 import './styles.scss';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { connect, shallowEqual, useSelector } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import i18n from 'i18next';
+import { connect, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import {
     ArrowDownOutlined, ArrowLeftOutlined, ArrowRightOutlined, ArrowUpOutlined,
 } from '@ant-design/icons';
@@ -23,8 +25,6 @@ import {
     updateActiveControl as updateActiveControlAction,
     updateAnnotationsAsync,
     updateCanvasContextMenu,
-    getDataFailed,
-    canvasErrorOccurred,
 } from 'actions/annotation-actions';
 import {
     ActiveControl,
@@ -118,8 +118,6 @@ interface StateToProps {
     outlineColor: string;
     colorBy: ColorBy;
     orientationVisibility: OrientationVisibility;
-    controlPointsSize: number;
-    focusedObjectPadding: number;
     frameFetching: boolean;
     canvasInstance: Canvas3d;
     jobInstance: Job;
@@ -145,8 +143,6 @@ interface DispatchToProps {
     onActivateObject: (activatedStateID: number | null) => void;
     updateActiveControl: (activeControl: ActiveControl) => void;
     onUpdateContextMenu(visible: boolean, left: number, top: number, type: ContextMenuType, pointID?: number): void;
-    onGetDataFailed(error: Error): void;
-    onCanvasErrorOccurred(error: Error): void;
 }
 
 function mapStateToProps(state: CombinedState): StateToProps {
@@ -171,10 +167,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
             player: {
                 resetZoom,
             },
-            workspace: {
-                controlPointsSize,
-                focusedObjectPadding,
-            },
             shapes: {
                 opacity, colorBy, selectedOpacity, outlined, outlineColor, orientationVisibility,
             },
@@ -195,8 +187,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
         outlined,
         outlineColor,
         orientationVisibility,
-        controlPointsSize,
-        focusedObjectPadding,
         activeLabelID,
         activatedStateID,
         activeObjectType,
@@ -247,12 +237,6 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
         updateActiveControl(activeControl: ActiveControl): void {
             dispatch(updateActiveControlAction(activeControl));
         },
-        onGetDataFailed(error: Error): void {
-            dispatch(getDataFailed(error));
-        },
-        onCanvasErrorOccurred(error: Error): void {
-            dispatch(canvasErrorOccurred(error));
-        },
     };
 }
 
@@ -266,18 +250,11 @@ const Spinner = React.memo(() => (
 
 export const PerspectiveViewComponent = React.memo(
     (): JSX.Element => {
+        const { t } = useTranslation();
         const ref = useRef<HTMLDivElement>(null);
-        const {
-            canvas,
-            canvasIsReady,
-            keyMap,
-            normalizedKeyMap,
-        } = useSelector((state: CombinedState) => ({
-            canvas: state.annotation.canvas.instance as Canvas3d,
-            canvasIsReady: state.annotation.canvas.ready,
-            keyMap: state.shortcuts.keyMap,
-            normalizedKeyMap: state.shortcuts.normalizedKeyMap,
-        }), shallowEqual);
+        const canvas = useSelector((state: CombinedState) => state.annotation.canvas.instance as Canvas3d);
+        const canvasIsReady = useSelector((state: CombinedState) => state.annotation.canvas.ready);
+        const { keyMap, normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
         const screenKeyControl = (code: CameraAction, altKey: boolean, shiftKey: boolean): void => {
             canvas.keyControls(new KeyboardEvent('keydown', { code, altKey, shiftKey }));
@@ -300,7 +277,7 @@ export const PerspectiveViewComponent = React.memo(
             return (
                 <div className='cvat-canvas3d-perspective-arrow-directions'>
                     <div>
-                        <CVATTooltip title={normalizedKeyMap.TILT_UP} placement='topRight'>
+                        <CVATTooltip title={t('tiltUpTooltip', { shortcut: normalizedKeyMap.TILT_UP })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.TILT_UP, false, true)}
@@ -311,7 +288,7 @@ export const PerspectiveViewComponent = React.memo(
                         </CVATTooltip>
                     </div>
                     <div>
-                        <CVATTooltip title={normalizedKeyMap.ROTATE_LEFT} placement='topRight'>
+                        <CVATTooltip title={t('rotateLeftTooltip', { shortcut: normalizedKeyMap.ROTATE_LEFT })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.ROTATE_LEFT, false, true)}
@@ -320,7 +297,7 @@ export const PerspectiveViewComponent = React.memo(
                                 <ArrowLeftOutlined className='cvat-canvas3d-perspective-arrow-directions-icons-color' />
                             </Button>
                         </CVATTooltip>
-                        <CVATTooltip title={normalizedKeyMap.TILT_DOWN} placement='topRight'>
+                        <CVATTooltip title={t('tiltDownTooltip', { shortcut: normalizedKeyMap.TILT_DOWN })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.TILT_DOWN, false, true)}
@@ -329,7 +306,7 @@ export const PerspectiveViewComponent = React.memo(
                                 <ArrowDownOutlined className='cvat-canvas3d-perspective-arrow-directions-icons-color' />
                             </Button>
                         </CVATTooltip>
-                        <CVATTooltip title={normalizedKeyMap.ROTATE_RIGHT} placement='topRight'>
+                        <CVATTooltip title={t('rotateRightTooltip', { shortcut: normalizedKeyMap.ROTATE_RIGHT })} placement='topRight'>
                             <Button
                                 size='small'
                                 onClick={() => screenKeyControl(CameraAction.ROTATE_RIGHT, false, true)}
@@ -346,7 +323,7 @@ export const PerspectiveViewComponent = React.memo(
         function ControlGroup(): JSX.Element {
             return (
                 <span className='cvat-canvas3d-perspective-directions'>
-                    <CVATTooltip title={normalizedKeyMap.MOVE_UP} placement='topLeft'>
+                    <CVATTooltip title={t('moveUpTooltip', { shortcut: normalizedKeyMap.MOVE_UP })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_UP, true, false)}
@@ -355,7 +332,7 @@ export const PerspectiveViewComponent = React.memo(
                             U
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.ZOOM_IN} placement='topLeft'>
+                    <CVATTooltip title={t('zoomInTooltip', { shortcut: normalizedKeyMap.ZOOM_IN })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.ZOOM_IN, true, false)}
@@ -364,7 +341,7 @@ export const PerspectiveViewComponent = React.memo(
                             I
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.MOVE_DOWN} placement='topLeft'>
+                    <CVATTooltip title={t('moveDownTooltip', { shortcut: normalizedKeyMap.MOVE_DOWN })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_DOWN, true, false)}
@@ -374,7 +351,7 @@ export const PerspectiveViewComponent = React.memo(
                         </Button>
                     </CVATTooltip>
                     <br />
-                    <CVATTooltip title={normalizedKeyMap.MOVE_LEFT} placement='topLeft'>
+                    <CVATTooltip title={t('moveLeftTooltip', { shortcut: normalizedKeyMap.MOVE_LEFT })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_LEFT, true, false)}
@@ -383,7 +360,7 @@ export const PerspectiveViewComponent = React.memo(
                             J
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.ZOOM_OUT} placement='topLeft'>
+                    <CVATTooltip title={t('zoomOutTooltip', { shortcut: normalizedKeyMap.ZOOM_OUT })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.ZOOM_OUT, true, false)}
@@ -392,7 +369,7 @@ export const PerspectiveViewComponent = React.memo(
                             K
                         </Button>
                     </CVATTooltip>
-                    <CVATTooltip title={normalizedKeyMap.MOVE_RIGHT} placement='topLeft'>
+                    <CVATTooltip title={t('moveRightTooltip', { shortcut: normalizedKeyMap.MOVE_RIGHT })} placement='topLeft'>
                         <Button
                             size='small'
                             onClick={() => screenKeyControl(CameraAction.MOVE_RIGHT, true, false)}
@@ -429,10 +406,8 @@ export const PerspectiveViewComponent = React.memo(
 export const TopViewComponent = React.memo(
     (): JSX.Element => {
         const ref = useRef<HTMLDivElement>(null);
-        const { canvas, canvasIsReady } = useSelector((state: CombinedState) => ({
-            canvas: state.annotation.canvas.instance as Canvas3d,
-            canvasIsReady: state.annotation.canvas.ready,
-        }), shallowEqual);
+        const canvas = useSelector((state: CombinedState) => state.annotation.canvas.instance as Canvas3d);
+        const canvasIsReady = useSelector((state: CombinedState) => state.annotation.canvas.ready);
 
         useEffect(() => {
             if (ref.current) {
@@ -443,7 +418,7 @@ export const TopViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-topview'>
                 { !canvasIsReady && <Spinner /> }
-                <div className='cvat-canvas3d-header'>Top</div>
+                <div className='cvat-canvas3d-header'>{i18n.t('top')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -456,10 +431,8 @@ export const TopViewComponent = React.memo(
 export const SideViewComponent = React.memo(
     (): JSX.Element => {
         const ref = useRef<HTMLDivElement>(null);
-        const { canvas, canvasIsReady } = useSelector((state: CombinedState) => ({
-            canvas: state.annotation.canvas.instance as Canvas3d,
-            canvasIsReady: state.annotation.canvas.ready,
-        }), shallowEqual);
+        const canvas = useSelector((state: CombinedState) => state.annotation.canvas.instance as Canvas3d);
+        const canvasIsReady = useSelector((state: CombinedState) => state.annotation.canvas.ready);
 
         useEffect(() => {
             if (ref.current) {
@@ -470,7 +443,7 @@ export const SideViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-sideview'>
                 { !canvasIsReady && <Spinner /> }
-                <div className='cvat-canvas3d-header'>Side</div>
+                <div className='cvat-canvas3d-header'>{i18n.t('side')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -483,10 +456,8 @@ export const SideViewComponent = React.memo(
 export const FrontViewComponent = React.memo(
     (): JSX.Element => {
         const ref = useRef<HTMLDivElement>(null);
-        const { canvas, canvasIsReady } = useSelector((state: CombinedState) => ({
-            canvas: state.annotation.canvas.instance as Canvas3d,
-            canvasIsReady: state.annotation.canvas.ready,
-        }), shallowEqual);
+        const canvas = useSelector((state: CombinedState) => state.annotation.canvas.instance as Canvas3d);
+        const canvasIsReady = useSelector((state: CombinedState) => state.annotation.canvas.ready);
 
         useEffect(() => {
             if (ref.current) {
@@ -497,7 +468,7 @@ export const FrontViewComponent = React.memo(
         return (
             <div className='cvat-canvas3d-orthographic-view cvat-canvas3d-frontview'>
                 { !canvasIsReady && <Spinner /> }
-                <div className='cvat-canvas3d-header'>Front</div>
+                <div className='cvat-canvas3d-header'>{i18n.t('front')}</div>
                 <div
                     className='cvat-canvas3d-fullsize'
                     ref={ref}
@@ -515,8 +486,6 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
         outlined,
         outlineColor,
         orientationVisibility,
-        controlPointsSize,
-        focusedObjectPadding,
         selectedOpacity,
         colorBy,
         contextMenuVisibility,
@@ -535,8 +504,6 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
         onMergeAnnotations,
         onSplitAnnotations,
         onGroupAnnotations,
-        onGetDataFailed,
-        onCanvasErrorOccurred,
     } = props;
 
     const { canvasInstance } = props as { canvasInstance: Canvas3d };
@@ -552,15 +519,6 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
     const onCanvasDragDone = (): void => {
         updateActiveControl(ActiveControl.CURSOR);
     };
-
-    const onCanvasErrorOccurrence = useCallback((event: any): void => {
-        const { exception, domain } = event.detail;
-        if (domain === 'data fetching') {
-            onGetDataFailed(exception);
-        } else {
-            onCanvasErrorOccurred(exception);
-        }
-    }, [onGetDataFailed, onCanvasErrorOccurred]);
 
     const animateCanvas = (): void => {
         canvasInstance.render();
@@ -666,15 +624,6 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
     }, []);
 
     useEffect(() => {
-        const canvasInstanceDOM = canvasInstance.html();
-        canvasInstanceDOM.perspective.addEventListener('canvas.error', onCanvasErrorOccurrence);
-
-        return () => {
-            canvasInstanceDOM.perspective.removeEventListener('canvas.error', onCanvasErrorOccurrence);
-        };
-    }, [onCanvasErrorOccurrence, canvasInstance]);
-
-    useEffect(() => {
         canvasInstance.activate(activatedStateID);
     }, [activatedStateID]);
 
@@ -691,6 +640,17 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
             }
         };
     }, [resetZoom]);
+
+    const updateShapesView = (): void => {
+        canvasInstance.configureShapes({
+            opacity,
+            outlined,
+            outlineColor,
+            selectedOpacity,
+            colorBy,
+            orientationVisibility,
+        });
+    };
 
     const onContextMenu = (event: any): void => {
         const { onUpdateContextMenu, onActivateObject } = props;
@@ -720,21 +680,8 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
     };
 
     useEffect(() => {
-        canvasInstance.configure({
-            colorBy,
-            shapeOpacity: opacity,
-            selectedShapeOpacity: selectedOpacity,
-            orientationVisibility,
-            outlinedBorders: outlined ? outlineColor : false,
-            controlPointsSize,
-            focusedObjectPadding,
-        });
-    }, [
-        opacity, outlined, outlineColor,
-        selectedOpacity, colorBy, focusedObjectPadding,
-        orientationVisibility, controlPointsSize,
-
-    ]);
+        updateShapesView();
+    }, [opacity, outlined, outlineColor, selectedOpacity, colorBy, orientationVisibility]);
 
     useEffect(() => {
         const canvasInstanceDOM = canvasInstance.html() as ViewsDOM;

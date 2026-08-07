@@ -31,7 +31,7 @@ const defaultState: SettingsState = {
     workspace: {
         autoSave: false,
         autoSaveInterval: 15 * 60 * 1000,
-        focusedObjectPadding: 50,
+        aamZoomMargin: 100,
         automaticBordering: false,
         adaptiveZoom: true,
         showObjectsTextAlways: false,
@@ -309,12 +309,12 @@ export default (state = defaultState, action: AnyAction): SettingsState => {
                 },
             };
         }
-        case SettingsActionTypes.CHANGE_FOCUSED_OBJECT_PADDING: {
+        case SettingsActionTypes.CHANGE_AAM_ZOOM_MARGIN: {
             return {
                 ...state,
                 workspace: {
                     ...state.workspace,
-                    focusedObjectPadding: action.payload.focusedObjectPadding,
+                    aamZoomMargin: action.payload.aamZoomMargin,
                 },
             };
         }

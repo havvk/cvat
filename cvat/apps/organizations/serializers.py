@@ -123,8 +123,8 @@ class InvitationWriteSerializer(serializers.ModelSerializer):
             del membership_data["user"]
         except ObjectDoesNotExist:
             user_email = membership_data["user"]["email"]
-            user = User.objects.create_user(username=user_email, email=user_email)
-            user.set_unusable_password()
+            user = User.objects.create_user(username=user_email, email=user_email, password=None)
+            user.is_active = False
             user.save()
             del membership_data["user"]
         membership, created = Membership.objects.get_or_create(

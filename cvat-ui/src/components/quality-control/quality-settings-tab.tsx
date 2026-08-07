@@ -12,6 +12,7 @@ import Button from 'antd/lib/button';
 import Alert from 'antd/lib/alert';
 import { ExclamationCircleFilled } from '@ant-design/icons/lib/icons';
 import Modal from 'antd/lib/modal';
+import { useTranslation } from 'react-i18next';
 import {
     Project, QualitySettings, QualitySettingsSaveFields, Task,
 } from 'cvat-core-wrapper';
@@ -31,6 +32,7 @@ interface Props {
 }
 
 function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
+    const { t } = useTranslation();
     const {
         instance,
         fetching,
@@ -100,8 +102,8 @@ function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
         header = (
             <div className='cvat-quality-control-settings-header'>
                 <Switch checked={settings?.inherit} onChange={onInheritChange} />
-                <Text>Use</Text>
-                <Link to={`/projects/${instance.projectId}/quality-control#settings`}>&nbsp;project settings</Link>
+                <Text>{t('use')}</Text>
+                <Link to={`/projects/${instance.projectId}/quality-control#settings`}>&nbsp;{t('projectSettings')}</Link>
             </div>
         );
     } else if (instance instanceof Project && nonInheritedChildSettings.length !== 0) {
@@ -112,7 +114,7 @@ function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
                     message={(
                         <div>
                             <ExclamationCircleFilled className='ant-alert-icon' />
-                            <Text>{`Own settings are used in ${nonInheritedChildSettings.length} tasks`}</Text>
+                            <Text>{t('ownSettingsAreUsedInTasks', { count: nonInheritedChildSettings.length })}</Text>
                         </div>
                     )}
                     action={(
@@ -121,16 +123,16 @@ function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
                             danger
                             onClick={() => {
                                 Modal.confirm({
-                                    title: 'Are you sure you want to force project settings?',
+                                    title: t('forceProjectSettingsConfirmationTitle'),
                                     icon: <ExclamationCircleFilled />,
-                                    content: 'This action will override own settings in all tasks.',
-                                    okText: 'Yes',
-                                    cancelText: 'No',
+                                    content: t('forceProjectSettingsConfirmationContent'),
+                                    okText: t('Yes'),
+                                    cancelText: t('No'),
                                     onOk: onChildInheritChange,
                                 });
                             }}
                         >
-                            Force project settings
+                            {t('forceProjectSettings')}
                         </Button>
                     )}
                 />
@@ -144,7 +146,7 @@ function QualitySettingsTab(props: Readonly<Props>): JSX.Element | null {
                 <Row justify='end' className='cvat-quality-settings-save-btn'>
                     <Col>
                         <Button onClick={onSave} type='primary'>
-                            Save
+                            {t('save')}
                         </Button>
                     </Col>
                 </Row>

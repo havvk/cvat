@@ -12,13 +12,7 @@ import dimensions from 'utils/dimensions';
 import BulkWrapper from 'components/bulk-wrapper';
 import JobCard from './job-card';
 
-interface Props {
-    onApplyFilter?: (filter: string | null) => void;
-}
-
-function JobsContentComponent(props: Readonly<Props>): JSX.Element {
-    const { onApplyFilter } = props;
-
+function JobsContentComponent(): JSX.Element {
     const jobs = useSelector((state: CombinedState) => state.jobs.current);
 
     const groupedJobs = jobs.reduce(
@@ -51,7 +45,6 @@ function JobsContentComponent(props: Readonly<Props>): JSX.Element {
                                                 key={job.id}
                                                 job={job}
                                                 {...selectProps(job.id, globalIdx)}
-                                                onApplyFilter={onApplyFilter}
                                             />
                                         </Col>
                                     );

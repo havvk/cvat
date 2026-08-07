@@ -4,7 +4,8 @@
 
 import './styles.scss';
 import React, { useEffect, useRef, useState } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import notification from 'antd/lib/notification';
 import Spin from 'antd/lib/spin';
@@ -20,20 +21,14 @@ interface Props {
 }
 
 function ContextImage(props: Props): JSX.Element {
+    const { t } = useTranslation();
     const { offset } = props;
     const defaultFrameOffset = (offset[0] || 0);
     const defaultContextImageOffset = (offset[1] || 0);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const {
-        job,
-        frame,
-        relatedFiles,
-    } = useSelector((state: CombinedState) => ({
-        job: state.annotation.job.instance!,
-        frame: state.annotation.player.frame.number,
-        relatedFiles: state.annotation.player.frame.relatedFiles,
-    }), shallowEqual);
+    const job = useSelector((state: CombinedState) => state.annotation.job.instance);
+    const { number: frame, relatedFiles } = useSelector((state: CombinedState) => state.annotation.player.frame);
     const frameIndex = frame + defaultFrameOffset;
 
     const [contextImageData, setContextImageData] = useState<Record<string, ImageBitmap>>({});
@@ -106,7 +101,7 @@ function ContextImage(props: Props): JSX.Element {
                 </div>
             </div>
             { (hasError ||
-                (!fetching && contextImageOffset >= Object.keys(contextImageData).length)) && <Text> No data </Text>}
+                (!fetching && contextImageOffset >= Object.keys(contextImageData).length)) && <Text> {t('noData')} </Text>}
             { fetching && <Spin size='small' /> }
             {
                 contextImageOffset < Object.keys(contextImageData).length &&

@@ -5,6 +5,7 @@
 
 import React from 'react';
 import Icon from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 import { GroupIcon } from 'icons';
 import CVATTooltip from 'components/common/cvat-tooltip';
@@ -26,19 +27,22 @@ function GroupControl(props: Props): JSX.Element {
         canvasInstance,
     } = props;
 
+    const { t } = useTranslation();
     const { normalizedKeyMap } = useSelector((state: CombinedState) => state.shortcuts);
 
     const title = [];
     if (canvasInstance instanceof Canvas) {
-        title.push(`Group shapes ${normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_CONTROLS}`);
-        title.push(`Select and press ${normalizedKeyMap.RESET_GROUP_STANDARD_CONTROLS} to reset a group.`);
+        title.push(t('groupShapesTooltip', { shortcut: normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_CONTROLS }));
+        title.push(t('resetGroupTooltip', { shortcut: normalizedKeyMap.RESET_GROUP_STANDARD_CONTROLS }));
     } else if (canvasInstance instanceof Canvas3d) {
-        title.push(`Group shapes/tracks ${normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_3D_CONTROLS}`);
-        title.push(`Select and press ${normalizedKeyMap.RESET_GROUP_STANDARD_3D_CONTROLS} to reset a group.`);
+        title.push(t('groupShapesTracksTooltip', { shortcut: normalizedKeyMap.SWITCH_GROUP_MODE_STANDARD_3D_CONTROLS }));
+        title.push(t('resetGroupTooltip', { shortcut: normalizedKeyMap.RESET_GROUP_STANDARD_3D_CONTROLS }));
     }
 
     return disabled ? (
-        <Icon className='cvat-group-control cvat-disabled-canvas-control' component={GroupIcon} />
+        <CVATTooltip title={title.join(' ')} placement='right'>
+            <Icon className='cvat-group-control cvat-disabled-canvas-control' component={GroupIcon} />
+        </CVATTooltip>
     ) : (
         <CVATTooltip title={title.join(' ')} placement='right'>
             <Icon {...dynamicIconProps} component={GroupIcon} />

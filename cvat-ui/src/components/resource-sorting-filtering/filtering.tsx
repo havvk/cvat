@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     Builder, Config, AntdConfig, ImmutableTree, Query, Utils as QbUtils,
 } from '@react-awesome-query-builder/antd';
@@ -17,6 +17,7 @@ import Button from 'antd/lib/button';
 import Checkbox, { CheckboxChangeEvent } from 'antd/lib/checkbox/Checkbox';
 import Menu from 'antd/lib/menu';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { CombinedState } from 'reducers';
 import { User } from 'cvat-core-wrapper';
 
@@ -32,18 +33,20 @@ interface ResourceFilterProps {
     onApplyFilter(filter: string | null): void;
 }
 
+function translationKey(value: string): string {
+    const words = value.trim().split(/[^a-zA-Z0-9]+/).filter(Boolean);
+    return words.map((word, index) => (
+        index ? `${word[0].toUpperCase()}${word.slice(1)}` : word.toLowerCase()
+    )).join('');
+}
+
 export default function ResourceFilterHOC(
     filtrationCfg: Partial<Config>,
     localStorageRecentKeyword: string,
     localStorageRecentCapacity: number,
     predefinedFilterValues?: Record<string, string>,
 ): React.FunctionComponent<ResourceFilterProps> {
-    const config: Config = { ...AntdConfig, ...filtrationCfg };
-    const defaultTree = QbUtils.checkTree(
-        QbUtils.loadTree({ id: QbUtils.uuid(), type: 'group' }), config,
-    ) as ImmutableTree;
-
-    function keepFilterInLocalStorage(filter: string): void {
+    function keepFilterInLocalStorage(filter: string, t: (key: string) => string): void {
         if (typeof filter !== 'string') {
             return;
         }
@@ -52,7 +55,7 @@ export default function ResourceFilterHOC(
         try {
             savedItems = JSON.parse(localStorage.getItem(localStorageRecentKeyword) || '[]');
             if (!Array.isArray(savedItems) || savedItems.some((item: any) => typeof item !== 'string')) {
-                throw new Error('Wrong filters value stored');
+                throw new Error(t('wrongFiltersValueStored'));
             }
         } catch (_: any) {
             // nothing to do
@@ -62,12 +65,12 @@ export default function ResourceFilterHOC(
         localStorage.setItem(localStorageRecentKeyword, JSON.stringify(savedItems));
     }
 
-    function receiveRecentFilters(): Record<string, string> {
+    function receiveRecentFilters(t: (key: string) => string): Record<string, string> {
         let recentFilters: string[] = [];
         try {
             recentFilters = JSON.parse(localStorage.getItem(localStorageRecentKeyword) || '[]');
             if (!Array.isArray(recentFilters) || recentFilters.some((item: any) => typeof item !== 'string')) {
-                throw new Error('Wrong filters value stored');
+                throw new Error(t('wrongFiltersValueStored'));
             }
         } catch (_: any) {
             // nothing to do
@@ -87,10 +90,6 @@ export default function ResourceFilterHOC(
         built: null,
     };
 
-    function isValidTree(tree: ImmutableTree): boolean {
-        return (QbUtils.queryString(tree, config) || '').trim().length > 0 && QbUtils.isValidTree(tree, config);
-    }
-
     function unite(filters: string[]): string {
         if (filters.length > 1) {
             return JSON.stringify({
@@ -99,23 +98,6 @@ export default function ResourceFilterHOC(
         }
 
         return filters[0];
-    }
-
-    function splitFilterIntoPredefined(predefinedFilters: string[], filter: string): string[] | null {
-        if (predefinedFilters.includes(filter)) {
-            return [filter];
-        }
-
-        const parsedFilter = JSON.parse(filter);
-        const filterKeys = Object.keys(parsedFilter);
-        if (filterKeys.length === 1 && filterKeys[0] === 'and') {
-            const subFilters = parsedFilter.and.map((v) => JSON.stringify(v));
-            if (subFilters.every((s) => predefinedFilters.includes(s))) {
-                return subFilters;
-            }
-        }
-
-        return null;
     }
 
     function getPredefinedFilters(user: User): Record<string, string> | null {
@@ -137,41 +119,82 @@ export default function ResourceFilterHOC(
             disabled,
         } = props;
 
+        const { t, i18n } = useTranslation();
+        const config = useMemo<Config>(() => {
+            const fields = Object.entries(filtrationCfg.fields || {}).reduce<Record<string, any>>(
+                (acc, [key, field]: [string, any]) => ({
+                    ...acc,
+                    [key]: {
+                        ...field,
+                        ...(typeof field.label === 'string' ? {
+                            label: t(translationKey(field.label), { defaultValue: field.label }),
+                        } : {}),
+                        ...(field.fieldSettings?.listValues ? {
+                            fieldSettings: {
+                                ...field.fieldSettings,
+                                listValues: field.fieldSettings.listValues.map((item: any) => ({
+                                    ...item,
+                                    title: typeof item.title === 'string' ?
+                                        t(translationKey(item.title), { defaultValue: item.title }) : item.title,
+                                })),
+                            },
+                        } : {}),
+                    },
+                }), {},
+            );
+
+            return {
+                ...AntdConfig,
+                ...filtrationCfg,
+                fields,
+                conjunctions: {
+                    ...AntdConfig.conjunctions,
+                    AND: { ...AntdConfig.conjunctions.AND, label: t('and') },
+                    OR: { ...AntdConfig.conjunctions.OR, label: t('or') },
+                },
+                settings: {
+                    ...AntdConfig.settings,
+                    ...filtrationCfg.settings,
+                    addRuleLabel: t('addRule'),
+                    addGroupLabel: t('addGroup'),
+                    fieldPlaceholder: t('selectField'),
+                    notLabel: t('not'),
+                    deleteLabel: t('delete'),
+                    delGroupLabel: t('delete'),
+                },
+            } as Config;
+        }, [i18n.resolvedLanguage, t]);
+        const defaultTree = useMemo(() => QbUtils.checkTree(
+            QbUtils.loadTree({ id: QbUtils.uuid(), type: 'group' }), config,
+        ) as ImmutableTree, [config]);
+        const isValidTree = (tree: ImmutableTree): boolean => (
+            (QbUtils.queryString(tree, config) || '').trim().length > 0 && QbUtils.isValidTree(tree, config)
+        );
         const user = useSelector((state: CombinedState) => state.auth.user);
         const [isMounted, setIsMounted] = useState<boolean>(false);
         const [recentFilters, setRecentFilters] = useState<Record<string, string>>({});
         const [appliedFilter, setAppliedFilter] = useState(defaultAppliedFilter);
         const [state, setState] = useState<ImmutableTree>(defaultTree);
 
-        const predefinedFilters = getPredefinedFilters(user);
-
         useEffect(() => {
-            setRecentFilters(receiveRecentFilters());
+            setRecentFilters(receiveRecentFilters(t));
             setIsMounted(true);
 
             try {
-                if (value && value !== '{}') {
+                if (value) {
                     const tree = QbUtils.loadFromJsonLogic(JSON.parse(value), config);
                     if (tree && isValidTree(tree)) {
                         setAppliedFilter({
                             ...appliedFilter,
-                            predefined: splitFilterIntoPredefined(Object.values(predefinedFilters), value),
                             built: JSON.stringify(QbUtils.jsonLogicFormat(tree, config).logic),
                         });
                         setState(tree);
                     }
-                } else {
-                    setState(defaultTree);
-                    setAppliedFilter({
-                        ...appliedFilter,
-                        predefined: null,
-                        built: null,
-                    });
                 }
             } catch (_: any) {
                 // nothing to do
             }
-        }, [value]);
+        }, []);
 
         useEffect(() => {
             const listener = (event: MouseEvent): void => {
@@ -224,6 +247,7 @@ export default function ResourceFilterHOC(
             </div>
         );
 
+        const predefinedFilters = user ? getPredefinedFilters(user) : null;
         return (
             <div className='cvat-resource-page-filters'>
                 {
@@ -260,7 +284,7 @@ export default function ResourceFilterHOC(
                                             }}
                                             key={key}
                                         >
-                                            {key}
+                                            {t(translationKey(key), { defaultValue: key })}
                                         </Checkbox>
                                     )) }
                                 </div>
@@ -271,7 +295,7 @@ export default function ResourceFilterHOC(
                                 type='default'
                                 onClick={() => onPredefinedVisibleChange(!predefinedVisible)}
                             >
-                                Quick filters
+                                {t('quickFilters')}
                                 { appliedFilter.predefined ?
                                     <FilterFilled /> :
                                     <FilterOutlined />}
@@ -332,7 +356,7 @@ export default function ResourceFilterHOC(
                                             () => onRecentVisibleChange(!recentVisible)
                                         }
                                     >
-                                        Recent
+                                        {t('Recent')}
                                         <DownOutlined />
                                     </Button>
                                 </Popover>
@@ -360,7 +384,7 @@ export default function ResourceFilterHOC(
                                         });
                                     }}
                                 >
-                                    Reset
+                                    {t('Reset')}
                                 </Button>
                                 <Button
                                     className='cvat-apply-filters-button'
@@ -369,8 +393,8 @@ export default function ResourceFilterHOC(
                                     onClick={() => {
                                         const filter = QbUtils.jsonLogicFormat(state, config).logic;
                                         const stringified = JSON.stringify(filter);
-                                        keepFilterInLocalStorage(stringified);
-                                        setRecentFilters(receiveRecentFilters());
+                                        keepFilterInLocalStorage(stringified, t);
+                                        setRecentFilters(receiveRecentFilters(t));
                                         onBuilderVisibleChange(false);
                                         setAppliedFilter({
                                             predefined: null,
@@ -379,7 +403,7 @@ export default function ResourceFilterHOC(
                                         });
                                     }}
                                 >
-                                    Apply
+                                    {t('Apply')}
                                 </Button>
                             </Space>
                         </div>
@@ -391,7 +415,7 @@ export default function ResourceFilterHOC(
                         type='default'
                         onClick={() => onBuilderVisibleChange(!builderVisible)}
                     >
-                        Filter
+                        {t('Filter')}
                         { appliedFilter.built || appliedFilter.recent ?
                             <FilterFilled /> :
                             <FilterOutlined />}
@@ -404,7 +428,7 @@ export default function ResourceFilterHOC(
                     type='link'
                     onClick={() => { setAppliedFilter({ ...defaultAppliedFilter }); }}
                 >
-                    Clear filters
+                    {t('clearFilters')}
                 </Button>
             </div>
         );

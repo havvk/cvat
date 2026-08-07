@@ -4,69 +4,52 @@
 
 import React from 'react';
 import Result from 'antd/lib/result';
-import Button from 'antd/lib/button';
-import { useHistory } from 'react-router-dom';
-
-function useReturnButton(fallbackPath: string): () => void {
-    const history = useHistory();
-    const handleReturn = (): void => {
-        if (history.length > 2) {
-            history.goBack();
-        } else {
-            history.push(fallbackPath);
-        }
-    };
-    return handleReturn;
-}
+import { useTranslation } from 'react-i18next';
 
 export const JobNotFoundComponent = React.memo((): JSX.Element => {
-    const handleReturn = useReturnButton('/jobs');
+    const { t } = useTranslation();
     return (
         <Result
             className='cvat-not-found'
             status='404'
-            title='Sorry, but this job was not found'
-            subTitle='Please, be sure information you tried to get exist and you have access'
-            extra={<Button type='primary' onClick={handleReturn}>Return to Previous Page</Button>}
+            title={t('jobNotFound')}
+            subTitle={t('checkInfoExistsAndAccess')}
         />
     );
 });
 
 export const TaskNotFoundComponent = React.memo((): JSX.Element => {
-    const handleReturn = useReturnButton('/tasks');
+    const { t } = useTranslation();
     return (
         <Result
             className='cvat-not-found'
             status='404'
-            title='There was something wrong during getting the task'
-            subTitle='Please, be sure information you tried to get exist and you have access'
-            extra={<Button type='primary' onClick={handleReturn}>Return to Previous Page</Button>}
+            title={t('errorGettingTask')}
+            subTitle={t('checkInfoExistsAndAccessible')}
         />
     );
 });
 
 export const ProjectNotFoundComponent = React.memo((): JSX.Element => {
-    const handleReturn = useReturnButton('/projects');
+    const { t } = useTranslation();
     return (
         <Result
             className='cvat-not-found'
             status='404'
-            title='There was something wrong during getting the project'
-            subTitle='Please, be sure, that information you tried to get exist and you are eligible to access it'
-            extra={<Button type='primary' onClick={handleReturn}>Return to Previous Page</Button>}
+            title={t('errorGettingProject')}
+            subTitle={t('checkInfoExistsAndAccessible')}
         />
     );
 });
 
 export const CloudStorageNotFoundComponent = React.memo((): JSX.Element => {
-    const handleReturn = useReturnButton('/cloudstorages');
+    const { t } = useTranslation();
     return (
         <Result
             className='cvat-not-found'
             status='404'
-            title='Sorry, but the requested cloud storage was not found'
-            subTitle='Please, be sure id you requested exists and you have appropriate permissions'
-            extra={<Button type='primary' onClick={handleReturn}>Return to Previous Page</Button>}
+            title={t('cloudStorageNotFound')}
+            subTitle={t('checkIdExistsAndPermissions')}
         />
     );
 });
