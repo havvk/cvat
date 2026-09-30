@@ -244,7 +244,7 @@ allow if {
 allow if {
     input.scope in {
         utils.VIEW, utils.VIEW_ANNOTATIONS, utils.VIEW_DATA, utils.VIEW_METADATA,
-        utils.UPDATE_STATE, utils.UPDATE_ANNOTATIONS, utils.DELETE_ANNOTATIONS,
+        utils.UPDATE_STAGE, utils.UPDATE_STATE, utils.UPDATE_ANNOTATIONS, utils.DELETE_ANNOTATIONS,
         utils.IMPORT_ANNOTATIONS, utils.UPDATE_METADATA
     }
     input.auth.organization.id == input.resource.organization.id
@@ -254,7 +254,14 @@ allow if {
 }
 
 allow if {
-    input.scope in {utils.UPDATE_STAGE, utils.UPDATE_ASSIGNEE}
+    input.scope == utils.UPDATE_STAGE
+    utils.is_sandbox
+    utils.has_perm(utils.WORKER)
+    is_job_staff
+}
+
+allow if {
+    input.scope == utils.UPDATE_ASSIGNEE
     utils.is_sandbox
     utils.has_perm(utils.WORKER)
     is_task_staff
@@ -268,7 +275,15 @@ allow if {
 }
 
 allow if {
-    input.scope in {utils.UPDATE_STAGE, utils.UPDATE_ASSIGNEE}
+    input.scope == utils.UPDATE_STAGE
+    input.auth.organization.id == input.resource.organization.id
+    utils.has_perm(utils.WORKER)
+    organizations.has_perm(organizations.WORKER)
+    is_job_staff
+}
+
+allow if {
+    input.scope == utils.UPDATE_ASSIGNEE
     input.auth.organization.id == input.resource.organization.id
     utils.has_perm(utils.WORKER)
     organizations.has_perm(organizations.WORKER)

@@ -294,17 +294,13 @@ export class InteractionHandlerImpl implements InteractionHandler {
             this.canvas.node.prepend(this.drawnIntermediateShape.node);
         } else if (shapeType === 'mask') {
             const [left, top, right, bottom] = points.slice(-4);
-<<<<<<< HEAD
-            const imageBitmap = expandChannels(255, 80, 80, points);
-=======
             const imageBitmap = expandChannels(255, 0, 0, points);
->>>>>>> github-pr-2
 
             const image = this.canvas.image().attr({
                 'color-rendering': 'optimizeQuality',
                 'shape-rendering': 'geometricprecision',
                 'pointer-events': 'none',
-                opacity: 0.35,
+                opacity: 0.5,
             }).addClass('cvat_canvas_interact_intermediate_shape');
             image.move(this.geometry.offset + left, this.geometry.offset + top);
             this.drawnIntermediateShape = image;

@@ -21,6 +21,14 @@ def handler(context, event):
     if isinstance(data, (bytes, str)):
         try:
             data = json.loads(data)
+        except Exception as json_e:
+            context.logger.error(f"Failed to parse JSON body: {json_e}")
+            pass
+            
+    # Sometimes event.body is doubly encoded or still string unexpectedly
+    if isinstance(data, str):
+        try:
+            data = json.loads(data)
         except Exception:
             pass
 
@@ -30,6 +38,17 @@ def handler(context, event):
     
     # Notice we simply call infer once!
     results = context.user_data.model.infer(image, threshold)
+
+    
+    # --- AUTO-PATCH: Explicit GPU Garbage Collection ---
+    try:
+        import gc
+        import torch
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    except Exception:
+        pass
 
     return context.Response(
         body=json.dumps(results),

@@ -1,4 +1,5 @@
 import os
+import cv2
 import torch
 import numpy as np
 from PIL import Image
@@ -36,25 +37,27 @@ class ModelHandler:
 
                 class_id = int(box.cls.item())
                 label_name = self.labels.get(class_id, str(class_id))
-                mapping = {
-                    "单根划痕": "scratch",
-                    "夹杂物": "inclusion",
-                    "坑洞": "pit",
-                    "无划痕": "no_scratch",
-                    "较少划痕": "minor_scratch",
-                    "较多划痕": "moderate_scratch",
-                    "很多划痕": "severe_scratch"
-                }
-                label_name = mapping.get(label_name, label_name)
                 
                 mask_np = mask_data.cpu().numpy().astype(np.uint8)
+
+                # Denoise mask: keep only the largest connected component
+                # This explicitly removes any structural noise (disconnected floating points) from the boolean mask itself
+                num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(mask_np, connectivity=8)
+                if num_labels > 1:
+                    # background is label 0, find largest component among the rest
+                    areas = stats[1:, cv2.CC_STAT_AREA]
+                    largest_label = 1 + np.argmax(areas)
+                    mask_np = (labels == largest_label).astype(np.uint8)
+                else:
+                    # Empty mask gracefully skipped
+                    continue
 
                 # 1. Output polygon points
                 contours = find_contours(mask_np, 0.5)
                 points_out = []
                 if len(contours) > 0:
-                    contour = contours[0]
-                    contour = np.flip(contour, axis=1)
+                    largest_contour = max(contours, key=len)
+                    contour = np.flip(largest_contour, axis=1)
                     contour = approximate_polygon(contour, tolerance=2.0)
                     if len(contour) >= 3:
                         points_out = contour.ravel().tolist()
@@ -76,6 +79,10 @@ class ModelHandler:
                     flat_mask.extend([x1, y1, x_br, y_br])
                 
                 # CVAT Django backend expects both, and delegates based on its own internal state switch
+                # Skip invalid polygons (less than 3 points) to prevent CVAT backend from rejecting the entire batch
+                if len(points_out) < 6:
+                    continue
+                
                 results_out.append({
                     "confidence": float(conf),
                     "label": label_name,
