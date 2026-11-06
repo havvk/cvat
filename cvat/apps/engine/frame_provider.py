@@ -585,10 +585,20 @@ class SegmentFrameProvider(IFrameProvider):
         *,
         quality: models.FrameQuality = models.FrameQuality.ORIGINAL,
     ) -> tuple[Any, str]:
+        import zipfile, zlib
         _, chunk_number, frame_offset = self.validate_frame_number(frame_number)
         loader = self._loaders[quality]
-        chunk_reader = loader.load(chunk_number)
-        frame, frame_name = chunk_reader[frame_offset]
+        try:
+            chunk_reader = loader.load(chunk_number)
+            frame, frame_name = chunk_reader[frame_offset]
+        except (zipfile.BadZipFile, zlib.error):
+            loader.unload()
+            if self._db_segment.task.require_data().storage_method == models.StorageMethodChoice.CACHE:
+                MediaCache().remove_segment_chunk(
+                    self._db_segment, chunk_number=str(chunk_number), quality=quality
+                )
+            chunk_reader = loader.load(chunk_number)
+            frame, frame_name = chunk_reader[frame_offset]
         return frame, frame_name
 
     def get_frame(

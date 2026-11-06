@@ -831,6 +831,30 @@ class JobReadSerializer(serializers.ModelSerializer):
 
         return data
 
+def get_mapped_assignee_id(job_id: int, next_stage: str) -> int | None:
+    import json
+    import logging
+    logger = logging.getLogger("cvat.apps.engine.custom_workflow")
+    try:
+        map_path = "/home/django/data/job_assignee_map.json"
+        if not os.path.exists(map_path):
+            return None
+        with open(map_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        job_key = str(job_id)
+        if job_key in data:
+            stage_map = data[job_key]
+            stage_key = next_stage.lower()
+            if stage_key in stage_map:
+                email = stage_map[stage_key]
+                if email:
+                    user_obj = User.objects.filter(username=email).first()
+                    if user_obj:
+                        return user_obj.id
+    except Exception as e:
+        logger.error(f"Error reading job_assignee_map.json: {e}")
+    return None
+
 class JobWriteSerializer(WriteOnceMixin, serializers.ModelSerializer):
     assignee = serializers.IntegerField(allow_null=True, required=False)
 
@@ -931,6 +955,40 @@ class JobWriteSerializer(WriteOnceMixin, serializers.ModelSerializer):
                     models.JobFrameSelectionMethod.MANUAL
                 )
             )
+
+        request = self.context.get('request')
+        user = getattr(request, 'user', None)
+
+        if 'stage' in attrs and self.instance:
+            new_stage = attrs['stage']
+            old_stage = self.instance.stage
+            
+            if new_stage != old_stage:
+                is_admin = user and (user.is_superuser or user.is_staff)
+                is_assignee = user and self.instance.assignee_id == user.id
+                
+                if not is_admin:
+                    if not is_assignee:
+                        raise serializers.ValidationError("Only the current assignee can switch the job stage.")
+                    
+                    if old_stage == models.StageChoice.ANNOTATION:
+                        # 如果是从 acceptance 回退的标注任务 (即当前 state 为 rejected)
+                        if self.instance.state == models.StateChoice.REJECTED:
+                            if new_stage != models.StageChoice.ACCEPTANCE:
+                                raise serializers.ValidationError("This task was rolled back from acceptance stage. You can only switch it back to acceptance stage.")
+                        else:
+                            if new_stage != models.StageChoice.VALIDATION:
+                                raise serializers.ValidationError("From annotation stage, you can only switch to validation stage.")
+                    elif old_stage == models.StageChoice.VALIDATION:
+                        if new_stage not in (models.StageChoice.ANNOTATION, models.StageChoice.ACCEPTANCE):
+                            raise serializers.ValidationError("From validation stage, you can only switch to annotation or acceptance stage.")
+                    elif old_stage == models.StageChoice.ACCEPTANCE:
+                        if new_stage != models.StageChoice.ANNOTATION:
+                            raise serializers.ValidationError("From acceptance stage, you can only switch to annotation stage.")
+
+                mapped_user_id = get_mapped_assignee_id(self.instance.id, str(new_stage))
+                if mapped_user_id is not None:
+                    attrs['assignee'] = mapped_user_id
 
         return super().validate(attrs)
 
@@ -1080,7 +1138,11 @@ class JobWriteSerializer(WriteOnceMixin, serializers.ModelSerializer):
         stage = validated_data.get('stage', instance.stage)
         state = validated_data.get('state', models.StateChoice.NEW if stage != instance.stage else instance.state)
 
-        if 'stage' in validated_data or 'state' in validated_data:
+        # 当从 ACCEPTANCE 阶段回退到 ANNOTATION 阶段时，自动将 state 设为 REJECTED
+        if instance.stage == models.StageChoice.ACCEPTANCE and stage == models.StageChoice.ANNOTATION:
+            state = models.StateChoice.REJECTED
+
+        if 'stage' in validated_data or 'state' in validated_data or state == models.StateChoice.REJECTED:
             if stage == models.StageChoice.ANNOTATION:
                 validated_data['status'] = models.StatusChoice.ANNOTATION
             elif stage == models.StageChoice.ACCEPTANCE and state == models.StateChoice.COMPLETED:

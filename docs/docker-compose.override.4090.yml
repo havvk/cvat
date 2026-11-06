@@ -51,6 +51,8 @@ services:
       - /app/dataset/MetaQual2025:/home/django/share:ro
       - ./cvat/apps/engine/rules/jobs.rego:/home/django/cvat/apps/engine/rules/jobs.rego:ro
       - ./cvat/apps/engine/serializers.py:/home/django/cvat/apps/engine/serializers.py:ro
+      - ./cvat/apps/engine/cache.py:/home/django/cvat/apps/engine/cache.py:ro
+      - ./cvat/apps/engine/frame_provider.py:/home/django/cvat/apps/engine/frame_provider.py:ro
 
   cvat_worker_annotation:
     extra_hosts:
@@ -72,6 +74,8 @@ services:
       - /app/dataset/MetaQual2025:/home/django/share:ro
       - ./cvat/apps/engine/rules/jobs.rego:/home/django/cvat/apps/engine/rules/jobs.rego:ro
       - ./cvat/apps/engine/serializers.py:/home/django/cvat/apps/engine/serializers.py:ro
+      - ./cvat/apps/engine/cache.py:/home/django/cvat/apps/engine/cache.py:ro
+      - ./cvat/apps/engine/frame_provider.py:/home/django/cvat/apps/engine/frame_provider.py:ro
   
   cvat_worker_export:
     environment: *email_env

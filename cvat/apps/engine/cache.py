@@ -223,10 +223,29 @@ class MediaCache:
     ) -> DataWithMime:
         from cvat.apps.engine.signals import cache_item_created_signal
 
-        timestamp = django_tz.now()
-        item_data = create_callback()
-        item_data_bytes = item_data[0].getvalue()
-        item = (item_data[0], item_data[1], cls._get_checksum(item_data_bytes), timestamp)
+        for _attempt in range(3):
+            timestamp = django_tz.now()
+            item_data = create_callback()
+            item_data_bytes = item_data[0].getvalue()
+            item_checksum = cls._get_checksum(item_data_bytes)
+            if item_data[1] == "application/zip":
+                try:
+                    with zipfile.ZipFile(item_data[0]) as zf:
+                        bad_file = zf.testzip()
+                    item_data[0].seek(0)
+                    if bad_file is not None:
+                        slogger.glob.warning(
+                            f"Cache item {key} failed zip CRC check on {bad_file} (attempt {_attempt + 1}/3), regenerating"
+                        )
+                        continue
+                except (zipfile.BadZipFile, zlib.error) as e:
+                    slogger.glob.warning(
+                        f"Cache item {key} invalid zip ({e}) (attempt {_attempt + 1}/3), regenerating"
+                    )
+                    continue
+            if cls._get_checksum(item_data[0].getvalue()) == item_checksum:
+                break
+        item = (item_data[0], item_data[1], item_checksum, timestamp)
 
         # allow empty data to be set in cache to prevent
         # future rq jobs from being enqueued to prepare the item
@@ -245,7 +264,14 @@ class MediaCache:
                         f"Chunk data size {item_size} exceeds the maximum allowed size "
                         f"{settings.CVAT_CACHE_ITEM_MAX_SIZE}."
                     )
-                cache.set(key, item, timeout=cache_item_ttl or cache.default_timeout)
+                for _set_attempt in range(3):
+                    cache.set(key, item, timeout=cache_item_ttl or cache.default_timeout)
+                    verify_item = cache.get(key)
+                    if verify_item is not None and len(verify_item) == 4:
+                        v_data = verify_item[0].getbuffer() if isinstance(verify_item[0], io.BytesIO) else verify_item[0]
+                        if verify_item[2] == cls._get_checksum(v_data):
+                            break
+                    slogger.glob.warning(f"Cache item {key} write verification mismatch (attempt {_set_attempt + 1}/3), rewriting")
 
                 cache_item_created_signal.send(
                     sender=cls,
@@ -302,22 +328,26 @@ class MediaCache:
         slogger.glob.info(f"Removed the cache keys {format_list(keys)}")
 
     def _get_cache_item(self, key: str) -> _CacheItem | None:
-        try:
-            item = self._cache().get(key)
-        except pickle.UnpicklingError:
-            slogger.glob.error(f"Unable to get item from cache: key {key}", exc_info=True)
-            item = None
+        for _read_attempt in range(3):
+            try:
+                item = self._cache().get(key)
+            except pickle.UnpicklingError:
+                slogger.glob.error(f"Unable to get item from cache: key {key}", exc_info=True)
+                item = None
 
-        if not item:
-            return None
+            if not item:
+                return None
 
-        item_data = item[0].getbuffer() if isinstance(item[0], io.BytesIO) else item[0]
-        item_checksum = item[2] if len(item) == 4 else None
-        if item_checksum != self._get_checksum(item_data):
-            slogger.glob.info(f"Cache item {key} checksum mismatch")
-            return None
+            item_data = item[0].getbuffer() if isinstance(item[0], io.BytesIO) else item[0]
+            item_checksum = item[2] if len(item) == 4 else None
+            if item_checksum == self._get_checksum(item_data):
+                return item
 
-        return item
+            slogger.glob.info(
+                f"Cache item {key} checksum mismatch (read attempt {_read_attempt + 1}/3)"
+            )
+
+        return None
 
     def _validate_cache_item_timestamp(
         self, item: _CacheItem, expected_timestamp: datetime
