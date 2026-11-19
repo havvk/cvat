@@ -1,4 +1,16 @@
 <clickhouse>
+    <!-- 降低日志级别（默认是 trace，极耗 I/O 与 CPU） -->
+    <logger>
+        <level>warning</level>
+    </logger>
+
+    <!-- 关闭 CVAT 用不到的 ClickHouse 内部高频采样表，彻底杜绝系统表膨胀 -->
+    <trace_log remove="1"/>
+    <metric_log remove="1"/>
+    <asynchronous_metric_log remove="1"/>
+    <query_log remove="1"/>
+    <part_log remove="1"/>
+
     <!-- background_pool_size 是服务器级别设置 -->
     <background_pool_size>1</background_pool_size>
 
